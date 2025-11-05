@@ -41,6 +41,9 @@
     </b:Interaction.Triggers>
 
     <Window.Resources>
+        <converters:BackgroundImageConverter x:Key="BackgroundImageConverter" xmlns:converters="clr-namespace:BlueMeter.WPF.Converters" />
+        <converters:ThemeColorConverter x:Key="ThemeColorConverter" xmlns:converters="clr-namespace:BlueMeter.WPF.Converters" />
+        <converters:ThemeColorOverlayConverter x:Key="ThemeColorOverlayConverter" xmlns:converters="clr-namespace:BlueMeter.WPF.Converters" />
 
         <Style x:Key="SelectedIconfont" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="pack://application:,,,/Assets/Fonts/#IconFont" />
@@ -246,15 +249,50 @@
 
     </Window.Resources>
 
-    <Border Background="#ECEBE9" Style="{StaticResource ShadowWindowBorder}">
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+    <!-- Main Border: Apply theme color as base background -->
+    <Border
+        Style="{StaticResource ShadowWindowBorder}"
+        Background="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeColorConverter}, FallbackValue=#ECEBE9}">
 
-            <ctrl:Header Title="{lex:Loc Key={x:Static loc:ResourcesKeys.Window_Settings_Title}}" Grid.Row="0" />
+        <Grid>
+            <!-- Optional Background Image Layer (on top of theme color) -->
+            <Border Panel.ZIndex="0">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="{x:Null}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding AppConfig.BackgroundOnlyMode}" Value="True">
+                                <Setter Property="Background" Value="{Binding AppConfig.BackgroundImagePath, Converter={StaticResource BackgroundImageConverter}}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+
+            <!-- Theme Color Filter Overlay (over background image, behind UI) -->
+            <Border Panel.ZIndex="1">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="{x:Null}" />
+                        <Style.Triggers>
+                            <!-- Only show color filter when background image is active -->
+                            <DataTrigger Binding="{Binding AppConfig.BackgroundOnlyMode}" Value="True">
+                                <Setter Property="Background" Value="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeColorOverlayConverter}, ConverterParameter=0.2}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+
+            <!-- Main Content Grid -->
+            <Grid Panel.ZIndex="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <ctrl:Header Title="{lex:Loc Key={x:Static loc:ResourcesKeys.Window_Settings_Title}}" Grid.Row="0" />
 
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -687,12 +725,13 @@
                                                 Style="{StaticResource FieldName}"
                                                 Text="{lex:Loc Key={x:Static loc:ResourcesKeys.Settings_Theme_WindowColor}}" />
                                             <Border Grid.Column="2" HorizontalAlignment="Right">
-                                                <WrapPanel>
-                                                    <Button Background="#1690F8" Style="{StaticResource ThemeButton_Active}" Click="ThemeButton_Click" />
+                                                <WrapPanel x:Name="ThemeButtonsPanel">
+                                                    <Button Background="#1690F8" Style="{StaticResource ThemeButton}" Click="ThemeButton_Click" />
                                                     <Button Background="#FFA9A8" Style="{StaticResource ThemeButton}" Click="ThemeButton_Click" />
                                                     <Button Background="#F7A0DD" Style="{StaticResource ThemeButton}" Click="ThemeButton_Click" />
                                                     <Button Background="#2F2F2F" Style="{StaticResource ThemeButton}" Click="ThemeButton_Click" />
                                                     <Button Background="#D0D0D0" Style="{StaticResource ThemeButton}" Click="ThemeButton_Click" />
+                                                    <Button Background="Transparent" Style="{StaticResource ThemeButton}" Click="ThemeButton_Click" Tag="Transparent" ToolTip="Transparent (No Color Overlay)" />
                                                     <Button Style="{StaticResource ThemeButton}" Click="ThemeButton_Click">
                                                         <Button.Template>
                                                             <ControlTemplate>
@@ -809,6 +848,7 @@
                 CancelCommand="{Binding CancelCommand}"
                 ConfirmClick="Footer_ConfirmClick"
                 ConfirmCommand="{Binding ConfirmCommand}" />
-        </Grid>
-    </Border>
+            </Grid> <!-- End of Content Grid with rows -->
+        </Grid> <!-- End of Layering Grid -->
+    </Border> <!-- End of Main Border with Theme Color -->
 </Window>

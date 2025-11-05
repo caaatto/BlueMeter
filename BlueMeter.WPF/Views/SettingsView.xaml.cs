@@ -22,6 +22,52 @@ public partial class SettingsView : Window
 
         _vm = vm;
         _vm.RequestClose += Vm_RequestClose;
+
+        // Set initial active theme button when window loads
+        Loaded += SettingsView_Loaded;
+    }
+
+    private void SettingsView_Loaded(object sender, RoutedEventArgs e)
+    {
+        // Find and mark the currently active theme button
+        InitializeActiveThemeButton();
+    }
+
+    // Initialize the active theme button indicator based on current AppConfig.ThemeColor
+    private void InitializeActiveThemeButton()
+    {
+        // Access the named WrapPanel directly
+        if (ThemeButtonsPanel == null) return;
+
+        var currentThemeColor = _vm.AppConfig.ThemeColor;
+
+        foreach (var child in ThemeButtonsPanel.Children)
+        {
+            if (child is Button button)
+            {
+                bool isActive = false;
+
+                // Check if this button matches the current theme
+                if (button.Tag is string tag && tag == "Transparent")
+                {
+                    isActive = currentThemeColor?.Equals("Transparent", StringComparison.OrdinalIgnoreCase) ?? false;
+                }
+                else if (button.Background is SolidColorBrush brush)
+                {
+                    isActive = brush.Color.ToString().Equals(currentThemeColor, StringComparison.OrdinalIgnoreCase);
+                }
+
+                // Set appropriate style
+                if (isActive)
+                {
+                    button.Style = (Style)FindResource("ThemeButton_Active");
+                }
+                else
+                {
+                    button.Style = (Style)FindResource("ThemeButton");
+                }
+            }
+        }
     }
 
     private void Vm_RequestClose()
@@ -30,18 +76,56 @@ public partial class SettingsView : Window
     }
 
     // FIX: Theme color button click handler - allows users to change window theme color
-    // Updates the AppConfig property which triggers PropertyChanged notification
+    // Updates the AppConfig property which triggers PropertyChanged notification with live preview
     private void ThemeButton_Click(object sender, RoutedEventArgs e)
     {
-        if (sender is Button button && button.Background is SolidColorBrush brush)
+        if (sender is Button button)
         {
-            // Update the property - this will trigger PropertyChanged through ObservableProperty
-            _vm.AppConfig.ThemeColor = brush.Color.ToString();
+            string? newThemeColor = null;
 
-            // Force property change notification to ensure UI updates
-            // This is needed because AppConfig is not directly observable from MainViewModel
-            System.Windows.Data.BindingOperations.GetBindingExpression(
-                button, Button.BackgroundProperty)?.UpdateSource();
+            // Check if it's the transparent button
+            if (button.Tag is string tag && tag == "Transparent")
+            {
+                newThemeColor = "Transparent";
+            }
+            else if (button.Background is SolidColorBrush brush)
+            {
+                newThemeColor = brush.Color.ToString();
+            }
+
+            if (newThemeColor != null)
+            {
+                // Update the property - this will trigger PropertyChanged through ObservableProperty
+                // This provides live preview without needing to click "Save"
+                _vm.AppConfig.ThemeColor = newThemeColor;
+
+                // Update visual indicator for active theme button
+                UpdateActiveThemeButton(button);
+            }
+        }
+    }
+
+    // Update the visual indicator to show which theme is currently active
+    private void UpdateActiveThemeButton(Button activeButton)
+    {
+        // Find the parent WrapPanel containing all theme buttons
+        if (activeButton.Parent is WrapPanel wrapPanel)
+        {
+            // Reset all buttons to normal style
+            foreach (var child in wrapPanel.Children)
+            {
+                if (child is Button btn && btn != activeButton)
+                {
+                    // Only update if it's currently using the active style
+                    if (btn.Style == FindResource("ThemeButton_Active"))
+                    {
+                        btn.Style = (Style)FindResource("ThemeButton");
+                    }
+                }
+            }
+
+            // Set clicked button to active style
+            activeButton.Style = (Style)FindResource("ThemeButton_Active");
         }
     }
 

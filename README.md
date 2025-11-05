@@ -28,7 +28,7 @@ This project is licensed under the [GNU Affero General Public License v3](LICENS
 
 By using this project, you agree to comply with the terms of the license.
 
-We do not welcome individuals or projects that disregard this license, including those who modify or translate open-source code and redistribute it as closed-source, or who mirror open-source updates into closed-source derivatives.
+I do not welcome individuals or projects that disregard this license, including those who modify or translate open-source code and redistribute it as closed-source, or who mirror open-source updates into closed-source derivatives.
 
 ## 👥 Contributing
 
@@ -40,4 +40,4 @@ If this project helps you, please consider giving it a star ⭐
 
 ---
 
-**Disclaimer**: This tool is for learning and analysis of game data only. Do not use it in ways that violate the game's Terms of Service. You are solely responsible for any risks incurred. The maintainers are not responsible for any misuse of this tool to discriminate against other players. Please adhere to the rules and ethical standards of the game's community.
+**Disclaimer**: This tool is for learning and analysis of game data only. Do not use it in ways that violate the game's Terms of Service. You are solely responsible for any risks incurred. I am not responsible for any misuse of this tool to discriminate against other players. Please adhere to the rules and ethical standards of the game's community.

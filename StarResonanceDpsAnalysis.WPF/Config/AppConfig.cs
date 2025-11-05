@@ -90,6 +90,12 @@ public partial class AppConfig : ObservableObject
     private string? _backgroundImagePath;
 
     /// <summary>
+    /// 背景图片专用模式（仅显示背景，面板透明）
+    /// </summary>
+    [ObservableProperty]
+    private bool _backgroundOnlyMode = false;
+
+    /// <summary>
     /// 当前界面语言（如 zh-CN、en-US、auto）
     /// </summary>
     [ObservableProperty]

@@ -756,7 +756,7 @@
                                     </Border>
 
                                     <!--  Background Only Mode Toggle  -->
-                                    <Border Style="{StaticResource SettingItemBorder}">
+                                    <Border Style="{StaticResource SectionFieldBorderBase}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>
                                                 <ColumnDefinition Width="39*" />

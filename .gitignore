@@ -367,6 +367,3 @@ FodyWeavers.xsd
 /BlueMeter/Properties/PublishProfiles/
 /BlueMeter.Core/Protobuf/BlueProtobuf.proto
 /AGENTS.md
-
-# Claude Code
-.claude/

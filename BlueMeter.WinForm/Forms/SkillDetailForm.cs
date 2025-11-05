@@ -365,14 +365,14 @@ namespace BlueMeter.WinForm.Control
 
         private static readonly Dictionary<string, Image> _professionImages = new()
         {
-            { "冰魔导师", HandledAssets.冰魔导师_Opacity10 },
-            { "巨刃守护者", HandledAssets.巨刃守护者_Opacity10 },
-            { "森语者", HandledAssets.森语者_Opacity10 },
-            { "灵魂乐手", HandledAssets.灵魂乐手_Opacity10 },
-            { "神射手", HandledAssets.神射手_Opacity10 },
-            { "神盾骑士", HandledAssets.神盾骑士_Opacity10 },
-            { "雷影剑士", HandledAssets.雷影剑士_Opacity10 },
-            { "青岚骑士", HandledAssets.青岚骑士_Opacity10 },
+            { "冰魔导师", HandledAssets.FrostMage_Opacity10 },
+            { "巨刃守护者", HandledAssets.HeavyGuardian_Opacity10 },
+            { "森语者", HandledAssets.VerdantOracle_Opacity10 },
+            { "灵魂乐手", HandledAssets.SoulMusician_Opacity10 },
+            { "神射手", HandledAssets.Marksman_Opacity10 },
+            { "神盾骑士", HandledAssets.ShieldKnight_Opacity10 },
+            { "雷影剑士", HandledAssets.Stormblade_Opacity10 },
+            { "青岚骑士", HandledAssets.WindKnight_Opacity10 },
         };
 
         public void GetPlayerInfo(string nickname, int power, string profession)

@@ -20,10 +20,10 @@ namespace BlueMeter.WinForm.Control
 
 
         // 添加折线图成员变量
-        private FlatLineChart _dpsTrendChart;
+        private FlatLineChart? _dpsTrendChart;
         // 添加条形图和饼图成员变量
-        private FlatBarChart _skillDistributionChart;
-        private FlatPieChart _critLuckyChart;
+        private FlatBarChart? _skillDistributionChart;
+        private FlatPieChart? _critLuckyChart;
 
         // 添加缺失的isSelect变量
         bool isSelect = false;
@@ -157,7 +157,7 @@ namespace BlueMeter.WinForm.Control
         /// <summary>
         /// panel7大小变化时的处理
         /// </summary>
-        private void Panel7_Resize(object sender, EventArgs e)
+        private void Panel7_Resize(object? sender, EventArgs e)
         {
             if (_dpsTrendChart != null)
             {
@@ -415,7 +415,7 @@ namespace BlueMeter.WinForm.Control
             }
         }
 
-        private void splitter1_SplitterMoving(object sender, SplitterCancelEventArgs e)
+        private void splitter1_SplitterMoving(object? sender, SplitterCancelEventArgs e)
         {
             if (e.SplitX < 350)
             {
@@ -442,7 +442,7 @@ namespace BlueMeter.WinForm.Control
             }
         }
 
-        private void splitter1_SplitterMoved(object sender, SplitterEventArgs e)
+        private void splitter1_SplitterMoved(object? sender, SplitterEventArgs e)
         {
             if (_dpsTrendChart != null)
             {

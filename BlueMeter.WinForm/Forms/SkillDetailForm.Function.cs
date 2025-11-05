@@ -46,9 +46,9 @@ namespace BlueMeter.WinForm.Control
 
         #region 区块：实例级字段（由外层窗体/调用方注入）
         public long Uid;           // 当前查看的玩家 UID
-        public string Nickname;     // 玩家昵称（展示用）
+        public string? Nickname;     // 玩家昵称（展示用）
         public int Power;           // 玩家战力（展示用）
-        public string Profession;   // 玩家职业（展示用）
+        public string? Profession;   // 玩家职业（展示用）
 
         // 技能排序选择器：默认按 Total 倒序；可通过外部替换该委托实现“改排序规则不改代码”
         public Func<SkillSummary, double> SkillOrderBySelector = s => s.Total;

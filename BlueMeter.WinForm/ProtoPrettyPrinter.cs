@@ -138,7 +138,7 @@ namespace BlueMeter.WinForm
             }
         }
 
-        static string TryUtf8Preview(ReadOnlySpan<byte> seg, int maxChars)
+        static string? TryUtf8Preview(ReadOnlySpan<byte> seg, int maxChars)
         {
             try
             {

@@ -56,7 +56,14 @@ public partial class EncounterHistoryViewModel : BaseViewModel
             var encounterService = DataStorageExtensions.GetEncounterService();
             if (encounterService == null)
             {
-                StatusMessage = "Database not initialized";
+                StatusMessage = "Database not initialized. Please ensure the database has been set up correctly.";
+                MessageBox.Show(
+                    "The database is not initialized.\n\n" +
+                    "The encounter history database may not have been set up yet. " +
+                    "Try running a few battles first to create some encounters.",
+                    "Database Not Initialized",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
                 return;
             }
 
@@ -68,11 +75,23 @@ public partial class EncounterHistoryViewModel : BaseViewModel
                 Encounters.Add(new EncounterSummaryViewModel(encounter));
             }
 
-            StatusMessage = $"Loaded {Encounters.Count} encounters";
+            if (Encounters.Count == 0)
+            {
+                StatusMessage = "No encounters found. Run some battles to create encounter history.";
+            }
+            else
+            {
+                StatusMessage = $"Loaded {Encounters.Count} encounter(s)";
+            }
         }
         catch (Exception ex)
         {
             StatusMessage = $"Error loading encounters: {ex.Message}";
+            MessageBox.Show(
+                $"An error occurred while loading encounters:\n\n{ex.Message}\n\n{ex.StackTrace}",
+                "Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
         }
         finally
         {

@@ -595,7 +595,7 @@
                                         </MenuItem>
                                     </MenuItem>
                                     <!--  历史记录  -->
-                                    <MenuItem Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_History}}" ItemContainerStyle="{StaticResource CheckableMenuItem}" />
+                                    <MenuItem Command="{Binding OpenEncounterHistoryCommand}" Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_History}}" ItemContainerStyle="{StaticResource CheckableMenuItem}" />
                                     <!--  打桩模式  -->
                                     <MenuItem Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_Training}}" ItemContainerStyle="{StaticResource CheckableMenuItem}">
                                         <MenuItem
@@ -719,17 +719,95 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
+
+                    <!-- Normal Mode Display - Current Battle -->
                     <TextBlock
                         Grid.Column="0"
                         HorizontalAlignment="Left"
-                        Style="{StaticResource FooterTextContent}"
-                        Text="{Binding CurrentStatisticData.CurrentPlayerSlot.Index, StringFormat=[{0}], TargetNullValue=[--], FallbackValue=[--]}" />
+                        Text="{Binding CurrentStatisticData.CurrentPlayerSlot.Index, StringFormat=[{0}], TargetNullValue=[--], FallbackValue=[--]}">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource FooterTextContent}">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsHistoryMode}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsShowingLastBattle}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
+                    <!-- Normal Mode Display - Last Battle Indicator -->
+                    <TextBlock
+                        Grid.Column="0"
+                        HorizontalAlignment="Left"
+                        Text="[LAST]"
+                        Foreground="#FFD700"
+                        FontWeight="Bold">
+                        <TextBlock.Style>
+                            <Style TargetType="TextBlock" BasedOn="{StaticResource FooterTextContent}">
+                                <Setter Property="Visibility" Value="Collapsed" />
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsHistoryMode}" Value="False" />
+                                            <Condition Binding="{Binding IsShowingLastBattle}" Value="True" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+
                     <TextBlock
                         Grid.Column="1"
                         Margin="6,0,0,0"
                         HorizontalAlignment="Left"
                         Style="{StaticResource FooterTextContent}"
-                        Text="{Binding Path=BattleDuration, StringFormat={}{0:mm\\:ss}}" />
+                        Text="{Binding Path=BattleDuration, StringFormat={}{0:mm\\:ss}}"
+                        Visibility="{Binding IsHistoryMode, Converter={StaticResource BoolToInvertedVisibilityConverter}}" />
+
+                    <!-- History Mode Display -->
+                    <Button
+                        Grid.Column="0"
+                        HorizontalAlignment="Left"
+                        Command="{Binding ReturnToLiveCommand}"
+                        Content="[HISTORY]"
+                        Foreground="#FFA500"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        FontWeight="Bold"
+                        Cursor="Hand"
+                        ToolTip="Click to return to live mode"
+                        Visibility="{Binding IsHistoryMode, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <TextBlock
+                                                Text="{TemplateBinding Content}"
+                                                Foreground="{TemplateBinding Foreground}"
+                                                FontWeight="{TemplateBinding FontWeight}"
+                                                Cursor="{TemplateBinding Cursor}" />
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <TextBlock
+                        Grid.Column="1"
+                        Margin="6,0,0,0"
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource FooterTextContent}"
+                        Text="{Binding HistoryModeLabel}"
+                        Foreground="#FFA500"
+                        Visibility="{Binding IsHistoryMode, Converter={StaticResource BoolToVisibilityConverter}}" />
+
                     <TextBlock
                         Grid.Column="2"
                         Margin="0,0,4,0"

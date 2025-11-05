@@ -543,6 +543,76 @@ public partial class DpsStatisticsSubViewModel : BaseViewModel, IDisposable
         }
     }
 
+    /// <summary>
+    /// Updates data with historical encounter data
+    /// </summary>
+    public void UpdateHistoricalData(IReadOnlyDictionary<long, DpsData> dpsDataDict, IReadOnlyDictionary<long, PlayerInfo> playerInfoDict)
+    {
+        _logger.LogDebug("Updating historical data");
+
+        // Clear existing data first
+        _dispatcher.Invoke(() => Data.Clear());
+        DataDictionary.Clear();
+
+        // Update all slots with their data
+        foreach (var kvp in dpsDataDict)
+        {
+            var uid = kvp.Key;
+            var dpsData = kvp.Value;
+
+            var slot = GetOrAddStatisticDataViewModel(dpsData);
+            var value = GetValueForType(dpsData);
+
+            // Calculate duration once
+            var duration = (dpsData.LastLoggedTick - (dpsData.StartLoggedTick ?? 0)).ConvertToUnsigned();
+
+            // Update slot values
+            slot.Value = value;
+            slot.Duration = duration;
+            slot.SkillList = BuildSkillListSnapshot(dpsData);
+
+            // Update player info if available
+            if (playerInfoDict.TryGetValue(uid, out var playerInfo))
+            {
+                slot.Player.Name = playerInfo.Name ?? $"UID: {uid}";
+                slot.Player.Class = playerInfo.ProfessionID.GetClassNameById();
+                slot.Player.Spec = playerInfo.Spec;
+                slot.Player.Uid = playerInfo.UID;
+                slot.Player.PowerLevel = playerInfo.CombatPower ?? 0;
+                slot.Player.IsNpc = dpsData.IsNpcData;
+            }
+            else
+            {
+                slot.Player.Name = $"UID: {uid}";
+                slot.Player.Class = Classes.Unknown;
+                slot.Player.Spec = ClassSpec.Unknown;
+                slot.Player.Uid = uid;
+                slot.Player.IsNpc = dpsData.IsNpcData;
+            }
+        }
+
+        // Batch calculate percentages
+        if (Data.Count > 0)
+        {
+            var maxValue = Data.Max(d => d.Value);
+            var totalValue = Data.Sum(d => Convert.ToDouble(d.Value));
+
+            var hasMaxValue = maxValue > 0;
+            var hasTotalValue = totalValue > 0;
+
+            foreach (var slot in Data)
+            {
+                slot.PercentOfMax = hasMaxValue ? slot.Value / (double)maxValue * 100 : 0;
+                slot.Percent = hasTotalValue ? slot.Value / totalValue : 0;
+            }
+        }
+
+        // Sort data in place
+        SortSlotsInPlace();
+
+        _logger.LogDebug("Historical data updated");
+    }
+
     // MEMORY LEAK FIX: Implement IDisposable to unsubscribe from CollectionChanged event (line 61).
     // The _data.CollectionChanged event handler creates a strong reference to this ViewModel instance.
     // Without unsubscribing, the BulkObservableCollection keeps this instance alive even when it's

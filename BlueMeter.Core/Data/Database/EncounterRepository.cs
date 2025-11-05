@@ -61,7 +61,7 @@ public class EncounterRepository
     /// <summary>
     /// Get or create a player
     /// </summary>
-    public async Task<PlayerEntity> EnsurePlayerAsync(PlayerInfo playerInfo)
+    public async Task<PlayerEntity> EnsurePlayerAsync(PlayerInfo playerInfo, bool isNpc = false)
     {
         var player = await _context.Players.FindAsync(playerInfo.UID);
 
@@ -70,27 +70,27 @@ public class EncounterRepository
             player = new PlayerEntity
             {
                 UID = playerInfo.UID,
-                Name = playerInfo.Name,
+                Name = playerInfo.Name ?? "Unknown",
                 FirstSeenTime = DateTime.UtcNow,
-                IsNpc = playerInfo.IsNpc
+                IsNpc = isNpc
             };
             _context.Players.Add(player);
         }
 
         // Update player info
-        player.Name = playerInfo.Name;
-        player.ProfessionID = playerInfo.ProfessionID;
-        player.SubProfessionName = playerInfo.SubProfessionName;
+        player.Name = playerInfo.Name ?? "Unknown";
+        player.ProfessionID = playerInfo.ProfessionID ?? 0;
+        player.SubProfessionName = playerInfo.SubProfessionName ?? string.Empty;
         player.Spec = playerInfo.Spec;
         player.Class = playerInfo.Class;
-        player.CombatPower = playerInfo.CombatPower;
-        player.Level = playerInfo.Level;
-        player.RankLevel = playerInfo.RankLevel;
-        player.Critical = playerInfo.Critical;
-        player.Lucky = playerInfo.Lucky;
-        player.MaxHP = playerInfo.MaxHP;
+        player.CombatPower = playerInfo.CombatPower ?? 0;
+        player.Level = playerInfo.Level ?? 0;
+        player.RankLevel = playerInfo.RankLevel ?? 0;
+        player.Critical = playerInfo.Critical ?? 0;
+        player.Lucky = playerInfo.Lucky ?? 0;
+        player.MaxHP = playerInfo.MaxHP ?? 0;
         player.LastSeenTime = DateTime.UtcNow;
-        player.IsNpc = playerInfo.IsNpc;
+        player.IsNpc = isNpc;
 
         await _context.SaveChangesAsync();
 
@@ -108,7 +108,7 @@ public class EncounterRepository
         if (encounter == null) return;
 
         // Ensure player exists
-        await EnsurePlayerAsync(playerInfo);
+        await EnsurePlayerAsync(playerInfo, dpsData.IsNpcData);
 
         // Check if stats already exist
         var stats = await _context.PlayerEncounterStats
@@ -128,18 +128,18 @@ public class EncounterRepository
         stats.TotalAttackDamage = dpsData.TotalAttackDamage;
         stats.TotalTakenDamage = dpsData.TotalTakenDamage;
         stats.TotalHeal = dpsData.TotalHeal;
-        stats.StartLoggedTick = dpsData.StartLoggedTick;
+        stats.StartLoggedTick = dpsData.StartLoggedTick ?? 0;
         stats.LastLoggedTick = dpsData.LastLoggedTick;
         stats.IsNpcData = dpsData.IsNpcData;
 
         // Snapshot current player stats
-        stats.CombatPowerSnapshot = playerInfo.CombatPower;
-        stats.LevelSnapshot = playerInfo.Level;
-        stats.NameSnapshot = playerInfo.Name;
+        stats.CombatPowerSnapshot = playerInfo.CombatPower ?? 0;
+        stats.LevelSnapshot = playerInfo.Level ?? 0;
+        stats.NameSnapshot = playerInfo.Name ?? "Unknown";
 
         // Serialize skill data
         var skillDictionary = new Dictionary<long, SkillData>();
-        foreach (var skill in dpsData.GetSkillDatas())
+        foreach (var skill in dpsData.ReadOnlySkillDataList)
         {
             skillDictionary[skill.SkillId] = skill;
         }

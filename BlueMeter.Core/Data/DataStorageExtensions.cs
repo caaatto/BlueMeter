@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BlueMeter.Core.Data.Database;
 using BlueMeter.Core.Data.Models;
+using BlueMeter.WPF.Data;
 
 namespace BlueMeter.Core.Data;
 
@@ -12,6 +13,7 @@ namespace BlueMeter.Core.Data;
 public static class DataStorageExtensions
 {
     private static EncounterService? _encounterService;
+    private static IDataStorage? _dataStorage;
     private static bool _isInitialized;
     private static DateTime _lastSaveTime = DateTime.MinValue;
     private static readonly TimeSpan MinSaveDuration = TimeSpan.FromSeconds(3);
@@ -19,11 +21,12 @@ public static class DataStorageExtensions
     /// <summary>
     /// Initialize database integration with DataStorage
     /// </summary>
-    public static async Task InitializeDatabaseAsync(string? databasePath = null)
+    public static async Task InitializeDatabaseAsync(IDataStorage? dataStorage = null, string? databasePath = null)
     {
         if (_isInitialized) return;
 
         databasePath ??= DatabaseInitializer.GetDefaultDatabasePath();
+        _dataStorage = dataStorage;
 
         // Initialize database
         await DatabaseInitializer.InitializeAsync(databasePath);
@@ -33,9 +36,20 @@ public static class DataStorageExtensions
         _encounterService = new EncounterService(contextFactory);
 
         // Subscribe to DataStorage events
-        DataStorage.NewSectionCreated += OnNewSectionCreated;
-        DataStorage.ServerConnectionStateChanged += OnServerConnectionStateChanged;
-        DataStorage.PlayerInfoUpdated += OnPlayerInfoUpdated;
+        if (_dataStorage != null)
+        {
+            // Use IDataStorage instance (DataStorageV2)
+            _dataStorage.NewSectionCreated += OnNewSectionCreated;
+            _dataStorage.ServerConnectionStateChanged += OnServerConnectionStateChanged;
+            _dataStorage.PlayerInfoUpdated += OnPlayerInfoUpdated;
+        }
+        else
+        {
+            // Fallback to static DataStorage
+            DataStorage.NewSectionCreated += OnNewSectionCreated;
+            DataStorage.ServerConnectionStateChanged += OnServerConnectionStateChanged;
+            DataStorage.PlayerInfoUpdated += OnPlayerInfoUpdated;
+        }
 
         _isInitialized = true;
     }
@@ -67,8 +81,21 @@ public static class DataStorageExtensions
 
         try
         {
-            var playerInfos = DataStorage.ReadOnlyPlayerInfoDatas.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-            var dpsData = DataStorage.ReadOnlySectionedDpsDatas.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            Dictionary<long, PlayerInfo> playerInfos;
+            Dictionary<long, DpsData> dpsData;
+
+            if (_dataStorage != null)
+            {
+                // Use IDataStorage instance
+                playerInfos = _dataStorage.ReadOnlyPlayerInfoDatas.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                dpsData = _dataStorage.ReadOnlySectionedDpsDatas.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            }
+            else
+            {
+                // Fallback to static DataStorage
+                playerInfos = DataStorage.ReadOnlyPlayerInfoDatas.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+                dpsData = DataStorage.ReadOnlySectionedDpsDatas.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            }
 
             await _encounterService.SavePlayerStatsAsync(playerInfos, dpsData);
 
@@ -90,7 +117,7 @@ public static class DataStorageExtensions
         // Final save before ending
         await SaveCurrentEncounterAsync();
 
-        await _encounterService.EndEncounterAsync(durationMs);
+        await _encounterService.EndCurrentEncounterAsync(durationMs);
     }
 
     /// <summary>
@@ -200,17 +227,91 @@ public static class DataStorageExtensions
     }
 
     /// <summary>
+    /// Preload player cache from database to reduce "Unknown" players
+    /// </summary>
+    public static async Task PreloadPlayerCacheAsync()
+    {
+        if (_encounterService == null) return;
+
+        try
+        {
+            using var context = DatabaseInitializer.CreateContextFactory(DatabaseInitializer.GetDefaultDatabasePath())();
+            var repository = new EncounterRepository(context);
+            var players = await repository.GetAllPlayersAsync();
+
+            int loadedCount = 0;
+            foreach (var player in players)
+            {
+                // Only preload players with names (skip NPCs and incomplete data)
+                if (!string.IsNullOrEmpty(player.Name) && player.Name != "Unknown" && !player.IsNpc)
+                {
+                    var playerInfo = new PlayerInfo
+                    {
+                        UID = player.UID,
+                        Name = player.Name,
+                        ProfessionID = player.ProfessionID,
+                        SubProfessionName = player.SubProfessionName,
+                        Spec = player.Spec,
+                        CombatPower = player.CombatPower,
+                        Level = player.Level,
+                        RankLevel = player.RankLevel,
+                        Critical = player.Critical,
+                        Lucky = player.Lucky,
+                        MaxHP = player.MaxHP
+                    };
+
+                    // Add to DataStorage without triggering events
+                    DataStorage.ReadOnlyPlayerInfoDatas.GetType()
+                        .GetField("_dictionary", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)?
+                        .GetValue(DataStorage.ReadOnlyPlayerInfoDatas);
+
+                    // Use reflection to access private PlayerInfoDatas dictionary
+                    var playerInfoDatasField = typeof(DataStorage).GetField("PlayerInfoDatas",
+                        System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+
+                    if (playerInfoDatasField != null)
+                    {
+                        var playerInfoDatas = playerInfoDatasField.GetValue(null) as Dictionary<long, PlayerInfo>;
+                        if (playerInfoDatas != null && !playerInfoDatas.ContainsKey(player.UID))
+                        {
+                            playerInfoDatas[player.UID] = playerInfo;
+                            loadedCount++;
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine($"Preloaded {loadedCount} players from database cache");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error preloading player cache: {ex.Message}");
+        }
+    }
+
+    /// <summary>
     /// Cleanup database integration
     /// </summary>
     public static void Shutdown()
     {
         if (!_isInitialized) return;
 
-        DataStorage.NewSectionCreated -= OnNewSectionCreated;
-        DataStorage.ServerConnectionStateChanged -= OnServerConnectionStateChanged;
-        DataStorage.PlayerInfoUpdated -= OnPlayerInfoUpdated;
+        // Unsubscribe from events
+        if (_dataStorage != null)
+        {
+            _dataStorage.NewSectionCreated -= OnNewSectionCreated;
+            _dataStorage.ServerConnectionStateChanged -= OnServerConnectionStateChanged;
+            _dataStorage.PlayerInfoUpdated -= OnPlayerInfoUpdated;
+        }
+        else
+        {
+            DataStorage.NewSectionCreated -= OnNewSectionCreated;
+            DataStorage.ServerConnectionStateChanged -= OnServerConnectionStateChanged;
+            DataStorage.PlayerInfoUpdated -= OnPlayerInfoUpdated;
+        }
 
         _encounterService = null;
+        _dataStorage = null;
         _isInitialized = false;
     }
 }

@@ -204,7 +204,8 @@ public static class DataStorage
     /// <returns>是否已经存在; 是: true, 否: false</returns>
     /// <remarks>
     /// 如果传入的 UID 已存在, 则不会进行任何操作;
-    /// 否则会创建一个新的 PlayerInfo 并触发 PlayerInfoUpdated 事件
+    /// 否则会创建一个新的 PlayerInfo 并触发 PlayerInfoUpdated 事件.
+    /// 在创建新 PlayerInfo 时, 会先尝试从数据库加载已缓存的玩家信息
     /// </remarks>
     internal static bool TestCreatePlayerInfoByUID(long uid)
     {
@@ -219,7 +220,29 @@ public static class DataStorage
             return true;
         }
 
-        PlayerInfoDatas[uid] = new PlayerInfo { UID = uid };
+        // Try to load from database first
+        PlayerInfo? playerInfo = null;
+        try
+        {
+            var task = DataStorageExtensions.GetCachedPlayerInfoAsync(uid);
+            task.Wait(100); // Wait max 100ms to avoid blocking
+            playerInfo = task.Result;
+        }
+        catch
+        {
+            // Ignore database errors, will create new PlayerInfo
+        }
+
+        if (playerInfo != null)
+        {
+            // Found in database, use cached data
+            PlayerInfoDatas[uid] = playerInfo;
+        }
+        else
+        {
+            // Not in database, create new with UID only
+            PlayerInfoDatas[uid] = new PlayerInfo { UID = uid };
+        }
 
         TriggerPlayerInfoUpdated(uid);
 

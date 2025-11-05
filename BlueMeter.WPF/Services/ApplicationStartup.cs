@@ -34,8 +34,12 @@ public sealed class ApplicationStartup(
             // Initialize database for encounter history
             try
             {
-                await DataStorageExtensions.InitializeDatabaseAsync();
+                await DataStorageExtensions.InitializeDatabaseAsync(dataStorage);
                 logger.LogInformation(WpfLogEvents.StartupInit, "Database initialized successfully");
+
+                // Preload player cache from database to reduce "Unknown" players
+                await DataStorageExtensions.PreloadPlayerCacheAsync();
+                logger.LogInformation(WpfLogEvents.StartupInit, "Player cache preloaded from database");
             }
             catch (Exception dbEx)
             {

@@ -58,6 +58,15 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
     [ObservableProperty] private StatisticType _statisticIndex;
     [ObservableProperty] private AppConfig _appConfig;
     [ObservableProperty] private TimeSpan _battleDuration;
+    [ObservableProperty] private bool _isHistoryMode;
+    [ObservableProperty] private string _historyModeLabel = string.Empty;
+    [ObservableProperty] private bool _isShowingLastBattle;
+    [ObservableProperty] private string _battleStatusLabel = string.Empty;
+    private Dictionary<long, PlayerInfo>? _historicalPlayerInfos;
+    private Dictionary<long, DpsData>? _historicalDpsData;
+    private Dictionary<long, PlayerInfo>? _snapshotPlayerInfos;
+    private Dictionary<long, DpsData>? _snapshotDpsData;
+    private TimeSpan _snapshotBattleDuration;
 
     /// <inheritdoc/>
     public DpsStatisticsViewModel(IApplicationControlService appControlService,
@@ -189,6 +198,8 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         _sectionStartElapsed = TimeSpan.Zero;
         _awaitingSectionStart = false;
         _lastSectionElapsed = TimeSpan.Zero;
+        IsShowingLastBattle = false;
+        BattleStatusLabel = string.Empty;
 
         // Clear current UI data for all statistic types and rebuild from the new section snapshot
         foreach (var subVm in StatisticData.Values)
@@ -265,6 +276,12 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
             return;
         }
 
+        // Don't update UI if we're viewing history
+        if (IsHistoryMode)
+        {
+            return;
+        }
+
         var dpsList = ScopeTime == ScopeTime.Total
             ? _storage.ReadOnlyFullDpsDataList
             : _storage.ReadOnlySectionedDpsDataList;
@@ -286,6 +303,8 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
             _sectionStartElapsed = _timer.Elapsed;
             _lastSectionElapsed = TimeSpan.Zero;
             _awaitingSectionStart = false;
+            IsShowingLastBattle = false;
+            BattleStatusLabel = string.Empty;
         }
 
         UpdateData(dpsList);
@@ -531,6 +550,106 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         _appControlService.Shutdown();
     }
 
+    [RelayCommand]
+    private void OpenEncounterHistory()
+    {
+        var historyWindow = new Views.EncounterHistoryView
+        {
+            Owner = _windowManagement.DpsStatisticsView,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner
+        };
+
+        var viewModel = new EncounterHistoryViewModel();
+        historyWindow.DataContext = viewModel;
+
+        // Handle RequestClose event
+        viewModel.RequestClose += () =>
+        {
+            historyWindow.Close();
+        };
+
+        // Handle LoadEncounterRequested event
+        viewModel.LoadEncounterRequested += async (encounterData) =>
+        {
+            _logger.LogInformation("Loading encounter: {EncounterId}", encounterData.EncounterId);
+            await LoadHistoricalEncounterAsync(encounterData);
+        };
+
+        historyWindow.Show();
+    }
+
+    private async Task LoadHistoricalEncounterAsync(Core.Data.Database.EncounterData encounterData)
+    {
+        try
+        {
+            _logger.LogInformation("Loading historical encounter: {EncounterId} from {StartTime}",
+                encounterData.EncounterId, encounterData.StartTime);
+
+            // Create PlayerInfo dictionary
+            _historicalPlayerInfos = new Dictionary<long, PlayerInfo>();
+            _historicalDpsData = new Dictionary<long, DpsData>();
+
+            foreach (var playerStats in encounterData.PlayerStats.Values)
+            {
+                // Create PlayerInfo using factory method
+                var playerInfo = Core.Data.Database.EncounterService.CreatePlayerInfoFromEncounter(playerStats);
+                _historicalPlayerInfos[playerStats.UID] = playerInfo;
+
+                // Create DpsData using factory method
+                var dpsData = Core.Data.Database.EncounterService.CreateDpsDataFromEncounter(playerStats, encounterData.DurationMs);
+                _historicalDpsData[playerStats.UID] = dpsData;
+            }
+
+            // Update UI on dispatcher thread
+            await _dispatcher.InvokeAsync(() =>
+            {
+                IsHistoryMode = true;
+                HistoryModeLabel = $"History: {encounterData.StartTime:yyyy-MM-dd HH:mm:ss}";
+                BattleDuration = TimeSpan.FromMilliseconds(encounterData.DurationMs);
+
+                // Update all statistic sub-viewmodels with historical data
+                foreach (var subViewModel in StatisticData.Values)
+                {
+                    subViewModel.UpdateHistoricalData(_historicalDpsData, _historicalPlayerInfos);
+                }
+
+                _logger.LogInformation("Historical encounter loaded successfully");
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to load historical encounter");
+            await _dispatcher.InvokeAsync(() =>
+            {
+                MessageBox.Show($"Failed to load encounter: {ex.Message}",
+                    "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            });
+        }
+    }
+
+    [RelayCommand]
+    private void ReturnToLive()
+    {
+        if (!IsHistoryMode) return;
+
+        _logger.LogInformation("Returning to live mode");
+
+        IsHistoryMode = false;
+        HistoryModeLabel = string.Empty;
+        _historicalPlayerInfos = null;
+        _historicalDpsData = null;
+
+        // Check if we're showing last battle data
+        if (_awaitingSectionStart)
+        {
+            IsShowingLastBattle = true;
+            BattleStatusLabel = "Last Battle";
+        }
+
+        // Trigger a refresh to show current data
+        Refresh();
+    }
+
     private void EnsureDurationTimerStarted()
     {
         if (_durationTimer != null) return;
@@ -585,6 +704,8 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
             // Freeze current section duration and await first datapoint of the new section
             _lastSectionElapsed = _timer.IsRunning ? (_timer.Elapsed - _sectionStartElapsed) : TimeSpan.Zero;
             _awaitingSectionStart = true;
+            IsShowingLastBattle = true;
+            BattleStatusLabel = "Last Battle";
             UpdateBattleDuration();
 
             // Do NOT clear current UI data here; wait until data for the new section arrives

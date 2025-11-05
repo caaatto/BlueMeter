@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using BlueMeter.Core.Data.Models;
 using BlueMeter.Core.Data.Models.Database;
 using BlueMeter.Core.Models;
+using BlueMeter.Core.Extends.Data;
 
 namespace BlueMeter.Core.Data.Database;
 
@@ -184,8 +185,7 @@ public class EncounterService
             Critical = player.Critical,
             Lucky = player.Lucky,
             MaxHP = player.MaxHP,
-            HP = player.MaxHP,
-            IsNpc = player.IsNpc
+            HP = player.MaxHP
         };
     }
 
@@ -209,6 +209,68 @@ public class EncounterService
         var repository = new EncounterRepository(context);
 
         await repository.CleanupOldEncountersAsync(keepCount);
+    }
+
+    /// <summary>
+    /// Creates a PlayerInfo object from PlayerEncounterData (for history loading)
+    /// </summary>
+    public static PlayerInfo CreatePlayerInfoFromEncounter(PlayerEncounterData playerData)
+    {
+        return new PlayerInfo
+        {
+            UID = playerData.UID,
+            Name = playerData.Name,
+            ProfessionID = playerData.Class.GetProfessionID(),
+            Spec = playerData.Spec,
+            CombatPower = playerData.CombatPower,
+            Level = playerData.Level
+        };
+    }
+
+    /// <summary>
+    /// Creates a DpsData object from PlayerEncounterData (for history loading)
+    /// </summary>
+    public static DpsData CreateDpsDataFromEncounter(PlayerEncounterData playerData, long durationMs)
+    {
+        var dpsData = new DpsData
+        {
+            UID = playerData.UID,
+            TotalAttackDamage = playerData.TotalAttackDamage,
+            TotalTakenDamage = playerData.TotalTakenDamage,
+            TotalHeal = playerData.TotalHeal,
+            IsNpcData = playerData.IsNpcData,
+            LastLoggedTick = durationMs,
+            StartLoggedTick = 0
+        };
+
+        // Parse skill data from JSON
+        if (!string.IsNullOrEmpty(playerData.SkillDataJson))
+        {
+            try
+            {
+                var skillDataDict = Newtonsoft.Json.JsonConvert.DeserializeObject<Dictionary<long, SkillData>>(playerData.SkillDataJson);
+                if (skillDataDict != null)
+                {
+                    foreach (var kvp in skillDataDict)
+                    {
+                        dpsData.UpdateSkillData(kvp.Key, skillData =>
+                        {
+                            skillData.SkillId = kvp.Value.SkillId;
+                            skillData.TotalValue = kvp.Value.TotalValue;
+                            skillData.UseTimes = kvp.Value.UseTimes;
+                            skillData.CritTimes = kvp.Value.CritTimes;
+                            skillData.LuckyTimes = kvp.Value.LuckyTimes;
+                        });
+                    }
+                }
+            }
+            catch
+            {
+                // Ignore JSON deserialization errors
+            }
+        }
+
+        return dpsData;
     }
 }
 

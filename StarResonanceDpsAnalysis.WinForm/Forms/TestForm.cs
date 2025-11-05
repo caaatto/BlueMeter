@@ -25,13 +25,13 @@ namespace StarResonanceDpsAnalysis.WinForm.Forms
         List<ProgressBarData> data = [];
         List<Image> images =
         [
-            HandledAssets.冰魔导师,
-            HandledAssets.巨刃守护者,
-            HandledAssets.森语者,
-            HandledAssets.灵魂乐手,
-            HandledAssets.神射手,
-            HandledAssets.雷影剑士,
-            HandledAssets.青岚骑士
+            HandledAssets.FrostMage,
+            HandledAssets.HeavyGuardian,
+            HandledAssets.VerdantOracle,
+            HandledAssets.SoulMusician,
+            HandledAssets.Marksman,
+            HandledAssets.Stormblade,
+            HandledAssets.WindKnight
         ];
         Random rd = new();
 
@@ -46,8 +46,8 @@ namespace StarResonanceDpsAnalysis.WinForm.Forms
             sortedProgressBarList1.OrderFont = new Font("平方韶华体", 24f, FontStyle.Bold, GraphicsUnit.Pixel);
             sortedProgressBarList1.OrderImages =
             [
-                HandledAssets.皇冠,
-                HandledAssets.皇冠白
+                HandledAssets.Crown,
+                HandledAssets.Crown_White
             ];
             sortedProgressBarList1.OrderImageOffset = new RenderContent.ContentOffset { X = 10, Y = 0 };
             //sortedProgressBarList1.OrderImageRenderSize = new Size(32, 32);

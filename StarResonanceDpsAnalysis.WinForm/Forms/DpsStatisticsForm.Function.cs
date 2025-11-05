@@ -139,7 +139,7 @@ namespace StarResonanceDpsAnalysis.WinForm.Forms
             sortedProgressBarList_MainList.OrderImageRenderSize = new Size(22, 22);
             sortedProgressBarList_MainList.OrderOffset = new RenderContent.ContentOffset { X = 32, Y = 0 };
             sortedProgressBarList_MainList.OrderCallback = (i) => $"{i:d2}.";
-            sortedProgressBarList_MainList.OrderImages = [HandledAssets.皇冠];
+            sortedProgressBarList_MainList.OrderImages = [HandledAssets.Crown];
 
 
             sortedProgressBarList_MainList.OrderColor =

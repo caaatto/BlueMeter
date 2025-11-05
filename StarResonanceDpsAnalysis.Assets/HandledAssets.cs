@@ -347,290 +347,290 @@ namespace StarResonanceDpsAnalysis.Assets
         public static string UserUid => Resources.userUid;
         #endregion
 
-        #region 伤害
-        private static Image? _伤害;
-        public static Image 伤害
+        #region Damage
+        private static Image? _damage;
+        public static Image Damage
         {
             get
             {
-                _伤害 ??= new Bitmap(new MemoryStream(Resources.伤害));
-                return _伤害;
+                _damage ??= new Bitmap(new MemoryStream(Resources.Damage));
+                return _damage;
             }
         }
         #endregion
 
-        #region 伤害白色
-        private static Image? _伤害白色;
-        public static Image 伤害白色
+        #region Damage_White
+        private static Image? _damageWhite;
+        public static Image Damage_White
         {
             get
             {
-                _伤害白色 ??= new Bitmap(new MemoryStream(Resources.伤害白色));
-                return _伤害白色;
+                _damageWhite ??= new Bitmap(new MemoryStream(Resources.Damage_White));
+                return _damageWhite;
             }
         }
         #endregion
 
-        #region 冰魔导师
-        private static Image? _冰魔导师;
-        public static Image 冰魔导师
+        #region FrostMage
+        private static Image? _frostMage;
+        public static Image FrostMage
         {
             get
             {
-                _冰魔导师 ??= new Bitmap(new MemoryStream(Resources.冰魔导师));
-                return _冰魔导师;
+                _frostMage ??= new Bitmap(new MemoryStream(Resources.FrostMage));
+                return _frostMage;
             }
         }
         #endregion
 
-        #region 冰魔导师_Opacity10
-        private static Image? _冰魔导师_Opacity10;
-        public static Image 冰魔导师_Opacity10
+        #region FrostMage_Opacity10
+        private static Image? _frostMageOpacity10;
+        public static Image FrostMage_Opacity10
         {
             get
             {
-                _冰魔导师_Opacity10 ??= new Bitmap(new MemoryStream(Resources.冰魔导师_Opacity10));
-                return _冰魔导师_Opacity10;
+                _frostMageOpacity10 ??= new Bitmap(new MemoryStream(Resources.FrostMage_Opacity10));
+                return _frostMageOpacity10;
             }
         }
         #endregion
 
-        #region 巨刃守护者
-        private static Image? _巨刃守护者;
-        public static Image 巨刃守护者
+        #region HeavyGuardian
+        private static Image? _heavyGuardian;
+        public static Image HeavyGuardian
         {
             get
             {
-                _巨刃守护者 ??= new Bitmap(new MemoryStream(Resources.巨刃守护者));
-                return _巨刃守护者;
+                _heavyGuardian ??= new Bitmap(new MemoryStream(Resources.HeavyGuardian));
+                return _heavyGuardian;
             }
         }
         #endregion
 
-        #region 巨刃守护者_Opacity10
-        private static Image? _巨刃守护者_Opacity10;
-        public static Image 巨刃守护者_Opacity10
+        #region HeavyGuardian_Opacity10
+        private static Image? _heavyGuardianOpacity10;
+        public static Image HeavyGuardian_Opacity10
         {
             get
             {
-                _巨刃守护者_Opacity10 ??= new Bitmap(new MemoryStream(Resources.巨刃守护者_Opacity10));
-                return _巨刃守护者_Opacity10;
+                _heavyGuardianOpacity10 ??= new Bitmap(new MemoryStream(Resources.HeavyGuardian_Opacity10));
+                return _heavyGuardianOpacity10;
             }
         }
         #endregion
 
-        #region 承伤
-        private static Image? _承伤;
-        public static Image 承伤
+        #region DamageTaken
+        private static Image? _damageTaken;
+        public static Image DamageTaken
         {
             get
             {
-                _承伤 ??= new Bitmap(new MemoryStream(Resources.承伤));
-                return _承伤;
+                _damageTaken ??= new Bitmap(new MemoryStream(Resources.DamageTaken));
+                return _damageTaken;
             }
         }
         #endregion
 
-        #region 承伤白色
-        private static Image? _承伤白色;
-        public static Image 承伤白色
+        #region DamageTaken_White
+        private static Image? _damageTakenWhite;
+        public static Image DamageTaken_White
         {
             get
             {
-                _承伤白色 ??= new Bitmap(new MemoryStream(Resources.承伤白色));
-                return _承伤白色;
+                _damageTakenWhite ??= new Bitmap(new MemoryStream(Resources.DamageTaken_White));
+                return _damageTakenWhite;
             }
         }
         #endregion
 
-        #region 森语者
-        private static Image? _森语者;
-        public static Image 森语者
+        #region VerdantOracle
+        private static Image? _verdantOracle;
+        public static Image VerdantOracle
         {
             get
             {
-                _森语者 ??= new Bitmap(new MemoryStream(Resources.森语者));
-                return _森语者;
+                _verdantOracle ??= new Bitmap(new MemoryStream(Resources.VerdantOracle));
+                return _verdantOracle;
             }
         }
         #endregion
 
-        #region 森语者_Opacity10
-        private static Image? _森语者_Opacity10;
-        public static Image 森语者_Opacity10
+        #region VerdantOracle_Opacity10
+        private static Image? _verdantOracleOpacity10;
+        public static Image VerdantOracle_Opacity10
         {
             get
             {
-                _森语者_Opacity10 ??= new Bitmap(new MemoryStream(Resources.森语者_Opacity10));
-                return _森语者_Opacity10;
+                _verdantOracleOpacity10 ??= new Bitmap(new MemoryStream(Resources.VerdantOracle_Opacity10));
+                return _verdantOracleOpacity10;
             }
         }
         #endregion
 
-        #region 治疗
-        private static Image? _治疗;
-        public static Image 治疗
+        #region Healing
+        private static Image? _healing;
+        public static Image Healing
         {
             get
             {
-                _治疗 ??= new Bitmap(new MemoryStream(Resources.治疗));
-                return _治疗;
+                _healing ??= new Bitmap(new MemoryStream(Resources.Healing));
+                return _healing;
             }
         }
         #endregion
 
-        #region 治疗白色
-        private static Image? _治疗白色;
-        public static Image 治疗白色
+        #region Healing_White
+        private static Image? _healingWhite;
+        public static Image Healing_White
         {
             get
             {
-                _治疗白色 ??= new Bitmap(new MemoryStream(Resources.治疗白色));
-                return _治疗白色;
+                _healingWhite ??= new Bitmap(new MemoryStream(Resources.Healing_White));
+                return _healingWhite;
             }
         }
         #endregion
 
-        #region 灵魂乐手
-        private static Image? _灵魂乐手;
-        public static Image 灵魂乐手
+        #region SoulMusician
+        private static Image? _soulMusician;
+        public static Image SoulMusician
         {
             get
             {
-                _灵魂乐手 ??= new Bitmap(new MemoryStream(Resources.灵魂乐手));
-                return _灵魂乐手;
+                _soulMusician ??= new Bitmap(new MemoryStream(Resources.SoulMusician));
+                return _soulMusician;
             }
         }
         #endregion
 
-        #region 灵魂乐手_Opacity10
-        private static Image? _灵魂乐手_Opacity10;
-        public static Image 灵魂乐手_Opacity10
+        #region SoulMusician_Opacity10
+        private static Image? _soulMusicianOpacity10;
+        public static Image SoulMusician_Opacity10
         {
             get
             {
-                _灵魂乐手_Opacity10 ??= new Bitmap(new MemoryStream(Resources.灵魂乐手_Opacity10));
-                return _灵魂乐手_Opacity10;
+                _soulMusicianOpacity10 ??= new Bitmap(new MemoryStream(Resources.SoulMusician_Opacity10));
+                return _soulMusicianOpacity10;
             }
         }
         #endregion
 
-        #region 皇冠
-        private static Image? _皇冠;
-        public static Image 皇冠
+        #region Crown
+        private static Image? _crown;
+        public static Image Crown
         {
             get
             {
-                _皇冠 ??= new Bitmap(new MemoryStream(Resources.皇冠));
-                return _皇冠;
+                _crown ??= new Bitmap(new MemoryStream(Resources.Crown));
+                return _crown;
             }
         }
         #endregion
 
-        #region 皇冠白
-        private static Image? _皇冠白;
-        public static Image 皇冠白
+        #region Crown_White
+        private static Image? _crownWhite;
+        public static Image Crown_White
         {
             get
             {
-                _皇冠白 ??= new Bitmap(new MemoryStream(Resources.皇冠白));
-                return _皇冠白;
+                _crownWhite ??= new Bitmap(new MemoryStream(Resources.Crown_White));
+                return _crownWhite;
             }
         }
         #endregion
 
-        #region 神射手
-        private static Image? _神射手;
-        public static Image 神射手
+        #region Marksman
+        private static Image? _marksman;
+        public static Image Marksman
         {
             get
             {
-                _神射手 ??= new Bitmap(new MemoryStream(Resources.神射手));
-                return _神射手;
+                _marksman ??= new Bitmap(new MemoryStream(Resources.Marksman));
+                return _marksman;
             }
         }
         #endregion
 
-        #region 神射手_Opacity10
-        private static Image? _神射手_Opacity10;
-        public static Image 神射手_Opacity10
+        #region Marksman_Opacity10
+        private static Image? _marksmanOpacity10;
+        public static Image Marksman_Opacity10
         {
             get
             {
-                _神射手_Opacity10 ??= new Bitmap(new MemoryStream(Resources.神射手_Opacity10));
-                return _神射手_Opacity10;
+                _marksmanOpacity10 ??= new Bitmap(new MemoryStream(Resources.Marksman_Opacity10));
+                return _marksmanOpacity10;
             }
         }
         #endregion
 
-        #region 神盾骑士
-        private static Image? _神盾骑士;
-        public static Image 神盾骑士
+        #region ShieldKnight
+        private static Image? _shieldKnight;
+        public static Image ShieldKnight
         {
             get
             {
-                _神盾骑士 ??= new Bitmap(new MemoryStream(Resources.神盾骑士));
-                return _神盾骑士;
+                _shieldKnight ??= new Bitmap(new MemoryStream(Resources.ShieldKnight));
+                return _shieldKnight;
             }
         }
         #endregion
 
-        #region 神盾骑士_Opacity10
-        private static Image? _神盾骑士_Opacity10;
-        public static Image 神盾骑士_Opacity10
+        #region ShieldKnight_Opacity10
+        private static Image? _shieldKnightOpacity10;
+        public static Image ShieldKnight_Opacity10
         {
             get
             {
-                _神盾骑士_Opacity10 ??= new Bitmap(new MemoryStream(Resources.神盾骑士_Opacity10));
-                return _神盾骑士_Opacity10;
+                _shieldKnightOpacity10 ??= new Bitmap(new MemoryStream(Resources.ShieldKnight_Opacity10));
+                return _shieldKnightOpacity10;
             }
         }
         #endregion
 
-        #region 雷影剑士
-        private static Image? _雷影剑士;
-        public static Image 雷影剑士
+        #region Stormblade
+        private static Image? _stormblade;
+        public static Image Stormblade
         {
             get
             {
-                _雷影剑士 ??= new Bitmap(new MemoryStream(Resources.雷影剑士));
-                return _雷影剑士;
+                _stormblade ??= new Bitmap(new MemoryStream(Resources.Stormblade));
+                return _stormblade;
             }
         }
         #endregion
 
-        #region 雷影剑士_Opacity10
-        private static Image? _雷影剑士_Opacity10;
-        public static Image 雷影剑士_Opacity10
+        #region Stormblade_Opacity10
+        private static Image? _stormbladeOpacity10;
+        public static Image Stormblade_Opacity10
         {
             get
             {
-                _雷影剑士_Opacity10 ??= new Bitmap(new MemoryStream(Resources.雷影剑士_Opacity10));
-                return _雷影剑士_Opacity10;
+                _stormbladeOpacity10 ??= new Bitmap(new MemoryStream(Resources.Stormblade_Opacity10));
+                return _stormbladeOpacity10;
             }
         }
         #endregion
 
-        #region 青岚骑士
-        private static Image? _青岚骑士;
-        public static Image 青岚骑士
+        #region WindKnight
+        private static Image? _windKnight;
+        public static Image WindKnight
         {
             get
             {
-                _青岚骑士 ??= new Bitmap(new MemoryStream(Resources.青岚骑士));
-                return _青岚骑士;
+                _windKnight ??= new Bitmap(new MemoryStream(Resources.WindKnight));
+                return _windKnight;
             }
         }
         #endregion
 
-        #region 青岚骑士_Opacity10
-        private static Image? _青岚骑士_Opacity10;
-        public static Image 青岚骑士_Opacity10
+        #region WindKnight_Opacity10
+        private static Image? _windKnightOpacity10;
+        public static Image WindKnight_Opacity10
         {
             get
             {
-                _青岚骑士_Opacity10 ??= new Bitmap(new MemoryStream(Resources.青岚骑士_Opacity10));
-                return _青岚骑士_Opacity10;
+                _windKnightOpacity10 ??= new Bitmap(new MemoryStream(Resources.WindKnight_Opacity10));
+                return _windKnightOpacity10;
             }
         }
         #endregion  

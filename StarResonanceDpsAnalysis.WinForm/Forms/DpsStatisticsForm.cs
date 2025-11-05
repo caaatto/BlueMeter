@@ -556,9 +556,9 @@ namespace StarResonanceDpsAnalysis.WinForm.Forms
             panel_Footer.Back = ColorTranslator.FromHtml("#F5F5F5");
             panel_ModeBox.Back = ColorTranslator.FromHtml("#F5F5F5");
 
-            button_TotalDamage.Icon = HandledAssets.伤害;
-            button_TotalTreatment.Icon = HandledAssets.治疗;
-            button_AlwaysInjured.Icon = HandledAssets.承伤;
+            button_TotalDamage.Icon = HandledAssets.Damage;
+            button_TotalTreatment.Icon = HandledAssets.Healing;
+            button_AlwaysInjured.Icon = HandledAssets.DamageTaken;
             button_NpcTakeDamage.Icon = HandledAssets.Npc;
 
             foreach (var item in _stasticsTypeButtons)
@@ -577,9 +577,9 @@ namespace StarResonanceDpsAnalysis.WinForm.Forms
             panel_Footer.Back = ColorTranslator.FromHtml("#252527");
             panel_ModeBox.Back = ColorTranslator.FromHtml("#252527");
 
-            button_TotalDamage.Icon = HandledAssets.伤害白色;
-            button_TotalTreatment.Icon = HandledAssets.治疗白色;
-            button_AlwaysInjured.Icon = HandledAssets.承伤白色;
+            button_TotalDamage.Icon = HandledAssets.Damage_White;
+            button_TotalTreatment.Icon = HandledAssets.Healing_White;
+            button_AlwaysInjured.Icon = HandledAssets.DamageTaken_White;
             button_NpcTakeDamage.Icon = HandledAssets.NpcWhite;
 
             foreach (var item in _stasticsTypeButtons)

@@ -83,37 +83,37 @@ namespace StarResonanceDpsAnalysis.WinForm.Extends
 
         private static Dictionary<string, Image> ProfessionImageDict = new()
         {
-            { "神射手", HandledAssets.神射手 },
-            { "狼弓",  HandledAssets.神射手 },
-            { "鹰弓",  HandledAssets.神射手 },
+            { "神射手", HandledAssets.Marksman },
+            { "狼弓",  HandledAssets.Marksman },
+            { "鹰弓",  HandledAssets.Marksman },
 
-            { "森语者", HandledAssets.森语者 },
-            { "惩戒",  HandledAssets.森语者 },
-            { "愈合",  HandledAssets.森语者 },
+            { "森语者", HandledAssets.VerdantOracle },
+            { "惩戒",  HandledAssets.VerdantOracle },
+            { "愈合",  HandledAssets.VerdantOracle },
 
-            { "雷影剑士", HandledAssets.雷影剑士 },
-            { "居合",  HandledAssets.雷影剑士 },
-            { "月刃",  HandledAssets.雷影剑士 },
+            { "雷影剑士", HandledAssets.Stormblade },
+            { "居合",  HandledAssets.Stormblade },
+            { "月刃",  HandledAssets.Stormblade },
 
-            { "冰魔导师", HandledAssets.冰魔导师 },
-            { "冰矛",  HandledAssets.冰魔导师 },
-            { "射线",  HandledAssets.冰魔导师 },
+            { "冰魔导师", HandledAssets.FrostMage },
+            { "冰矛",  HandledAssets.FrostMage },
+            { "射线",  HandledAssets.FrostMage },
 
-            { "青岚骑士", HandledAssets.青岚骑士 },
-            { "重装",  HandledAssets.青岚骑士 },
-            { "空枪",  HandledAssets.青岚骑士 },
+            { "青岚骑士", HandledAssets.WindKnight },
+            { "重装",  HandledAssets.WindKnight },
+            { "空枪",  HandledAssets.WindKnight },
 
-            { "巨刃守护者", HandledAssets.巨刃守护者 },
-            { "岩盾",  HandledAssets.巨刃守护者 },
-            { "格挡",  HandledAssets.巨刃守护者 },
+            { "巨刃守护者", HandledAssets.HeavyGuardian },
+            { "岩盾",  HandledAssets.HeavyGuardian },
+            { "格挡",  HandledAssets.HeavyGuardian },
 
-            { "神盾骑士", HandledAssets.神盾骑士 },
-            { "防盾",  HandledAssets.神盾骑士 },
-            { "光盾",  HandledAssets.神盾骑士 },
+            { "神盾骑士", HandledAssets.ShieldKnight },
+            { "防盾",  HandledAssets.ShieldKnight },
+            { "光盾",  HandledAssets.ShieldKnight },
 
-            { "灵魂乐手", HandledAssets.灵魂乐手 },
-            { "协奏",  HandledAssets.灵魂乐手 },
-            { "狂音",  HandledAssets.灵魂乐手 },
+            { "灵魂乐手", HandledAssets.SoulMusician },
+            { "协奏",  HandledAssets.SoulMusician },
+            { "狂音",  HandledAssets.SoulMusician },
         };
 
         private static Bitmap? _emptyBitmap;

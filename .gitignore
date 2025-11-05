@@ -367,3 +367,6 @@ FodyWeavers.xsd
 /StarResonanceDpsAnalysis/Properties/PublishProfiles/
 /StarResonanceDpsAnalysis.Core/Protobuf/BlueProtobuf.proto
 /AGENTS.md
+
+# Claude Code
+.claude/

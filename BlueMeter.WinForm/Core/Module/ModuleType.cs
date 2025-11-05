@@ -55,7 +55,7 @@ namespace BlueMeter.WinForm.Core.Module
     /// <summary>模组信息（与 Python 对齐：Uuid 为 string）</summary>
     public class ModuleInfo
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public int ConfigId { get; set; }
         public long Uuid { get; set; }   // Python 是字符串，这里也保持一致
         public int Quality { get; set; }
@@ -65,7 +65,7 @@ namespace BlueMeter.WinForm.Core.Module
     public class ModulePart
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public int Value { get; set; }
     }
 

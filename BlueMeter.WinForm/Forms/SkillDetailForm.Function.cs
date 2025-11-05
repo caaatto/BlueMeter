@@ -55,7 +55,7 @@ namespace BlueMeter.WinForm.Control
         #endregion
 
         #region 私有小工具（为了替换 Linq，全部用最朴素写法）
-        private SkillData FindRowBySkillId(long skillId)
+        private SkillData? FindRowBySkillId(long skillId)
         {
             for (int i = 0; i < SkillTableDatas.SkillTable.Count; i++)
             {

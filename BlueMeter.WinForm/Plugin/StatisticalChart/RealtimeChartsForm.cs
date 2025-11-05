@@ -12,27 +12,27 @@ namespace BlueMeter.WinForm.Forms
     /// </summary>
     public partial class RealtimeChartsForm : BorderlessForm
     {
-        private Tabs _tabControl;
-        private FlatLineChart _dpsTrendChart;
-        private FlatPieChart _skillPieChart;
-        private FlatBarChart _teamDpsChart;
-        private FlatScatterChart _multiDimensionChart;
-        private FlatBarChart _damageTypeChart;
-        private Dropdown _playerSelector;
+        private Tabs? _tabControl;
+        private FlatLineChart? _dpsTrendChart;
+        private FlatPieChart? _skillPieChart;
+        private FlatBarChart? _teamDpsChart;
+        private FlatScatterChart? _multiDimensionChart;
+        private FlatBarChart? _damageTypeChart;
+        private Dropdown? _playerSelector;
 
         // 控制按钮
-        private AntdUI.Button _refreshButton;
-        private AntdUI.Button _closeButton;
-        private AntdUI.Button _autoRefreshToggle;
+        private AntdUI.Button? _refreshButton;
+        private AntdUI.Button? _closeButton;
+        private AntdUI.Button? _autoRefreshToggle;
 
         // 自动刷新相关
-        private System.Windows.Forms.Timer _autoRefreshTimer;
+        private System.Windows.Forms.Timer? _autoRefreshTimer;
         private bool _autoRefreshEnabled = false;
 
         // 窗体拖动相关
         private bool _isDragging = false;
         private Point _dragStartPoint;
-        private SystemPanel _draggablePanel;
+        private SystemPanel? _draggablePanel;
 
         public RealtimeChartsForm()
         {

@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="App_Name" xml:space="preserve">
-    <value>StarResonance ToolBox</value>
+    <value>BlueMeter</value>
   </data>
   <data name="Menu_Settings" xml:space="preserve">
     <value>Settings</value>
@@ -307,7 +307,7 @@
     <value>This project is open source at</value>
   </data>
   <data name="About_OpenSource_RepositoryUrl" xml:space="preserve">
-    <value>https://github.com/anying1073/StarResonanceDps</value>
+    <value>https://github.com/caaatto/BlueMeter</value>
   </data>
   <data name="About_OpenSource_Suffix" xml:space="preserve">
     <value>, If you encounter any issues, please open an issue there.</value>
@@ -334,7 +334,7 @@
     <value>for supporting and inspiring this project.</value>
   </data>
   <data name="About_Copyright" xml:space="preserve">
-    <value>Copyright (C) 2025 anying1073/StarResonanceDps Team.</value>
+    <value>Copyright (C) 2025 BlueMeter.</value>
   </data>
   <data name="About_PoweredBy" xml:space="preserve">
     <value>Powered by .NET 8, Licensed under the GNU AGPL v3.</value>
@@ -463,7 +463,7 @@
     <value>Debug utilities</value>
   </data>
   <data name="MainView_Header_Title" xml:space="preserve">
-    <value>StarResonance ToolBox</value>
+    <value>BlueMeter</value>
   </data>
   <data name="MainView_PluginList_Title" xml:space="preserve">
     <value>Plugins</value>
@@ -481,7 +481,7 @@
     <value>Author:</value>
   </data>
   <data name="MainView_Plugin_Author_OfficialTeam" xml:space="preserve">
-    <value>[Official] StarResonanceToolBox Team</value>
+    <value>[Official] BlueMeter Team</value>
   </data>
   <data name="MainView_Plugin_AutoStart" xml:space="preserve">
     <value>Auto start</value>
@@ -888,6 +888,9 @@
   </data>
   <data name="Settings_Theme_SelectImage" xml:space="preserve">
     <value>Select Image...</value>
+  </data>
+  <data name="Settings_Theme_ShowBackgroundInDpsMeter" xml:space="preserve">
+    <value>Show Background in DPS Meter</value>
   </data>
   <data name="Settings_CancelConfirm_Title" xml:space="preserve">
     <value>Discard Changes</value>

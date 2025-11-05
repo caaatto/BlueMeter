@@ -1,37 +1,43 @@
-# 星痕共鸣工具箱
+# BlueMeter
 
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-brightgreen.svg)](https://www.gnu.org/licenses/agpl-3.0.txt)
 
-本项目关键数据抓取与分析部分基于 [StarResonanceDamageCounter](https://github.com/dmlgzs/StarResonanceDamageCounter) 项目移植而来，感谢原作者对于本项目的帮助。
+This project ports the key data capture and analysis components from [StarResonanceDamageCounter](https://github.com/dmlgzs/StarResonanceDamageCounter). Many thanks to the original author for their help and inspiration.
 
-该工具无需修改游戏客户端，不违反游戏服务条款。该工具旨在帮助玩家更好地理解战斗数据，减少无效提升，提升游戏体验。使用该工具前，请确保不会将数据结果用于战力歧视等破坏游戏社区环境的行为。
+The tool does not require modifying the game client and does not violate the game's Terms of Service. It is intended to help players better understand combat data, avoid ineffective optimizations, and improve overall gameplay. Please do not use the results to justify power-level discrimination or any behavior that harms the community.
 
-![Moe-counter](https://ipacel.cc/+/MoeCounter2/?name=StarResonanceToolBox)
+## 🚀 Quick Start
 
-## 🚀 快速开始
-
-### 前置要求
+### Prerequisites
 
 - .NET 8.0
 
-## 📄 许可证
+### Building
+
+```bash
+cd BlueMeter.WPF
+dotnet build -c Release
+dotnet run --no-build -c Release
+```
+
+## 📄 License
 
 [![AGPLv3](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](LICENSE.txt)
 
-本项目采用 [GNU AFFERO GENERAL PUBLIC LICENSE version 3](LICENSE.txt) 许可证。
+This project is licensed under the [GNU Affero General Public License v3](LICENSE.txt).
 
-使用本项目即表示您同意遵守该许可证的条款。
+By using this project, you agree to comply with the terms of the license.
 
-不欢迎某些不遵守本许可证的人。不欢迎某些修改或翻译了开源代码却做闭源、开源一更新闭源就跟进的人。
+We do not welcome individuals or projects that disregard this license, including those who modify or translate open-source code and redistribute it as closed-source, or who mirror open-source updates into closed-source derivatives.
 
-## 👥 贡献
+## 👥 Contributing
 
-欢迎提交 Issue 和 Pull Request 来改进项目！
+Issues and pull requests to improve the project are welcome!
 
-## ⭐ 支持
+## ⭐ Support
 
-如果这个项目对您有帮助，请给它一个 Star ⭐
+If this project helps you, please consider giving it a star ⭐
 
 ---
 
-**免责声明**：本工具仅用于游戏数据分析学习目的，不得用于任何违反游戏服务条款的行为。使用者需自行承担相关风险。项目开发者不对任何他人使用本工具的恶意战力歧视行为负责。请在使用前确保遵守游戏社区的相关规定和道德标准。
+**Disclaimer**: This tool is for learning and analysis of game data only. Do not use it in ways that violate the game's Terms of Service. You are solely responsible for any risks incurred. The maintainers are not responsible for any misuse of this tool to discriminate against other players. Please adhere to the rules and ethical standards of the game's community.

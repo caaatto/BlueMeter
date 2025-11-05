@@ -19,13 +19,13 @@ namespace BlueMeter.WinForm.Core.test
             SocialData? social = null;
 
             // 1) 服务器返回的社交数据
-            if (TryParse<GetSocialDataReply>(payload, out var reply) && reply.Data != null)
+            if (TryParse<GetSocialDataReply>(payload, out var reply) && reply?.Data != null)
             {
                 social = reply.Data;
                 Console.WriteLine("[SocialPrinter] 解析为 GetSocialDataReply → SocialData");
             }
             // 2) 直接推的 SocialData
-            else if (TryParse<SocialData>(payload, out var direct))
+            else if (TryParse<SocialData>(payload, out var direct) && direct != null)
             {
                 social = direct;
                 Console.WriteLine("[SocialPrinter] 解析为 SocialData");
@@ -35,7 +35,10 @@ namespace BlueMeter.WinForm.Core.test
                 return false; // 不是社交相关
             }
 
-            PrintSocial(social);
+            if (social != null)
+            {
+                PrintSocial(social);
+            }
             return true;
         }
 
@@ -108,7 +111,7 @@ namespace BlueMeter.WinForm.Core.test
                 Console.WriteLine("CohabitantIds          : " + string.Join(", ", com.CohabitantIds));
         }
 
-        private static bool TryParse<T>(byte[] payload, out T msg) where T : class, IMessage<T>, new()
+        private static bool TryParse<T>(byte[] payload, out T? msg) where T : class, IMessage<T>, new()
         {
             msg = default;
             try

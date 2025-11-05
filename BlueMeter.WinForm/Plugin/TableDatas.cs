@@ -895,14 +895,14 @@ namespace BlueMeter.WinForm.Plugin
     public class DamageReferenceSkill : NotifyProperty
     {
         #region 字段（私有存储）
-        private string name;       // 技能名称
-        private string damage;      // 技能总伤害
-        private string hitCount;      // 技能命中次数
-        private string critRate;   // 暴击率
-        private string luckyRate;  // 幸运率
-        private string avgPerHit;  // 平均值
-        private string totalDps;//秒伤
-        private string share; //百分比
+        private string? name;       // 技能名称
+        private string? damage;      // 技能总伤害
+        private string? hitCount;      // 技能命中次数
+        private string? critRate;   // 暴击率
+        private string? luckyRate;  // 幸运率
+        private string? avgPerHit;  // 平均值
+        private string? totalDps;//秒伤
+        private string? share; //百分比
         #endregion
 
         #region 构造函数

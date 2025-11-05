@@ -14,7 +14,7 @@ namespace BlueMeter.WinForm
         /// <summary>
         /// 尝试从字段中获取嵌套解码结构（即 ProtoValue.Decoded）
         /// </summary>
-        public static Dictionary<int, object>? TryGetDecoded(Dictionary<int, object> dict, int tag)
+        public static Dictionary<int, object?>? TryGetDecoded(Dictionary<int, object> dict, int tag)
         {
             if (dict.TryGetValue(tag, out var val) && val is ProtoValue pv && pv.Decoded != null)
                 return pv.Decoded;

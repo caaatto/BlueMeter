@@ -50,6 +50,8 @@
     <Window.Resources>
         <converters:DoubleNegateConverter x:Key="DoubleNegateConverter" />
         <converters:DoubleSumConverter x:Key="DoubleSumConverter" />
+        <converters:BackgroundImageConverter x:Key="BackgroundImageConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 
         <Style x:Key="StatisticTypeText" TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -323,6 +325,25 @@
                 <RowDefinition Height="Auto" />
                 <RowDefinition Height="25" />
             </Grid.RowDefinitions>
+
+            <!--  Background Image Overlay  -->
+            <Border
+                Grid.Row="0"
+                Grid.RowSpan="4"
+                CornerRadius="{StaticResource MainCornerRadius}"
+                Panel.ZIndex="0">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="{x:Null}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding AppConfig.ShowBackgroundInDpsMeter}" Value="True">
+                                <Setter Property="Background" Value="{Binding AppConfig.BackgroundImagePath, Converter={StaticResource BackgroundImageConverter}}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+
             <Border
                 Height="25"
                 VerticalAlignment="Top"

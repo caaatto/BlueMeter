@@ -96,6 +96,12 @@ public partial class AppConfig : ObservableObject
     private bool _backgroundOnlyMode = false;
 
     /// <summary>
+    /// 在DPS统计窗口中显示背景图片
+    /// </summary>
+    [ObservableProperty]
+    private bool _showBackgroundInDpsMeter = false;
+
+    /// <summary>
     /// 当前界面语言（如 zh-CN、en-US、auto）
     /// </summary>
     [ObservableProperty]

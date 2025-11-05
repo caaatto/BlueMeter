@@ -26,6 +26,8 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Resources"
     ResizeMode="CanResize"
     Style="{StaticResource TransparentWindow}"
+    TextOptions.TextFormattingMode="Display"
+    TextOptions.TextRenderingMode="ClearType"
     Topmost="{Binding AppConfig.TopmostEnabled, Mode=OneWay}"
     mc:Ignorable="d">
 
@@ -51,6 +53,8 @@
         <converters:DoubleNegateConverter x:Key="DoubleNegateConverter" />
         <converters:DoubleSumConverter x:Key="DoubleSumConverter" />
         <converters:BackgroundImageConverter x:Key="BackgroundImageConverter" />
+        <converters:ThemeColorConverter x:Key="ThemeColorConverter" />
+        <converters:ThemeColorOverlayConverter x:Key="ThemeColorOverlayConverter" />
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
 
         <Style x:Key="StatisticTypeText" TargetType="TextBlock">
@@ -316,20 +320,14 @@
         </DataTemplate>
     </Window.Resources>
 
-    <!--  半透明/圆角交给内部 Border  -->
-    <Border Style="{StaticResource ShadowWindowBorder}">
-        <Grid CacheMode="BitmapCache">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="25" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="25" />
-            </Grid.RowDefinitions>
+    <!--  Main Border: Apply theme color as base background (like MainView)  -->
+    <Border
+        Style="{StaticResource ShadowWindowBorder}"
+        Background="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeColorConverter}, FallbackValue=#1690F8}">
 
-            <!--  Background Image Overlay  -->
+        <Grid>
+            <!--  Optional Background Image Layer (on top of theme color)  -->
             <Border
-                Grid.Row="0"
-                Grid.RowSpan="4"
                 CornerRadius="{StaticResource MainCornerRadius}"
                 Panel.ZIndex="0">
                 <Border.Style>
@@ -344,10 +342,36 @@
                 </Border.Style>
             </Border>
 
+            <!--  Theme Color Filter Overlay (over background image, behind UI)  -->
+            <Border
+                CornerRadius="{StaticResource MainCornerRadius}"
+                Panel.ZIndex="1">
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background" Value="{x:Null}" />
+                        <Style.Triggers>
+                            <!-- Only show color filter when background image is active -->
+                            <DataTrigger Binding="{Binding AppConfig.ShowBackgroundInDpsMeter}" Value="True">
+                                <Setter Property="Background" Value="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeColorOverlayConverter}, ConverterParameter=0.2}" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+
+            <!--  Main Content Grid  -->
+            <Grid CacheMode="BitmapCache" Panel.ZIndex="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="25" />
+                </Grid.RowDefinitions>
+
             <Border
                 Height="25"
                 VerticalAlignment="Top"
-                Panel.ZIndex="1"
+                Panel.ZIndex="2"
                 MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Border.CornerRadius>
                     <CornerRadius
@@ -358,21 +382,12 @@
                 </Border.CornerRadius>
                 <Border.Style>
                     <Style TargetType="Border">
-                        <Setter Property="Background">
-                            <Setter.Value>
-                                <SolidColorBrush>
-                                    <SolidColorBrush.Color>
-                                        <MultiBinding Converter="{StaticResource ConditionalPercentToColorConverter}" ConverterParameter="#BABABA">
-                                            <Binding Path="AppConfig.Opacity" />
-                                            <Binding Path="AppConfig.MouseThroughEnabled" />
-                                        </MultiBinding>
-                                    </SolidColorBrush.Color>
-                                </SolidColorBrush>
-                            </Setter.Value>
-                        </Setter>
+                        <!-- Default: Light overlay to create depth while showing theme color -->
+                        <Setter Property="Background" Value="#22FFFFFF" />
                         <Style.Triggers>
+                            <!-- When background image is shown, use more transparency -->
                             <DataTrigger Binding="{Binding AppConfig.ShowBackgroundInDpsMeter}" Value="True">
-                                <Setter Property="Background" Value="#80BABABA" />
+                                <Setter Property="Background" Value="#33FFFFFF" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -631,21 +646,12 @@
             <Border Grid.Row="1">
                 <Border.Style>
                     <Style TargetType="Border">
-                        <Setter Property="Background">
-                            <Setter.Value>
-                                <SolidColorBrush>
-                                    <SolidColorBrush.Color>
-                                        <MultiBinding Converter="{StaticResource ConditionalPercentToColorConverter}" ConverterParameter="#191919">
-                                            <Binding Path="AppConfig.Opacity" />
-                                            <Binding Path="AppConfig.MouseThroughEnabled" />
-                                        </MultiBinding>
-                                    </SolidColorBrush.Color>
-                                </SolidColorBrush>
-                            </Setter.Value>
-                        </Setter>
+                        <!-- Default: Dark overlay for contrast with theme color -->
+                        <Setter Property="Background" Value="#22000000" />
                         <Style.Triggers>
+                            <!-- When background image is shown, keep some darkness for readability -->
                             <DataTrigger Binding="{Binding AppConfig.ShowBackgroundInDpsMeter}" Value="True">
-                                <Setter Property="Background" Value="#CC191919" />
+                                <Setter Property="Background" Value="#33000000" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -663,21 +669,11 @@
                 ClipToBounds="True">
                 <Border.Style>
                     <Style TargetType="Border">
-                        <Setter Property="Background">
-                            <Setter.Value>
-                                <SolidColorBrush>
-                                    <SolidColorBrush.Color>
-                                        <MultiBinding Converter="{StaticResource ConditionalPercentToColorConverter}" ConverterParameter="#191919">
-                                            <Binding Path="AppConfig.Opacity" />
-                                            <Binding Path="AppConfig.MouseThroughEnabled" />
-                                        </MultiBinding>
-                                    </SolidColorBrush.Color>
-                                </SolidColorBrush>
-                            </Setter.Value>
-                        </Setter>
+                        <!-- Default: Dark overlay matching content area -->
+                        <Setter Property="Background" Value="#22000000" />
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding AppConfig.ShowBackgroundInDpsMeter}" Value="True">
-                                <Setter Property="Background" Value="#CC191919" />
+                                <Setter Property="Background" Value="#33000000" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -728,21 +724,11 @@
                 Grid.Row="3">
                 <Border.Style>
                     <Style TargetType="Border" BasedOn="{StaticResource FooterContentBorder}">
-                        <Setter Property="Background">
-                            <Setter.Value>
-                                <SolidColorBrush>
-                                    <SolidColorBrush.Color>
-                                        <MultiBinding Converter="{StaticResource ConditionalPercentToColorConverter}" ConverterParameter="#BABABA">
-                                            <Binding Path="DataContext.AppConfig.Opacity" RelativeSource="{RelativeSource AncestorType=Window}" />
-                                            <Binding Path="DataContext.AppConfig.MouseThroughEnabled" RelativeSource="{RelativeSource AncestorType=Window}" />
-                                        </MultiBinding>
-                                    </SolidColorBrush.Color>
-                                </SolidColorBrush>
-                            </Setter.Value>
-                        </Setter>
+                        <!-- Default: Light overlay matching header -->
+                        <Setter Property="Background" Value="#22FFFFFF" />
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding DataContext.AppConfig.ShowBackgroundInDpsMeter, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
-                                <Setter Property="Background" Value="#80BABABA" />
+                                <Setter Property="Background" Value="#33FFFFFF" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -783,8 +769,9 @@
                 </Grid>
             </Border>
 
-        </Grid>
-    </Border>
+            </Grid> <!-- End of Content Grid with CacheMode -->
+        </Grid> <!-- End of Layering Grid -->
+    </Border> <!-- End of Main Border with Theme Color -->
 
 
 </Window>

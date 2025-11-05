@@ -335,7 +335,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 伤害参考.
+        ///   Looks up a localized string similar to Damage参考.
         /// </summary>
         internal static string DamageReference_Ribbon_Title {
             get {
@@ -344,7 +344,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 伤害参考.
+        ///   Looks up a localized string similar to Damage参考.
         /// </summary>
         internal static string DamageReference_Table_Title {
             get {
@@ -398,7 +398,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 伤害参考窗口.
+        ///   Looks up a localized string similar to Damage参考窗口.
         /// </summary>
         internal static string Debug_Button_DamageReference {
             get {
@@ -750,7 +750,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 伤害参考窗口.
+        ///   Looks up a localized string similar to Damage参考窗口.
         /// </summary>
         internal static string MainView_Debug_Button_DamageReference {
             get {
@@ -1160,7 +1160,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 冰魔导师.
+        ///   Looks up a localized string similar to FrostMage.
         /// </summary>
         internal static string Profession_FrostMage {
             get {
@@ -1169,7 +1169,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 巨刃守护者.
+        ///   Looks up a localized string similar to HeavyGuardian.
         /// </summary>
         internal static string Profession_HeavyGuardian {
             get {
@@ -1178,7 +1178,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 神射手.
+        ///   Looks up a localized string similar to Marksman.
         /// </summary>
         internal static string Profession_Marksman {
             get {
@@ -1187,7 +1187,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 神盾骑士.
+        ///   Looks up a localized string similar to ShieldKnight.
         /// </summary>
         internal static string Profession_ShieldKnight {
             get {
@@ -1196,7 +1196,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 灵魂乐手.
+        ///   Looks up a localized string similar to SoulMusician.
         /// </summary>
         internal static string Profession_SoulMusician {
             get {
@@ -1205,7 +1205,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 雷影剑士.
+        ///   Looks up a localized string similar to Stormblade.
         /// </summary>
         internal static string Profession_Stormblade {
             get {
@@ -1214,7 +1214,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 森语者.
+        ///   Looks up a localized string similar to VerdantOracle.
         /// </summary>
         internal static string Profession_VerdantOracle {
             get {
@@ -1223,7 +1223,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 青岚骑士.
+        ///   Looks up a localized string similar to WindKnight.
         /// </summary>
         internal static string Profession_WindKnight {
             get {
@@ -1309,7 +1309,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 伤害分布.
+        ///   Looks up a localized string similar to Damage分布.
         /// </summary>
         internal static string SkillBreakdown_Card_DamageDistribution {
             get {
@@ -1390,7 +1390,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 平均伤害.
+        ///   Looks up a localized string similar to 平均Damage.
         /// </summary>
         internal static string SkillBreakdown_Label_AverageDamage {
             get {
@@ -1408,7 +1408,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 暴击伤害.
+        ///   Looks up a localized string similar to 暴击Damage.
         /// </summary>
         internal static string SkillBreakdown_Label_CritDamage {
             get {
@@ -1462,7 +1462,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 幸运伤害.
+        ///   Looks up a localized string similar to 幸运Damage.
         /// </summary>
         internal static string SkillBreakdown_Label_LuckDamage {
             get {
@@ -1480,7 +1480,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 普通伤害.
+        ///   Looks up a localized string similar to 普通Damage.
         /// </summary>
         internal static string SkillBreakdown_Label_NormalDamage {
             get {
@@ -1489,7 +1489,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 总伤害.
+        ///   Looks up a localized string similar to 总Damage.
         /// </summary>
         internal static string SkillBreakdown_Label_TotalDamage {
             get {
@@ -1552,7 +1552,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 伤害信息.
+        ///   Looks up a localized string similar to Damage信息.
         /// </summary>
         internal static string SkillBreakdown_Section_DamageInfo {
             get {
@@ -1579,7 +1579,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 治疗.
+        ///   Looks up a localized string similar to Healing.
         /// </summary>
         internal static string SkillBreakdown_Tab_Healing {
             get {
@@ -1606,7 +1606,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 承伤.
+        ///   Looks up a localized string similar to DamageTaken.
         /// </summary>
         internal static string SkillBreakdown_Tab_Tanking {
             get {
@@ -1770,7 +1770,7 @@ namespace BlueMeter.Assets.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 伤害参考.
+        ///   Looks up a localized string similar to Damage参考.
         /// </summary>
         internal static string Window_DamageReference_Title {
             get {
@@ -1808,9 +1808,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 伤害 {
+        internal static byte[] Damage {
             get {
-                object obj = ResourceManager.GetObject("伤害", resourceCulture);
+                object obj = ResourceManager.GetObject("Damage", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1818,9 +1818,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 伤害白色 {
+        internal static byte[] Damage_White {
             get {
-                object obj = ResourceManager.GetObject("伤害白色", resourceCulture);
+                object obj = ResourceManager.GetObject("Damage_White", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1828,9 +1828,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 冰魔导师 {
+        internal static byte[] FrostMage {
             get {
-                object obj = ResourceManager.GetObject("冰魔导师", resourceCulture);
+                object obj = ResourceManager.GetObject("FrostMage", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1838,9 +1838,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 冰魔导师_Opacity10 {
+        internal static byte[] FrostMage_Opacity10 {
             get {
-                object obj = ResourceManager.GetObject("冰魔导师_Opacity10", resourceCulture);
+                object obj = ResourceManager.GetObject("FrostMage_Opacity10", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1848,9 +1848,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 巨刃守护者 {
+        internal static byte[] HeavyGuardian {
             get {
-                object obj = ResourceManager.GetObject("巨刃守护者", resourceCulture);
+                object obj = ResourceManager.GetObject("HeavyGuardian", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1858,9 +1858,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 巨刃守护者_Opacity10 {
+        internal static byte[] HeavyGuardian_Opacity10 {
             get {
-                object obj = ResourceManager.GetObject("巨刃守护者_Opacity10", resourceCulture);
+                object obj = ResourceManager.GetObject("HeavyGuardian_Opacity10", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1868,9 +1868,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 承伤 {
+        internal static byte[] DamageTaken {
             get {
-                object obj = ResourceManager.GetObject("承伤", resourceCulture);
+                object obj = ResourceManager.GetObject("DamageTaken", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1878,9 +1878,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 承伤白色 {
+        internal static byte[] DamageTaken_White {
             get {
-                object obj = ResourceManager.GetObject("承伤白色", resourceCulture);
+                object obj = ResourceManager.GetObject("DamageTaken_White", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1888,9 +1888,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 森语者 {
+        internal static byte[] VerdantOracle {
             get {
-                object obj = ResourceManager.GetObject("森语者", resourceCulture);
+                object obj = ResourceManager.GetObject("VerdantOracle", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1898,9 +1898,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 森语者_Opacity10 {
+        internal static byte[] VerdantOracle_Opacity10 {
             get {
-                object obj = ResourceManager.GetObject("森语者_Opacity10", resourceCulture);
+                object obj = ResourceManager.GetObject("VerdantOracle_Opacity10", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1908,9 +1908,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 治疗 {
+        internal static byte[] Healing {
             get {
-                object obj = ResourceManager.GetObject("治疗", resourceCulture);
+                object obj = ResourceManager.GetObject("Healing", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1918,9 +1918,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 治疗白色 {
+        internal static byte[] Healing_White {
             get {
-                object obj = ResourceManager.GetObject("治疗白色", resourceCulture);
+                object obj = ResourceManager.GetObject("Healing_White", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1928,9 +1928,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 灵魂乐手 {
+        internal static byte[] SoulMusician {
             get {
-                object obj = ResourceManager.GetObject("灵魂乐手", resourceCulture);
+                object obj = ResourceManager.GetObject("SoulMusician", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1938,9 +1938,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 灵魂乐手_Opacity10 {
+        internal static byte[] SoulMusician_Opacity10 {
             get {
-                object obj = ResourceManager.GetObject("灵魂乐手_Opacity10", resourceCulture);
+                object obj = ResourceManager.GetObject("SoulMusician_Opacity10", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1948,9 +1948,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 皇冠 {
+        internal static byte[] Crown {
             get {
-                object obj = ResourceManager.GetObject("皇冠", resourceCulture);
+                object obj = ResourceManager.GetObject("Crown", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1958,9 +1958,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 皇冠白 {
+        internal static byte[] Crown_White {
             get {
-                object obj = ResourceManager.GetObject("皇冠白", resourceCulture);
+                object obj = ResourceManager.GetObject("Crown_White", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1968,9 +1968,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 神射手 {
+        internal static byte[] Marksman {
             get {
-                object obj = ResourceManager.GetObject("神射手", resourceCulture);
+                object obj = ResourceManager.GetObject("Marksman", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1978,9 +1978,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 神射手_Opacity10 {
+        internal static byte[] Marksman_Opacity10 {
             get {
-                object obj = ResourceManager.GetObject("神射手_Opacity10", resourceCulture);
+                object obj = ResourceManager.GetObject("Marksman_Opacity10", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1988,9 +1988,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 神盾骑士 {
+        internal static byte[] ShieldKnight {
             get {
-                object obj = ResourceManager.GetObject("神盾骑士", resourceCulture);
+                object obj = ResourceManager.GetObject("ShieldKnight", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -1998,9 +1998,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 神盾骑士_Opacity10 {
+        internal static byte[] ShieldKnight_Opacity10 {
             get {
-                object obj = ResourceManager.GetObject("神盾骑士_Opacity10", resourceCulture);
+                object obj = ResourceManager.GetObject("ShieldKnight_Opacity10", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -2008,9 +2008,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 雷影剑士 {
+        internal static byte[] Stormblade {
             get {
-                object obj = ResourceManager.GetObject("雷影剑士", resourceCulture);
+                object obj = ResourceManager.GetObject("Stormblade", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -2018,9 +2018,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 雷影剑士_Opacity10 {
+        internal static byte[] Stormblade_Opacity10 {
             get {
-                object obj = ResourceManager.GetObject("雷影剑士_Opacity10", resourceCulture);
+                object obj = ResourceManager.GetObject("Stormblade_Opacity10", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -2028,9 +2028,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 青岚骑士 {
+        internal static byte[] WindKnight {
             get {
-                object obj = ResourceManager.GetObject("青岚骑士", resourceCulture);
+                object obj = ResourceManager.GetObject("WindKnight", resourceCulture);
                 return ((byte[])(obj));
             }
         }
@@ -2038,9 +2038,9 @@ namespace BlueMeter.Assets.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] 青岚骑士_Opacity10 {
+        internal static byte[] WindKnight_Opacity10 {
             get {
-                object obj = ResourceManager.GetObject("青岚骑士_Opacity10", resourceCulture);
+                object obj = ResourceManager.GetObject("WindKnight_Opacity10", resourceCulture);
                 return ((byte[])(obj));
             }
         }

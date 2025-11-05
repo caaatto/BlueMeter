@@ -1,0 +1,82 @@
+<UserControl
+    x:Class="StarResonanceDpsAnalysis.WPF.Controls.Footer"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:StarResonanceDpsAnalysis.WPF.Controls"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="Root"
+    d:DesignHeight="50"
+    d:DesignWidth="400"
+    Background="#FFF"
+    mc:Ignorable="d">
+
+    <UserControl.Template>
+        <ControlTemplate TargetType="UserControl">
+            <!--  Avoid drawing UserControl default Background (square corners)  -->
+            <ContentPresenter />
+        </ControlTemplate>
+    </UserControl.Template>
+
+    <UserControl.Resources>
+        <Style x:Key="FooterBorder" TargetType="Border">
+            <Setter Property="Background" Value="{Binding Path=Background, RelativeSource={RelativeSource AncestorType=local:Footer}}" />
+            <Setter Property="CornerRadius">
+                <Setter.Value>
+                    <CornerRadius
+                        BottomLeft="{StaticResource MainCornerRadiusDouble}"
+                        BottomRight="{StaticResource MainCornerRadiusDouble}"
+                        TopLeft="0"
+                        TopRight="0" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="FooterGrid" TargetType="Grid">
+            <Setter Property="Width" Value="100" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+
+        <Style x:Key="ControlButton" TargetType="Button">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Width" Value="30" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+    </UserControl.Resources>
+
+    <Border Style="{StaticResource FooterBorder}">
+        <Grid Style="{StaticResource FooterGrid}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+
+            <Button
+                x:Name="Confirm"
+                Grid.Column="0"
+                Click="Confirm_Click"
+                Command="{Binding ConfirmCommand, ElementName=Root}"
+                Style="{StaticResource ControlButton}">
+
+                <Button.Content>
+                    <Image Source="{StaticResource ImageOkNormal}" />
+                </Button.Content>
+            </Button>
+
+            <Button
+                x:Name="Cancel"
+                Grid.Column="1"
+                Click="Cancel_Click"
+                Command="{Binding CancelCommand, ElementName=Root}"
+                Style="{StaticResource ControlButton}">
+
+                <Button.Content>
+                    <Image Source="{StaticResource ImageCancelNormal}" />
+                </Button.Content>
+            </Button>
+        </Grid>
+    </Border>
+</UserControl>

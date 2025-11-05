@@ -1,0 +1,913 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="App_Name" xml:space="preserve">
+    <value>StarResonance ToolBox</value>
+  </data>
+  <data name="Menu_Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Menu_StatisticBoss" xml:space="preserve">
+    <value>Track Boss Only</value>
+  </data>
+  <data name="Menu_ShowTotal" xml:space="preserve">
+    <value>Show Total Damage</value>
+  </data>
+  <data name="Menu_PersonalMode" xml:space="preserve">
+    <value>Solo Mode</value>
+  </data>
+  <data name="Menu_RecordSettings" xml:space="preserve">
+    <value>Record Options</value>
+  </data>
+  <data name="Menu_Record_Always" xml:space="preserve">
+    <value>Record Every Fight</value>
+  </data>
+  <data name="Menu_Record_Skip1Min" xml:space="preserve">
+    <value>Ignore fights &lt; 1 min</value>
+  </data>
+  <data name="Menu_Record_Skip2Min" xml:space="preserve">
+    <value>Ignore fights &lt; 2 min</value>
+  </data>
+  <data name="Menu_SkillDisplay" xml:space="preserve">
+    <value>Skill Display</value>
+  </data>
+  <data name="Menu_SkillDisplay_Top5" xml:space="preserve">
+    <value>Top 5</value>
+  </data>
+  <data name="Menu_SkillDisplay_Top8" xml:space="preserve">
+    <value>Top 8</value>
+  </data>
+  <data name="Menu_SkillDisplay_Top10" xml:space="preserve">
+    <value>Top 10</value>
+  </data>
+  <data name="Menu_SkillDisplay_Top15" xml:space="preserve">
+    <value>Top 15</value>
+  </data>
+  <data name="Menu_SkillDisplay_All" xml:space="preserve">
+    <value>Show All</value>
+  </data>
+  <data name="Menu_History" xml:space="preserve">
+    <value>History</value>
+  </data>
+  <data name="Menu_Training" xml:space="preserve">
+    <value>Training Mode</value>
+  </data>
+  <data name="Menu_Training_Personal" xml:space="preserve">
+    <value>Solo Training</value>
+  </data>
+  <data name="Menu_Training_Faction" xml:space="preserve">
+    <value>Faction Training</value>
+  </data>
+  <data name="Menu_Training_Extreme" xml:space="preserve">
+    <value>Extreme Training</value>
+  </data>
+  <data name="Menu_SkillDiary" xml:space="preserve">
+    <value>Skill Diary</value>
+  </data>
+  <data name="Menu_Exit" xml:space="preserve">
+    <value>Exit</value>
+  </data>
+  <data name="Tooltip_ToggleScope" xml:space="preserve">
+    <value>Toggle: Full / Current</value>
+  </data>
+  <data name="Window_Settings_Title" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Window_DpsStatistics_Title" xml:space="preserve">
+    <value>DPS Statistics</value>
+  </data>
+  <data name="Settings_Heading" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Settings_Section_Basic_Title" xml:space="preserve">
+    <value>Basic Settings</value>
+  </data>
+  <data name="Settings_Section_Basic_Sub" xml:space="preserve">
+    <value>Adjust manually when auto detection fails</value>
+  </data>
+  <data name="Settings_Section_Shortcut_Title" xml:space="preserve">
+    <value>Shortcuts</value>
+  </data>
+  <data name="Settings_Section_Shortcut_Sub" xml:space="preserve">
+    <value>Press [Delete] to clear the selected shortcut</value>
+  </data>
+  <data name="Settings_Shortcut_MouseThrough" xml:space="preserve">
+    <value>Mouse Through</value>
+  </data>
+  <data name="Settings_Shortcut_ClearData" xml:space="preserve">
+    <value>Clear Data</value>
+  </data>
+  <data name="Settings_Shortcut_MouseThrough_Tooltip" xml:space="preserve">
+    <value>Focus this box and press a shortcut (e.g. Ctrl+F6). Press Delete to clear.</value>
+  </data>
+  <data name="Settings_Shortcut_ClearData_Tooltip" xml:space="preserve">
+    <value>Focus this box and press a shortcut (e.g. F9). Press Delete to clear.</value>
+  </data>
+  <data name="Settings_Section_Display_Title" xml:space="preserve">
+    <value>Display</value>
+  </data>
+  <data name="Settings_Section_Combat_Title" xml:space="preserve">
+    <value>Combat Settings</value>
+  </data>
+  <data name="Settings_Section_Combat_Sub" xml:space="preserve">
+    <value>[Clear data after combat] resets only the current data, not the total.</value>
+  </data>
+  <data name="Settings_NetworkAdapter_Label" xml:space="preserve">
+    <value>Capture Adapter</value>
+  </data>
+  <data name="Settings_Combat_ClearAfterBattle" xml:space="preserve">
+    <value>Clear data after combat</value>
+  </data>
+  <data name="Settings_Common_Seconds" xml:space="preserve">
+    <value>sec</value>
+  </data>
+  <data name="Settings_Combat_ClearAfterTeleport" xml:space="preserve">
+    <value>Reset on map change</value>
+  </data>
+  <data name="Settings_Switch_On" xml:space="preserve">
+    <value>On</value>
+  </data>
+  <data name="Settings_Switch_Off" xml:space="preserve">
+    <value>Off</value>
+  </data>
+  <data name="Settings_Display_NumberMode" xml:space="preserve">
+    <value>Number display mode</value>
+  </data>
+  <data name="Settings_Display_Opacity" xml:space="preserve">
+    <value>Overlay opacity</value>
+  </data>
+  <data name="Settings_Section_Language_Title" xml:space="preserve">
+    <value>Language</value>
+  </data>
+  <data name="Settings_Section_Language_Description" xml:space="preserve">
+    <value>Choose the interface language</value>
+  </data>
+  <data name="Settings_Language_Auto" xml:space="preserve">
+    <value>Follow system</value>
+  </data>
+  <data name="Settings_Language_Chinese" xml:space="preserve">
+    <value>简体中文</value>
+  </data>
+  <data name="Settings_Language_English" xml:space="preserve">
+    <value>English</value>
+  </data>
+  <data name="Settings_Language_Portuguese" xml:space="preserve">
+    <value>Português (Brasil)</value>
+  </data>
+  <data name="NumberDisplay_Wan" xml:space="preserve">
+    <value>Wan (East Asian)</value>
+  </data>
+  <data name="NumberDisplay_KMB" xml:space="preserve">
+    <value>KMBT (Western)</value>
+  </data>
+  <data name="Window_About_Title" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="About_Intro_Primary" xml:space="preserve">
+    <value>A combat data analytics tool built for Star Resonance players.</value>
+  </data>
+  <data name="About_Intro_Details" xml:space="preserve">
+    <value>This tool requires no client modifications and stays within the game's terms of service. It helps players understand combat data, reduce unnecessary effort, and improve the gameplay experience. Please do not use the results for power discrimination or any behaviour that harms the community.</value>
+  </data>
+  <data name="About_Version_Label" xml:space="preserve">
+    <value>Current version:</value>
+  </data>
+  <data name="About_Developers_Label" xml:space="preserve">
+    <value>Contributors for this release (in no particular order):</value>
+  </data>
+  <data name="About_Developer_Lead" xml:space="preserve">
+    <value>惊奇猫猫盒 (anying1073: project founder)</value>
+  </data>
+  <data name="About_Developer_RocyJune" xml:space="preserve">
+    <value>露詩（Rocy-June）</value>
+  </data>
+  <data name="About_Developer_QingLan" xml:space="preserve">
+    <value>青岚宗王腾</value>
+  </data>
+  <data name="About_Developer_Ihonliu" xml:space="preserve">
+    <value>尻鸭（ihonliu）</value>
+  </data>
+  <data name="About_OpenSource_Prefix" xml:space="preserve">
+    <value>This project is open source at</value>
+  </data>
+  <data name="About_OpenSource_RepositoryUrl" xml:space="preserve">
+    <value>https://github.com/anying1073/StarResonanceDps</value>
+  </data>
+  <data name="About_OpenSource_Suffix" xml:space="preserve">
+    <value>, If you encounter any issues, please open an issue there.</value>
+  </data>
+  <data name="About_Contribution" xml:space="preserve">
+    <value>To contribute, please fork the repository and submit a pull request.</value>
+  </data>
+  <data name="About_Community_Invite" xml:space="preserve">
+    <value>If you cannot access GitHub or want to find teammates, join the Tencent QQ groups:</value>
+  </data>
+  <data name="About_Community_GroupOne" xml:space="preserve">
+    <value>678150498 (Group 1)</value>
+  </data>
+  <data name="About_Community_GroupTwo" xml:space="preserve">
+    <value>1022797551 (Group 2)</value>
+  </data>
+  <data name="About_Thanks_Prefix" xml:space="preserve">
+    <value>Special thanks to</value>
+  </data>
+  <data name="About_Thanks_RepositoryUrl" xml:space="preserve">
+    <value>https://github.com/dmlgzs/StarResonanceDamageCounter</value>
+  </data>
+  <data name="About_Thanks_Suffix" xml:space="preserve">
+    <value>for supporting and inspiring this project.</value>
+  </data>
+  <data name="About_Copyright" xml:space="preserve">
+    <value>Copyright (C) 2025 anying1073/StarResonanceDps Team.</value>
+  </data>
+  <data name="About_PoweredBy" xml:space="preserve">
+    <value>Powered by .NET 8, Licensed under the GNU AGPL v3.</value>
+  </data>
+  <data name="Window_DamageReference_Title" xml:space="preserve">
+    <value>Damage Reference</value>
+  </data>
+  <data name="DamageReference_Header_Title" xml:space="preserve">
+    <value>Skill Breakdown</value>
+  </data>
+  <data name="DamageReference_Ribbon_Title" xml:space="preserve">
+    <value>Damage Reference</value>
+  </data>
+  <data name="DamageReference_Classes_All" xml:space="preserve">
+    <value>All Classes</value>
+  </data>
+  <data name="Classes_Stormblade" xml:space="preserve">
+    <value>Stormblade</value>
+  </data>
+  <data name="Classes_FrostMage" xml:space="preserve">
+    <value>Frost Mage</value>
+  </data>
+  <data name="Classes_WindKnight" xml:space="preserve">
+    <value>Wind Knight</value>
+  </data>
+  <data name="Classes_VerdantOracle" xml:space="preserve">
+    <value>Verdant Oracle</value>
+  </data>
+  <data name="Classes_HeavyGuardian" xml:space="preserve">
+    <value>Heavy Guardian</value>
+  </data>
+  <data name="Classes_Marksman" xml:space="preserve">
+    <value>Marksman</value>
+  </data>
+  <data name="Classes_ShieldKnight" xml:space="preserve">
+    <value>Shield Knight</value>
+  </data>
+  <data name="Classes_SoulMusician" xml:space="preserve">
+    <value>Soul Musician</value>
+  </data>
+  <data name="DamageReference_Table_Title" xml:space="preserve">
+    <value>Damage Reference</value>
+  </data>
+  <data name="DamageReference_NoData" xml:space="preserve">
+    <value>No data yet</value>
+  </data>
+  <data name="DamageReference_Disclaimer" xml:space="preserve">
+    <value>Data is for entertainment and reference only. Do not use it for power discrimination or any behaviour that harms the community; violations will result in permanent revocation.</value>
+  </data>
+  <data name="Window_Debug_Title" xml:space="preserve">
+    <value>Debug View</value>
+  </data>
+  <data name="Debug_LoadPcap" xml:space="preserve">
+    <value>Load PCAP</value>
+  </data>
+  <data name="Debug_AddSampleData" xml:space="preserve">
+    <value>AddSampleData</value>
+  </data>
+  <data name="Debug_ClearLogs" xml:space="preserve">
+    <value>Clear Logs</value>
+  </data>
+  <data name="Debug_AddTestLog" xml:space="preserve">
+    <value>Add Test Log</value>
+  </data>
+  <data name="Debug_SaveLogs" xml:space="preserve">
+    <value>Save Logs</value>
+  </data>
+  <data name="Debug_AutoScroll" xml:space="preserve">
+    <value>Auto Scroll</value>
+  </data>
+  <data name="Debug_Filter_Level" xml:space="preserve">
+    <value>Level:</value>
+  </data>
+  <data name="Debug_Filter_Label" xml:space="preserve">
+    <value>Filter:</value>
+  </data>
+  <data name="Debug_Filter_Tooltip" xml:space="preserve">
+    <value>Filter logs by message or category content</value>
+  </data>
+  <data name="Debug_Header_Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="Debug_Header_Level" xml:space="preserve">
+    <value>Level</value>
+  </data>
+  <data name="Debug_Header_Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Debug_Header_Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="Debug_Status_TotalPrefix" xml:space="preserve">
+    <value>Total: </value>
+  </data>
+  <data name="Debug_Status_TotalSuffix" xml:space="preserve">
+    <value> logs</value>
+  </data>
+  <data name="Debug_Status_FilteredPrefix" xml:space="preserve">
+    <value>Filtered: </value>
+  </data>
+  <data name="Debug_Status_FilteredSuffix" xml:space="preserve">
+    <value> logs</value>
+  </data>
+  <data name="Debug_Status_LastPrefix" xml:space="preserve">
+    <value>Last: </value>
+  </data>
+  <data name="Debug_ThemeTestText" xml:space="preserve">
+    <value>Theme switch test text</value>
+  </data>
+  <data name="Debug_Button_PcapTest" xml:space="preserve">
+    <value>Pcap Test</value>
+  </data>
+  <data name="Debug_Button_SkillBreakdown" xml:space="preserve">
+    <value>Skill Breakdown View</value>
+  </data>
+  <data name="Debug_Button_DamageReference" xml:space="preserve">
+    <value>Damage Reference View</value>
+  </data>
+  <data name="Debug_Button_Settings" xml:space="preserve">
+    <value>Settings View</value>
+  </data>
+  <data name="Debug_Button_About" xml:space="preserve">
+    <value>About View</value>
+  </data>
+  <data name="Debug_Group_Title" xml:space="preserve">
+    <value>Debug utilities</value>
+  </data>
+  <data name="MainView_Header_Title" xml:space="preserve">
+    <value>StarResonance ToolBox</value>
+  </data>
+  <data name="MainView_PluginList_Title" xml:space="preserve">
+    <value>Plugins</value>
+  </data>
+  <data name="MainView_Plugin_Label_Intro" xml:space="preserve">
+    <value>Intro:</value>
+  </data>
+  <data name="MainView_Plugin_DpsTool_Title" xml:space="preserve">
+    <value>DPS Toolkit</value>
+  </data>
+  <data name="MainView_Plugin_DpsTool_Description" xml:space="preserve">
+    <value>Provides DPS statistics and skill breakdown tools</value>
+  </data>
+  <data name="MainView_Plugin_Label_Author" xml:space="preserve">
+    <value>Author:</value>
+  </data>
+  <data name="MainView_Plugin_Author_OfficialTeam" xml:space="preserve">
+    <value>[Official] StarResonanceToolBox Team</value>
+  </data>
+  <data name="MainView_Plugin_AutoStart" xml:space="preserve">
+    <value>Auto start</value>
+  </data>
+  <data name="Common_Action_Open" xml:space="preserve">
+    <value>Launch</value>
+  </data>
+  <data name="MainView_Plugin_ModuleSolver_Title" xml:space="preserve">
+    <value>Module Solver</value>
+  </data>
+  <data name="MainView_Plugin_ModuleSolver_Description" xml:space="preserve">
+    <value>Quickly calculates optimal module combinations</value>
+  </data>
+  <data name="MainView_Plugin_WorldBoss_Title" xml:space="preserve">
+    <value>World Boss Status Tracker</value>
+  </data>
+  <data name="MainView_Plugin_WorldBoss_Description" xml:space="preserve">
+    <value>Crowdsourced live data for each channel's world boss status</value>
+  </data>
+  <data name="MainView_Plugin_PigTracker_Title" xml:space="preserve">
+    <value>Pig Nabo Status Tracker</value>
+  </data>
+  <data name="MainView_Plugin_PigTracker_Description" xml:space="preserve">
+    <value>Community-driven tracker for Pig Nabo routes and locations</value>
+  </data>
+  <data name="MainView_Debug_Group_Title" xml:space="preserve">
+    <value>Debug utilities</value>
+  </data>
+  <data name="MainView_Debug_ThemeTest" xml:space="preserve">
+    <value>Theme switch test text</value>
+  </data>
+  <data name="MainView_Debug_Button_PcapTest" xml:space="preserve">
+    <value>Pcap Test</value>
+  </data>
+  <data name="MainView_Debug_Button_SkillBreakdown" xml:space="preserve">
+    <value>Skill Breakdown View</value>
+  </data>
+  <data name="MainView_Debug_Button_DamageReference" xml:space="preserve">
+    <value>Damage Reference View</value>
+  </data>
+  <data name="MainView_Debug_Button_Settings" xml:space="preserve">
+    <value>Settings View</value>
+  </data>
+  <data name="MainView_Debug_Button_About" xml:space="preserve">
+    <value>About View</value>
+  </data>
+  <data name="Window_ModuleSolve_Title" xml:space="preserve">
+    <value>Module Solver</value>
+  </data>
+  <data name="ModuleSolve_Header_Title" xml:space="preserve">
+    <value>Module Solver</value>
+  </data>
+  <data name="ModuleSolve_TargetProperties_Title" xml:space="preserve">
+    <value>Target stats and levels (0 = default) [type to search]</value>
+  </data>
+  <data name="ModuleSolve_Property1_Label" xml:space="preserve">
+    <value>Stat 1:</value>
+  </data>
+  <data name="ModuleSolve_Property2_Label" xml:space="preserve">
+    <value>Stat 2:</value>
+  </data>
+  <data name="ModuleSolve_Property3_Label" xml:space="preserve">
+    <value>Stat 3:</value>
+  </data>
+  <data name="ModuleSolve_Property4_Label" xml:space="preserve">
+    <value>Stat 4:</value>
+  </data>
+  <data name="ModuleSolve_Property5_Label" xml:space="preserve">
+    <value>Stat 5:</value>
+  </data>
+  <data name="ModuleSolve_ExpectedLevel_Label" xml:space="preserve">
+    <value>Desired level:</value>
+  </data>
+  <data name="ModuleSolve_ExcludeProperties_Title" xml:space="preserve">
+    <value>Exclude stats (conflicts with targets) [type to search]</value>
+  </data>
+  <data name="ModuleSolve_ModuleType_Label" xml:space="preserve">
+    <value>Module type:</value>
+  </data>
+  <data name="ModuleSolve_ModuleType_All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="ModuleSolve_ModuleType_Offense" xml:space="preserve">
+    <value>Offense</value>
+  </data>
+  <data name="ModuleSolve_ModuleType_Defense" xml:space="preserve">
+    <value>Defense</value>
+  </data>
+  <data name="ModuleSolve_ModuleType_Support" xml:space="preserve">
+    <value>Support</value>
+  </data>
+  <data name="ModuleSolve_Sort_Label" xml:space="preserve">
+    <value>Sort by:</value>
+  </data>
+  <data name="ModuleSolve_Sort_Attribute" xml:space="preserve">
+    <value>Stat priority</value>
+  </data>
+  <data name="ModuleSolve_Sort_Level" xml:space="preserve">
+    <value>Level priority</value>
+  </data>
+  <data name="ModuleSolve_Analyze_Button" xml:space="preserve">
+    <value>Analyze modules</value>
+  </data>
+  <data name="ModuleSolve_UsingTip" xml:space="preserve">
+    <value>After opening this window, change zone or relog before analyzing. Right-click a stat option to clear it.</value>
+  </data>
+  <data name="Window_SkillBreakdown_Title" xml:space="preserve">
+    <value>Skill Details</value>
+  </data>
+  <data name="SkillBreakdown_Header_Title" xml:space="preserve">
+    <value>Skill Breakdown</value>
+  </data>
+  <data name="SkillBreakdown_Card_RealtimeChart" xml:space="preserve">
+    <value>Realtime DPS/HPS/DTPS charts</value>
+  </data>
+  <data name="SkillBreakdown_Placeholder_LineChart" xml:space="preserve">
+    <value>Imagine a line chart here</value>
+  </data>
+  <data name="SkillBreakdown_Card_ShareChart" xml:space="preserve">
+    <value>Skill contribution chart</value>
+  </data>
+  <data name="SkillBreakdown_Placeholder_PieChart" xml:space="preserve">
+    <value>Imagine a pie chart here</value>
+  </data>
+  <data name="SkillBreakdown_Card_DamageDistribution" xml:space="preserve">
+    <value>Damage distribution</value>
+  </data>
+  <data name="SkillBreakdown_Placeholder_BarChart" xml:space="preserve">
+    <value>Imagine a bar chart here</value>
+  </data>
+  <data name="SkillBreakdown_Section_DamageInfo" xml:space="preserve">
+    <value>Damage info</value>
+  </data>
+  <data name="SkillBreakdown_Label_TotalDamage" xml:space="preserve">
+    <value>Total damage</value>
+  </data>
+  <data name="SkillBreakdown_Value_TotalDamage" xml:space="preserve">
+    <value>42.64K</value>
+  </data>
+  <data name="SkillBreakdown_Label_Dps" xml:space="preserve">
+    <value>DPS</value>
+  </data>
+  <data name="SkillBreakdown_Value_Dps" xml:space="preserve">
+    <value>29.01K</value>
+  </data>
+  <data name="SkillBreakdown_Label_HitCount" xml:space="preserve">
+    <value>Hits</value>
+  </data>
+  <data name="SkillBreakdown_Value_HitCount" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="SkillBreakdown_Label_CritRate" xml:space="preserve">
+    <value>Crit rate</value>
+  </data>
+  <data name="SkillBreakdown_Value_CritRate" xml:space="preserve">
+    <value>16.67%</value>
+  </data>
+  <data name="SkillBreakdown_Label_LuckRate" xml:space="preserve">
+    <value>Luck rate</value>
+  </data>
+  <data name="SkillBreakdown_Value_LuckRate" xml:space="preserve">
+    <value>0%</value>
+  </data>
+  <data name="SkillBreakdown_Label_CritCount" xml:space="preserve">
+    <value>Critical hits</value>
+  </data>
+  <data name="SkillBreakdown_Value_CritCount" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="SkillBreakdown_Label_NormalDamage" xml:space="preserve">
+    <value>Normal damage</value>
+  </data>
+  <data name="SkillBreakdown_Value_NormalDamage" xml:space="preserve">
+    <value>28.71K</value>
+  </data>
+  <data name="SkillBreakdown_Label_CritDamage" xml:space="preserve">
+    <value>Critical damage</value>
+  </data>
+  <data name="SkillBreakdown_Value_CritDamage" xml:space="preserve">
+    <value>13.92K</value>
+  </data>
+  <data name="SkillBreakdown_Label_LuckCount" xml:space="preserve">
+    <value>Lucky hits</value>
+  </data>
+  <data name="SkillBreakdown_Value_LuckCount" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="SkillBreakdown_Label_LuckDamage" xml:space="preserve">
+    <value>Lucky damage</value>
+  </data>
+  <data name="SkillBreakdown_Value_LuckDamage" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="SkillBreakdown_Label_AverageDamage" xml:space="preserve">
+    <value>Average hit</value>
+  </data>
+  <data name="SkillBreakdown_Value_AverageDamage" xml:space="preserve">
+    <value>7106</value>
+  </data>
+  <data name="SkillBreakdown_Label_DamageTakenCount" xml:space="preserve">
+    <value>Times hit</value>
+  </data>
+  <data name="SkillBreakdown_Value_DamageTakenCount" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="SkillBreakdown_Placeholder_Form" xml:space="preserve">
+    <value>Imagine a data table here</value>
+  </data>
+  <data name="SkillBreakdown_Info_Name" xml:space="preserve">
+    <value>--Sample Name--</value>
+  </data>
+  <data name="SkillBreakdown_Info_Uid" xml:space="preserve">
+    <value>UID: 123456</value>
+  </data>
+  <data name="SkillBreakdown_Info_Power" xml:space="preserve">
+    <value>Power: 25000</value>
+  </data>
+  <data name="SkillBreakdown_Info_Level" xml:space="preserve">
+    <value>Level: 60</value>
+  </data>
+  <data name="SkillBreakdown_Info_Badge" xml:space="preserve">
+    <value>Badge: 190</value>
+  </data>
+  <data name="SkillBreakdown_Tab_Output" xml:space="preserve">
+    <value>DPS</value>
+  </data>
+  <data name="SkillBreakdown_Tab_Healing" xml:space="preserve">
+    <value>Healing</value>
+  </data>
+  <data name="SkillBreakdown_Tab_Tanking" xml:space="preserve">
+    <value>Damage Taken</value>
+  </data>
+  <data name="SkillBreakdown_Tab_Summary" xml:space="preserve">
+    <value>Summary</value>
+  </data>
+  <data name="SkillBreakdown_Tab_Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="SkillBreakdown_Placeholder_Details" xml:space="preserve">
+    <value>Details placeholder</value>
+  </data>
+  <data name="SkillBreakdown_Tab_Graph" xml:space="preserve">
+    <value>Graph</value>
+  </data>
+  <data name="SkillBreakdown_Placeholder_Graph" xml:space="preserve">
+    <value>Graph placeholder</value>
+  </data>
+  <data name="DpsStatistics_TestButton_Content" xml:space="preserve">
+    <value>T</value>
+  </data>
+  <data name="DpsStatistics_TestButton_Tooltip" xml:space="preserve">
+    <value>Add Test Item</value>
+  </data>
+  <data name="Common_Dash" xml:space="preserve">
+    <value>-</value>
+  </data>
+  <data name="SkillBreakdown_Section_DamageDistribution" xml:space="preserve">
+    <value>Damage distribution</value>
+  </data>
+  <data name="StatisticType_Damage" xml:space="preserve">
+    <value>Damage</value>
+  </data>
+  <data name="StatisticType_Healing" xml:space="preserve">
+    <value>Healing</value>
+  </data>
+  <data name="StatisticType_TakenDamage" xml:space="preserve">
+    <value>Dmg In</value>
+  </data>
+  <data name="StatisticType_NpcTakenDamage" xml:space="preserve">
+    <value>NPC Dmg In</value>
+  </data>
+  <data name="ScopeTime_Current" xml:space="preserve">
+    <value>Current</value>
+  </data>
+  <data name="ScopeTime_Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="DpsStatistics_Indicator_ClickThrough_Tooltip" xml:space="preserve">
+    <value>Mouse click-through enabled</value>
+    <comment>鼠标穿透已启用</comment>
+  </data>
+  <data name="Settings_Shortcut_TopMost" xml:space="preserve">
+    <value>Always on Top</value>
+  </data>
+  <data name="DpsStatistics_Indicator_WindowTopMost_Tooltip" xml:space="preserve">
+    <value>Toggle Always on Top</value>
+    <comment>切换置顶</comment>
+  </data>
+  <data name="Settings_Shortcut_TopMost_Tooltip" xml:space="preserve">
+    <value>Focus this box and press a shortcut (e.g. Ctrl+F9). Press Delete to clear.</value>
+  </data>
+  <data name="ClassSpec_Unknown" xml:space="preserve">
+    <value>Unknown</value>
+    <comment>Unknown = 0</comment>
+  </data>
+  <data name="ClassSpec_ShieldKnightRecovery" xml:space="preserve">
+    <value>Recovery</value>
+    <comment>ShieldKnightRecovery</comment>
+  </data>
+  <data name="ClassSpec_ShieldKnightShield" xml:space="preserve">
+    <value>Shield</value>
+    <comment>ShieldKnightShield</comment>
+  </data>
+  <data name="ClassSpec_HeavyGuardianEarthfort" xml:space="preserve">
+    <value>Earthfort</value>
+    <comment>HeavyGuardianEarthfort</comment>
+  </data>
+  <data name="ClassSpec_HeavyGuardianBlock" xml:space="preserve">
+    <value>Block</value>
+    <comment>HeavyGuardianBlock</comment>
+  </data>
+  <data name="ClassSpec_StormbladeIaidoSlash" xml:space="preserve">
+    <value>IaidoSlash</value>
+    <comment>StormbladeIaidoSlash</comment>
+  </data>
+  <data name="ClassSpec_StormbladeMoonStrike" xml:space="preserve">
+    <value>MoonStrike</value>
+    <comment>StormbladeMoonStrike</comment>
+  </data>
+  <data name="ClassSpec_WindKnightVanGuard" xml:space="preserve">
+    <value>VanGuard</value>
+    <comment>WindKnightVanGuard</comment>
+  </data>
+  <data name="ClassSpec_WindKnightSkyward" xml:space="preserve">
+    <value>Skyward</value>
+    <comment>WindKnightSkyward</comment>
+  </data>
+  <data name="ClassSpec_FrostMageIcicle" xml:space="preserve">
+    <value>Icicle</value>
+    <comment>FrostMageIcicle</comment>
+  </data>
+  <data name="ClassSpec_FrostMageFrostBeam" xml:space="preserve">
+    <value>FrostBeam</value>
+    <comment>FrostMageFrostBeam</comment>
+  </data>
+  <data name="ClassSpec_MarksmanWildpack" xml:space="preserve">
+    <value>Wildpack</value>
+    <comment>MarksmanWildpack</comment>
+  </data>
+  <data name="ClassSpec_MarksmanFalconry" xml:space="preserve">
+    <value>Falconry</value>
+    <comment>MarksmanFalconry</comment>
+  </data>
+  <data name="ClassSpec_VerdantOracleSmite" xml:space="preserve">
+    <value>Smite</value>
+    <comment>VerdantOracleSmite</comment>
+  </data>
+  <data name="ClassSpec_VerdantOracleLifeBind" xml:space="preserve">
+    <value>LifeBind</value>
+    <comment>VerdantOracleLifeBind</comment>
+  </data>
+  <data name="ClassSpec_SoulMusicianDissonance" xml:space="preserve">
+    <value>Dissonance</value>
+    <comment>SoulMusicianDissonance</comment>
+  </data>
+  <data name="ClassSpec_SoulMusicianConcerto" xml:space="preserve">
+    <value>Concerto</value>
+    <comment>SoulMusicianConcerto</comment>
+  </data>
+  <data name="Settings_NetworkAdapterAutoSelect_Failed" xml:space="preserve">
+    <value>Network adapter auto select failed, please check you have proper network connections</value>
+  </data>
+  <data name="Settings_NetworkAdapterAutoSelect_Button" xml:space="preserve">
+    <value>Auto</value>
+  </data>
+  <data name="Window_BossTracker_Title" xml:space="preserve">
+    <value>野外Boss状态查看器</value>
+  </data>
+  <data name="Debug_Localization_Language" xml:space="preserve">
+    <value>Language:</value>
+  </data>
+  <data name="Debug_Localization_Apply" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="Debug_Localization_TestKey" xml:space="preserve">
+    <value>Test Key:</value>
+  </data>
+  <data name="Debug_Localization_Test" xml:space="preserve">
+    <value>Test</value>
+  </data>
+  <data name="MainView_Plugin_Search_PlaceHolder" xml:space="preserve">
+    <value>Search...</value>
+  </data>
+  <data name="MainView_Plugin_State_Inactive" xml:space="preserve">
+    <value>Inactive</value>
+  </data>
+  <data name="MainView_Plugin_State_Running" xml:space="preserve">
+    <value>Running</value>
+  </data>
+  <data name="MainView_Plugin_Settings" xml:space="preserve">
+    <value>Settings</value>
+  </data>
+  <data name="Settings_Section_Theme_Title" xml:space="preserve">
+    <value>Theme Settings</value>
+  </data>
+  <data name="Settings_Section_Theme_Description" xml:space="preserve">
+    <value>Customize your own tool box</value>
+  </data>
+  <data name="Settings_Theme_WindowColor" xml:space="preserve">
+    <value>Window Color</value>
+  </data>
+  <data name="Settings_Theme_BackgroundImage" xml:space="preserve">
+    <value>Background Image</value>
+  </data>
+  <data name="Settings_Theme_SelectImage" xml:space="preserve">
+    <value>Select Image...</value>
+  </data>
+  <data name="Settings_CancelConfirm_Title" xml:space="preserve">
+    <value>Discard Changes</value>
+  </data>
+  <data name="Settings_CancelConfirm_Message" xml:space="preserve">
+    <value>Discard all changes? Unsaved changes will be lost.</value>
+  </data>
+  <data name="MainView_Plugin_AutoRunState_Enabled" xml:space="preserve">
+    <value>Auto On</value>
+  </data>
+  <data name="MainView_Plugin_AutoRunState_Disabled" xml:space="preserve">
+    <value>Auto Off</value>
+  </data>
+  <data name="MainView_Plugin_ThirdPartySdkTips" xml:space="preserve">
+    <value>Plugin SDK coming soon!</value>
+  </data>
+  <data name="App_Exit_Confirm_Title" xml:space="preserve">
+    <value>Confirmation</value>
+  </data>
+  <data name="App_Exit_Confirm_Content" xml:space="preserve">
+    <value>Close application?</value>
+  </data>
+</root>

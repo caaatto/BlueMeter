@@ -1,0 +1,350 @@
+<!--  Themes/MenuStyles.xaml  -->
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--  ===== 颜色（用自带 Alpha，避免多层透明叠加导致黑边） =====  -->
+    <SolidColorBrush x:Key="MenuBg" Color="#F2FFFFFF" />
+    <SolidColorBrush x:Key="MenuFg" Color="#222222" />
+    <SolidColorBrush x:Key="MenuHover" Color="#12000000" />
+    <SolidColorBrush x:Key="MenuPressed" Color="#1E000000" />
+    <SolidColorBrush x:Key="MenuSep" Color="#14000000" />
+
+    <!--  阴影强度预设  -->
+    <DropShadowEffect
+        x:Key="MenuShadow.Light"
+        BlurRadius="24"
+        Opacity="0.22"
+        ShadowDepth="0"
+        Color="#33000000" />
+    <DropShadowEffect
+        x:Key="MenuShadow.Medium"
+        BlurRadius="20"
+        Opacity="0.30"
+        ShadowDepth="0"
+        Color="#40000000" />
+    <DropShadowEffect
+        x:Key="MenuShadow.SoftGlow"
+        BlurRadius="28"
+        Opacity="0.18"
+        ShadowDepth="0"
+        Color="#22000000" />
+
+    <!--  ===== 勾圈/箭头：参数化资源（改这里就能全局生效） =====  -->
+    <!--  ✔ 勾（左圈）  -->
+    <sys:Double x:Key="Menu.Check.Diameter">16</sys:Double>
+    <!--  勾“圆圈”直径（px）→ 改这个=圈大小  -->
+    <sys:Double x:Key="Menu.Check.FontSize">6</sys:Double>
+
+    <!--  勾字符字号 → 改这个=勾大小  -->
+    <Thickness x:Key="Menu.Check.GlyphMargin">0,0.0,0,0</Thickness>
+    <!--  勾字符位置偏移(左,上,右,下)。第二个值为负=上移，正=下移；第一个/第三个值可左右移动  -->
+    <SolidColorBrush x:Key="Menu.Check.Bg" Color="#222222" />
+    <!--  勾圈背景色  -->
+    <SolidColorBrush x:Key="Menu.Check.Fg" Color="#FFFFFFFF" />
+    <!--  勾字符颜色  -->
+    <sys:String x:Key="Menu.Check.Glyph">✔</sys:String>
+    <!--  勾字符（可换成 ✅ 等）  -->
+
+    <!--  › 箭头（右圈）  -->
+    <sys:Double x:Key="Menu.Arrow.Diameter">16</sys:Double>
+    <!--  箭头“圆圈”直径（px）→ 改这个=圈大小  -->
+    <sys:Double x:Key="Menu.Arrow.FontSize">16</sys:Double>
+    <!--  箭头字符字号 → 改这个=箭头大小  -->
+    <Thickness x:Key="Menu.Arrow.GlyphMargin">0,0,0,5</Thickness>
+    <!--  箭头位置偏移(左,上,右,下)。第二个值为负=上移；改第1/3个值可左右微调  -->
+    <SolidColorBrush x:Key="Menu.Arrow.Bg" Color="#222222" />
+    <!--  箭头圈背景色  -->
+    <SolidColorBrush x:Key="Menu.Arrow.Fg" Color="#FFFFFFFF" />
+    <!--  箭头字符颜色  -->
+    <sys:String x:Key="Menu.Arrow.Glyph">›</sys:String>
+    <!--  箭头字符（可换 ⟩、❯ 等看基线更顺眼的）  -->
+    <FontFamily x:Key="Menu.Arrow.FontFamily">Segoe UI</FontFamily>
+    <!--  箭头字符字体（影响基线/样式）  -->
+
+    <!--  圆角为“足够大”即可保持圆（宽高相等时）  -->
+    <CornerRadius x:Key="Menu.CircleCorner">999</CornerRadius>
+    <!--  圆角半径（一般不用改，保持超大即可）  -->
+
+
+    <!--  不显示滚动条的 ScrollViewer 模板  -->
+    <ControlTemplate x:Key="NoScrollViewerTemplate" TargetType="ScrollViewer">
+        <ScrollContentPresenter />
+    </ControlTemplate>
+
+    <!--  ===== ContextMenu 外壳：圆角 + 投影 =====  -->
+    <Style x:Key="ModernContextMenu" TargetType="ContextMenu">
+        <Style.Triggers>
+            <EventTrigger RoutedEvent="Opened">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation
+                            Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                            From="0"
+                            To="1"
+                            Duration="0:0:0.2" />
+                        <DoubleAnimation
+                            Storyboard.TargetProperty="Opacity"
+                            From="0"
+                            To="1"
+                            Duration="0:0:0.2" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+            <EventTrigger RoutedEvent="Closed">
+                <BeginStoryboard>
+                    <Storyboard>
+                        <DoubleAnimation
+                            Storyboard.TargetProperty="(UIElement.RenderTransform).(ScaleTransform.ScaleY)"
+                            From="1"
+                            To="0"
+                            Duration="0:0:0.2" />
+                        <DoubleAnimation
+                            Storyboard.TargetProperty="Opacity"
+                            From="1"
+                            To="0"
+                            Duration="0:0:0.2" />
+                    </Storyboard>
+                </BeginStoryboard>
+            </EventTrigger>
+        </Style.Triggers>
+        <Setter Property="OverridesDefaultStyle" Value="True" />
+        <Setter Property="HasDropShadow" Value="False" />
+        <Setter Property="RenderTransform">
+            <Setter.Value>
+                <ScaleTransform ScaleX="1" ScaleY="0" />
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ContextMenu">
+                    <Border
+                        Padding="12"
+                        Background="Transparent"
+                        SnapsToDevicePixels="True">
+                        <Grid>
+                            <!--  阴影层  -->
+                            <Border
+                                Background="{DynamicResource MenuBg}"
+                                CornerRadius="12"
+                                IsHitTestVisible="False">
+                                <Border.Effect>
+                                    <StaticResource ResourceKey="MenuShadow.Light" />
+                                </Border.Effect>
+                            </Border>
+                            <!--  前景  -->
+                            <Border
+                                Padding="6"
+                                Background="{DynamicResource MenuBg}"
+                                ClipToBounds="True"
+                                CornerRadius="6"
+                                SnapsToDevicePixels="True">
+                                <ScrollViewer
+                                    Focusable="False"
+                                    HorizontalScrollBarVisibility="Disabled"
+                                    Template="{StaticResource NoScrollViewerTemplate}"
+                                    VerticalScrollBarVisibility="Disabled">
+                                    <ItemsPresenter />
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  ===== 分隔线 =====  -->
+    <Style TargetType="Separator">
+        <Setter Property="Margin" Value="8,6,8,6" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Separator">
+                    <Border Height="1" Background="{DynamicResource MenuSep}" />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  ===== MenuItem：左勾选 / 右箭头 / 圆角悬浮 / 可选左 Icon =====  -->
+    <Style x:Key="ModernMenuItem" TargetType="MenuItem">
+        <Setter Property="Foreground" Value="{DynamicResource MenuFg}" />
+        <Setter Property="FontFamily" Value="pack://application:,,,/Assets/Fonts/#HarmonyOS Sans SC" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Height" Value="26" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="MenuItem">
+                    <Grid Margin="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="26" />
+                            <!--  左：勾选/图标  -->
+                            <ColumnDefinition Width="*" />
+                            <!--  中：文本  -->
+                            <ColumnDefinition Width="22" />
+                            <!--  右：箭头  -->
+                        </Grid.ColumnDefinitions>
+
+                        <!--  悬浮/按下 背景  -->
+                        <Border
+                            x:Name="Bg"
+                            Grid.ColumnSpan="3"
+                            Background="Transparent"
+                            CornerRadius="10" />
+
+                        <!--  ✔ 勾（使用资源）  -->
+                        <Border
+                            x:Name="CheckCircle"
+                            Grid.Column="0"
+                            Width="{DynamicResource Menu.Check.Diameter}"
+                            Height="{DynamicResource Menu.Check.Diameter}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource Menu.Check.Bg}"
+                            CornerRadius="{DynamicResource Menu.CircleCorner}"
+                            Visibility="Collapsed" />
+                        <TextBlock
+                            x:Name="CheckGlyph"
+                            Grid.Column="0"
+                            Margin="{DynamicResource Menu.Check.GlyphMargin}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="{DynamicResource Menu.Check.FontSize}"
+                            Foreground="{DynamicResource Menu.Check.Fg}"
+                            Text="{DynamicResource Menu.Check.Glyph}"
+                            Visibility="Collapsed" />
+
+                        <!--  左侧自定义图标（可选）  -->
+                        <ContentPresenter
+                            x:Name="LeftIcon"
+                            Grid.Column="0"
+                            Margin="0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            ContentSource="Icon"
+                            Visibility="Visible" />
+
+                        <!--  标题  -->
+                        <ContentPresenter
+                            Grid.Column="1"
+                            Margin="0,0,4,0"
+                            VerticalAlignment="Center"
+                            ContentSource="Header"
+                            RecognizesAccessKey="True" />
+
+                        <!--  › 箭头（使用资源）  -->
+                        <Border
+                            x:Name="ArrowCircle"
+                            Grid.Column="2"
+                            Width="{DynamicResource Menu.Arrow.Diameter}"
+                            Height="{DynamicResource Menu.Arrow.Diameter}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="{DynamicResource Menu.Arrow.Bg}"
+                            CornerRadius="{DynamicResource Menu.CircleCorner}"
+                            Opacity="0.95"
+                            Visibility="Collapsed" />
+                        <TextBlock
+                            x:Name="ArrowGlyph"
+                            Grid.Column="2"
+                            Margin="{DynamicResource Menu.Arrow.GlyphMargin}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontFamily="{DynamicResource Menu.Arrow.FontFamily}"
+                            FontSize="{DynamicResource Menu.Arrow.FontSize}"
+                            Foreground="{DynamicResource Menu.Arrow.Fg}"
+                            Text="{DynamicResource Menu.Arrow.Glyph}"
+                            Visibility="Collapsed" />
+
+                        <!--  子菜单：圆角+投影  -->
+                        <Popup
+                            x:Name="PART_Popup"
+                            AllowsTransparency="True"
+                            Focusable="False"
+                            HorizontalOffset="4"
+                            IsOpen="{TemplateBinding IsSubmenuOpen}"
+                            Placement="Right"
+                            PopupAnimation="Fade"
+                            VerticalOffset="-6">
+                            <Border
+                                Padding="12"
+                                Background="Transparent"
+                                SnapsToDevicePixels="True">
+                                <Grid>
+                                    <!--  阴影层  -->
+                                    <Border
+                                        Background="{DynamicResource MenuBg}"
+                                        CornerRadius="12"
+                                        IsHitTestVisible="False">
+                                        <Border.Effect>
+                                            <StaticResource ResourceKey="MenuShadow.Light" />
+                                        </Border.Effect>
+                                    </Border>
+                                    <!--  前景层  -->
+                                    <Border
+                                        Padding="6"
+                                        Background="{DynamicResource MenuBg}"
+                                        ClipToBounds="True"
+                                        CornerRadius="12"
+                                        SnapsToDevicePixels="True">
+                                        <ScrollViewer
+                                            Focusable="False"
+                                            HorizontalScrollBarVisibility="Disabled"
+                                            Template="{StaticResource NoScrollViewerTemplate}"
+                                            VerticalScrollBarVisibility="Disabled">
+                                            <ItemsPresenter />
+                                        </ScrollViewer>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </Popup>
+                    </Grid>
+
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource MenuHover}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bg" Property="Background" Value="{DynamicResource MenuPressed}" />
+                        </Trigger>
+
+                        <!--  Icon 为空就折叠  -->
+                        <DataTrigger Binding="{Binding Icon, RelativeSource={RelativeSource TemplatedParent}}" Value="{x:Null}">
+                            <Setter TargetName="LeftIcon" Property="Visibility" Value="Collapsed" />
+                        </DataTrigger>
+
+                        <!--  ✅ 只有勾选时显示“勾圈+勾”，并隐藏左侧图标  -->
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="LeftIcon" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="CheckCircle" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="CheckGlyph" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                        <Trigger Property="HasItems" Value="True">
+                            <Setter TargetName="ArrowCircle" Property="Visibility" Value="Visible" />
+                            <Setter TargetName="ArrowGlyph" Property="Visibility" Value="Visible" />
+                        </Trigger>
+
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!--  让某些 MenuItem 具备勾选能力的样式（默认不勾选）  -->
+    <Style
+        x:Key="CheckableMenuItem"
+        BasedOn="{StaticResource ModernMenuItem}"
+        TargetType="MenuItem">
+        <Setter Property="IsCheckable" Value="True" />
+        <!--  想点击后菜单不自动关闭可打开这行（当开关用很方便）  -->
+        <Setter Property="StaysOpenOnClick" Value="True" />
+    </Style>
+
+</ResourceDictionary>

@@ -1,0 +1,152 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+
+    <!--  引入 System.Double 类型（用于定义数值资源）  -->
+    <sys:Double x:Key="MainCornerRadiusDouble">6</sys:Double>
+
+    <!--  以 CornerRadius 资源形式定义圆角（四个角相同）  -->
+    <CornerRadius x:Key="MainCornerRadius">6,6,6,6</CornerRadius>
+
+    <sys:Double x:Key="CardHeaderHeight">25</sys:Double>
+
+    <sys:Double x:Key="{x:Static SystemParameters.VerticalScrollBarWidthKey}">10</sys:Double>
+
+    <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarHeightKey}">10</sys:Double>
+
+
+    <!--  Window 风格：透明窗口（没有系统边框/标题栏），背景透明  -->
+    <Style x:Key="TransparentWindow" TargetType="Window">
+        <!--  允许透明（Enable per-pixel transparency）  -->
+        <Setter Property="AllowsTransparency" Value="True" />
+        <!--  去掉系统窗体样式（无标题栏、无边框）  -->
+        <Setter Property="WindowStyle" Value="None" />
+        <!--  窗口背景设为完全透明（常用于自定义 chrome）  -->
+        <Setter Property="Background" Value="Transparent" />
+
+        <!--  新增：强制布局取整和像素对齐  -->
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+    </Style>
+
+    <!--  更高性能的透明Window 风格：透明窗口（没有系统边框/标题栏），背景透明  -->
+    <!--  https://blog.walterlv.com/post/wpf-transparent-window-without-allows-transparency.html  -->
+    <Style x:Key="TransparentWindowAlt" TargetType="Window">
+        <Setter Property="WindowStyle" Value="None" />
+        <Setter Property="ResizeMode" Value="NoResize" />
+        <Setter Property="WindowChrome.GlassFrameThickness" Value="-1" />
+        <!--  新增：强制布局取整和像素对齐  -->
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+
+    </Style>
+
+    <!--  Border 风格：给窗口内容区留边距并加圆角和投影  -->
+    <Style x:Key="ShadowWindowBorder" TargetType="Border">
+        <!--  给外部留出空间以显示投影（shadow）  -->
+        <Setter Property="Margin" Value="5" />
+        <!--  使用上面定义的圆角资源  -->
+        <Setter Property="CornerRadius" Value="{DynamicResource MainCornerRadius}" />
+        <!--  使用 DropShadowEffect 作为简单投影效果  -->
+        <Setter Property="Effect">
+            <Setter.Value>
+                <!--  BlurRadius: 模糊半径；Opacity: 透明度；ShadowDepth: 阴影偏移（0 = 居中扩散）  -->
+                <DropShadowEffect
+                    BlurRadius="5"
+                    Opacity="0.5"
+                    ShadowDepth="0"
+                    Color="#000" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="SpliterBase" TargetType="Border">
+        <Setter Property="Height" Value="1" />
+        <Setter Property="Background" Value="#ECECEC" />
+    </Style>
+
+    <Style x:Key="NormalTextBlockBaseStyle" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="pack://application:,,,/Assets/Fonts/#HarmonyOS Sans SC" />
+    </Style>
+
+    <Style x:Key="CardBorderBaseStyle" TargetType="Border">
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="Background" Value="#FFF" />
+        <Setter Property="CornerRadius" Value="{StaticResource MainCornerRadius}" />
+    </Style>
+
+    <Style
+        x:Key="CardHeaderBaseStyle"
+        BasedOn="{StaticResource NormalTextBlockBaseStyle}"
+        TargetType="TextBlock">
+        <Setter Property="Foreground" Value="#2297F4" />
+    </Style>
+    <Style
+        x:Key="CardHeaderMainTitleStyle"
+        BasedOn="{StaticResource CardHeaderBaseStyle}"
+        TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style
+        x:Key="CardHeaderSubTitleStyle"
+        BasedOn="{StaticResource CardHeaderBaseStyle}"
+        TargetType="TextBlock">
+        <Setter Property="FontSize" Value="9" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+
+    <Style TargetType="GridSplitter">
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+    </Style>
+
+    <!--  设置默认字体  -->
+    <Style BasedOn="{StaticResource NormalTextBlockBaseStyle}" TargetType="TextBlock" />
+
+    <!--  设置默认滚动条样式  -->
+    <Style TargetType="ScrollBar">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ScrollBar">
+                    <Grid Width="8" Background="Transparent">
+                        <!--  轨道  -->
+                        <Track Name="PART_Track" IsDirectionReversed="true">
+                            <Track.Resources>
+                                <Style TargetType="RepeatButton">
+                                    <Setter Property="Background" Value="Transparent" />
+                                    <Setter Property="BorderBrush" Value="Transparent" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                </Style>
+                            </Track.Resources>
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton Command="ScrollBar.LineUpCommand" />
+                            </Track.DecreaseRepeatButton>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton Command="ScrollBar.LineDownCommand" />
+                            </Track.IncreaseRepeatButton>
+                            <!--  滑块  -->
+                            <Track.Thumb>
+                                <Thumb Background="#888">
+                                    <Thumb.Template>
+                                        <ControlTemplate TargetType="Thumb">
+                                            <Border Background="{TemplateBinding Background}" CornerRadius="4" />
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+
+</ResourceDictionary>

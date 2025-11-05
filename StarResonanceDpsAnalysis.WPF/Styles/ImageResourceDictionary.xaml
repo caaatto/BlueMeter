@@ -1,0 +1,7 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <BitmapImage x:Key="ImageOkHover" UriSource="pack://application:,,,/Assets/Images/ok_hover.png" />
+    <BitmapImage x:Key="ImageOkNormal" UriSource="pack://application:,,,/Assets/Images/ok_normal.png" />
+    <BitmapImage x:Key="ImageCancelHover" UriSource="pack://application:,,,/Assets/Images/cancel_hover.png" />
+    <BitmapImage x:Key="ImageCancelNormal" UriSource="pack://application:,,,/Assets/Images/cancel_normal.png" />
+    <BitmapImage x:Key="ImageCrown" UriSource="pack://application:,,,/Assets/Images/Crown.png" />
+</ResourceDictionary>

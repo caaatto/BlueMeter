@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <Platforms>x64</Platforms>
+    <LangVersion>latest</LangVersion>
+    <!-- <InternalsVisibleTo>StarResonanceDpsAnalysis.WPF</InternalsVisibleTo> -->
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="StarResonanceDpsAnalysis.WPF" />
+    <InternalsVisibleTo Include="StarResonanceDpsAnalysis.Tests" />
+    <InternalsVisibleTo Include="StarResonanceDpsAnalysis.Core.Benchmarks" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Analyze\Versions\**" />
+    <EmbeddedResource Remove="Analyze\Versions\**" />
+    <None Remove="Analyze\Versions\**" />
+    <Page Remove="Analyze\Versions\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Google.Protobuf" />
+    <PackageReference Include="Grpc.Tools">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" />
+    <PackageReference Include="Newtonsoft.Json" />
+    <PackageReference Include="Newtonsoft.Json.Bson" />
+    <PackageReference Include="PacketDotNet" />
+    <PackageReference Include="SharpPcap" />
+    <PackageReference Include="System.IO.Pipelines" />
+    <PackageReference Include="System.Threading.Channels" />
+    <PackageReference Include="ZstdNet" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- <Protobuf Include="..\StarResonanceData\proto\**\*.proto" GrpcServices="Both" ProtoRoot="..\StarResonanceData\proto" /> -->
+    <Protobuf Include="Protobuf\BlueProtobuf.proto" GrpcServices="Both" Condition="Exists('Protobuf\BlueProtobuf.proto')" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,33 @@
+name: .NET Desktop Build
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    strategy:
+      matrix:
+        configuration: [Release]  # Only build Release, not Debug
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 8
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore StarResonanceDpsAnalysis.sln
+
+    - name: Build solution
+      run: dotnet build StarResonanceDpsAnalysis.sln --configuration ${{ matrix.configuration }} --no-restore
+
+    - name: Run tests
+      run: dotnet test StarResonanceDpsAnalysis.sln --configuration ${{ matrix.configuration }} --no-build

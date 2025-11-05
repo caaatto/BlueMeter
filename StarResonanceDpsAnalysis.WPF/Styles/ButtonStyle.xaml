@@ -1,0 +1,73 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--  可被替换的资源（像 CSS 变量）  -->
+    <FontFamily x:Key="IconButtonFontFamily">Segoe UI Symbol</FontFamily>
+    <sys:Double x:Key="IconButtonFontSize">14</sys:Double>
+
+    <!--  图标按钮样式（去掉焦点虚线 + 悬停阴影）  -->
+    <Style x:Key="IconButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{x:Null}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontFamily" Value="{DynamicResource IconButtonFontFamily}" />
+        <Setter Property="FontSize" Value="{DynamicResource IconButtonFontSize}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <ControlTemplate.Resources>
+                        <!--  DataTemplate for string content: creates a TextBlock that binds to the Button's FontFamily/FontSize  -->
+                        <DataTemplate DataType="{x:Type sys:String}">
+                            <TextBlock
+                                FontFamily="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=FontFamily}"
+                                FontSize="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=FontSize}"
+                                Text="{Binding}"
+                                TextAlignment="Center" />
+                        </DataTemplate>
+                    </ControlTemplate.Resources>
+
+                    <Border Background="{TemplateBinding Background}">
+                        <!--  Let ContentPresenter use TemplateBindings; when Content is a string the DataTemplate above will be used and will apply local FontFamily/FontSize  -->
+                        <ContentPresenter
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect
+                            BlurRadius="4"
+                            Opacity="0.28"
+                            ShadowDepth="0"
+                            Color="#000000" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Cursor" Value="Hand" />
+            </Trigger>
+
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="0.96" ScaleY="0.96" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!--  可以定义隐式样式（如果想默认所有 Button 都应用）  -->
+    <!-- <Style TargetType="Button" BasedOn="{StaticResource IconButtonStyle}" /> -->
+
+</ResourceDictionary>

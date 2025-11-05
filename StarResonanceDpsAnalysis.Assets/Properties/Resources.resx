@@ -1,0 +1,771 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+  <data name="setting_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\setting_normal.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="minimize_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\minimize_normal.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="top_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\top_hover.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="userUid" xml:space="preserve">
+    <value>&lt;svg t="1754590078301" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8371" width="200" height="200"&gt;&lt;path d="M619.064182 504.57971c91.163561-42.401656 154.766046-133.565217 154.766046-239.569358C773.830228 118.724638 655.10559 0 508.819876 0S243.809524 118.724638 243.809524 265.010352c0 106.004141 63.602484 197.167702 154.766045 239.569358C169.606625 555.461698 0 758.989648 0 1002.799172v21.200828h1017.639752v-21.200828c0-243.809524-169.606625-447.337474-398.57557-498.219462zM286.21118 265.010352C286.21118 142.045549 385.855072 42.401656 508.819876 42.401656s222.608696 99.643892 222.608695 222.608696S631.784679 487.619048 508.819876 487.619048s-222.608696-99.643892-222.608696-222.608696zM42.401656 981.598344c10.600414-248.049689 216.248447-445.217391 466.41822-445.217392s455.817805 197.167702 466.418219 445.217392H42.401656z" p-id="8372"&gt;&lt;/path&gt;&lt;/svg&gt;</value>
+  </data>
+  <data name="cancel_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\cancel_hover.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="top_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\top_normal.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="set_up" xml:space="preserve">
+    <value>&lt;svg t="1724122928419" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2893" width="200" height="200"&gt;&lt;path d="M920.5 435.9c-7.6-40.3-36.1-66.8-69.8-66.2h-3.4c-36.6 0-66.3-29.7-66.3-66.3 0-7.8 3.6-19.1 6-24.9 15.4-35.1 3.3-78.1-28.9-100.6l-102-56.9-4.2-2c-31.7-13.7-72.7-5.4-96.4 19.2-15.1 15.6-42.2 33.7-54.6 33.7-12.5 0-39.8-18.5-54.9-34.3-23.6-24.9-62.2-34.4-97.4-19.5l-105.4 57.7-4.2 2.7c-31.7 22-43.8 65.3-28.3 100.1 1.9 4.6 6 16.7 6 24.9 0 36.6-29.7 66.3-66.3 66.3h-2.6c-34.9-0.6-63.1 25.8-70.7 66.2-0.9 4.8-8.9 48.2-8.9 84s8 79.2 8.9 84c7.5 39.6 35.3 66.2 69.2 66.2h4.1c36.6 0 66.3 29.7 66.3 66.3 0 8.2-4 20.3-5.8 24.5-15.6 35.2-3.6 78.4 28.9 101.2l99.8 56 4.1 2c10.5 4.6 21.8 6.9 33.6 6.9 24.5 0 47.8-9.9 63.7-27.3 14.8-16.1 43.5-35.8 55.8-35.8 12.8 0 40.8 19.7 56.1 36.5 15.8 17.4 39.8 27.8 64.2 27.8 11.6 0 22.6-2.2 34.3-7.3l103.2-56.9 4.2-2.7c31.6-22 43.7-65.2 28.1-100.4-1.9-4.6-5.9-16.5-5.9-24.6 0-36.6 29.7-66.3 66.3-66.3h4c34 0 61.7-26.4 69.2-65.9 0.1-0.5 9-46.3 9-84.4-0.1-35.9-8.1-79.1-9-83.9z m-71.3 154.6c-0.6 3.3-1.5 5.6-2.2 7.1-76.4 0.1-138.6 62.4-138.6 138.8 0 23 8.4 45.7 12.1 53.9 1.6 3.5 0.4 8.4-3.3 11.5l-96.4 53.3c-4.7 1.6-11.9-0.9-14.3-3.5-5.6-6.2-56.5-60.3-109.8-60.3-54 0-106.9 56.8-109.1 59.2-2.2 2.4-7.4 5.7-14.6 3.1l-93.1-52.1c-3.1-2.5-4.5-7.7-2.8-11.6 1.2-2.8 12-28.1 12-53.7 0-76.5-62.1-138.7-138.6-138.8-0.7-1.5-1.6-3.8-2.3-7.1-0.3-1.6-7.6-40.9-7.6-70.6 0-29.7 7.3-69 7.6-70.6 0.6-3.3 1.5-5.7 2.3-7.1 76.4-0.1 138.6-62.3 138.6-138.8 0-25-9.9-49.1-12.1-54-1.5-3.5-0.4-8.3 3.2-11.4l98.2-53.9c4.8-1.7 12.5 0.8 15 3.4 5.5 5.8 55.7 56.8 107.4 56.8 51.2 0 101.2-50 106.7-55.8 2.4-2.4 8.3-5.6 15.1-3.1l94.9 52.7c3.2 2.5 4.5 7.7 2.9 11.3l-0.7 1.8c-3.1 7.6-11.3 29.8-11.3 52.2 0 76.5 62.1 138.7 138.6 138.8 0.7 1.5 1.6 3.8 2.3 7.1 0.1 0.4 7.6 40.6 7.6 70.6-0.1 25.6-5.7 60.4-7.7 70.8z" p-id="2894"&gt;&lt;/path&gt;&lt;path d="M498.7 355.9c-90.3 0-163.8 73.5-163.8 163.8 0 90.3 73.5 163.8 163.8 163.8 90.3 0 163.8-73.5 163.8-163.8 0-90.4-73.5-163.8-163.8-163.8z m0 273.1c-60.3 0-109.4-49.1-109.4-109.4 0-60.3 49.1-109.4 109.4-109.4 60.3 0 109.4 49.1 109.4 109.4 0 60.3-49.1 109.4-109.4 109.4z" p-id="2895"&gt;&lt;/path&gt;&lt;/svg&gt;</value>
+  </data>
+  <data name="right_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\right_normal.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="flushed_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\flushed_hover.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ok_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\ok_normal.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="flushed_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\flushed_normal.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="right_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\right_hover.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="ok_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\ok_hover.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="data-display" xml:space="preserve">
+    <value>&lt;svg  xmlns="http://www.w3.org/2000/svg"  width="24"  height="24"  viewBox="0 0 24 24"  fill="none"  stroke="currentColor"  stroke-width="2"  stroke-linecap="round"  stroke-linejoin="round"  class="icon icon-tabler icons-tabler-outline icon-tabler-chart-bar-popular"&gt;&lt;path stroke="none" d="M0 0h24v24H0z" fill="none"/&gt;&lt;path d="M3 13a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v6a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /&gt;&lt;path d="M9 9a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v10a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /&gt;&lt;path d="M15 5a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v14a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" /&gt;&lt;path d="M4 20h14" /&gt;&lt;/svg&gt;</value>
+  </data>
+  <data name="left_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\left_normal.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="cancel_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\cancel_normal.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="setting_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\setting_hover.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="left_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\left_hover.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="handoff_hover" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\handoff_hover.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="handoff_normal" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\handoff_normal.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Stakes" xml:space="preserve">
+    <value>&lt;svg t="1755060932429" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="19756" width="200" height="200"&gt;&lt;path d="M637.256674 18.797246c-24.996338-24.996338-65.590392-24.996338-90.586731 0l-239.964849 239.964849c-24.996338 24.996338-24.996338 65.590392 0 90.586731l31.995314 31.995313c24.996338 24.996338 65.590392 24.996338 90.58673 0l7.998828-7.998828 213.568716 213.368745-7.998828 7.998828c-24.996338 24.996338-24.996338 65.590392 0 90.58673l31.995313 31.995314c24.996338 24.996338 65.590392 24.996338 90.58673 0l239.964849-239.964849c24.996338-24.996338 24.996338-65.590392 0-90.586731l-31.995313-31.995313c-24.996338-24.996338-65.590392-24.996338-90.58673 0l-7.998829 7.998828L661.253159 149.178148l7.998828-7.998829c24.996338-24.996338 24.996338-65.590392 0-90.58673l-31.995313-31.995313z m-303.955475 575.915638c-24.996338-24.996338-65.590392-24.996338-90.586731 0l-223.967192 223.967192c-24.996338 24.996338-24.996338 65.590392 0 90.586731l95.985939 95.985939c24.996338 24.996338 65.590392 24.996338 90.586731 0l223.967192-223.967192c24.996338-24.996338 24.996338-65.590392 0-90.586731l-2.79959-2.799589 117.582776-117.382806-90.58673-90.58673-117.382806 117.382805-2.799589-2.79959z" p-id="19757"&gt;&lt;/path&gt;&lt;/svg&gt;</value>
+  </data>
+  <data name="exclude" xml:space="preserve">
+    <value>&lt;svg t="1755061232067" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="25570" width="200" height="200"&gt;&lt;path d="M662.016 361.984V102.4H102.4v519.68h219.648V921.6H921.6V361.984z m-19.968 19.968v220.16H342.016v-220.16z m239.616 499.712H361.984v-239.616h320V401.92h199.68z" p-id="25571"&gt;&lt;/path&gt;&lt;/svg&gt;</value>
+  </data>
+  <data name="quit" xml:space="preserve">
+    <value>&lt;svg t="1755091003951" class="icon" viewBox="0 0 1042 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6442" width="200" height="200"&gt;&lt;path d="M581.632 697.344l126.976 0 0 194.56q0 33.792-10.24 58.88t-27.136 40.96-39.424 23.552-48.128 7.68l-452.608 0q-24.576 0-48.128-9.728t-41.472-27.136-29.184-40.96-11.264-52.224l0-706.56q0-24.576 11.776-47.104t30.208-39.936 40.96-28.16 45.056-10.752l449.536 0q26.624 0 50.176 11.776t41.472 29.696 28.16 40.448 10.24 44.032l0 188.416-126.976 0 1.024-195.584-452.608 0-1.024 713.728 452.608 0 0-195.584zM1021.952 505.856q37.888 30.72 2.048 60.416-20.48 15.36-44.544 37.888t-50.176 46.592-51.712 47.616-47.104 40.96q-23.552 18.432-40.448 18.432t-16.896-24.576q2.048-14.336 0.512-35.84t-1.536-36.864q0-17.408-12.288-21.504t-29.696-4.096l-40.96 0-62.464 0q-34.816 0-73.216-0.512t-73.216-0.512l-62.464 0-41.984 0q-8.192 0-17.92-1.536t-17.408-6.656-12.288-14.336-4.608-23.552q0-19.456-0.512-46.08t0.512-47.104q0-27.648 13.312-37.888t43.008-9.216l33.792 0 59.392 0q32.768 0 70.144 0.512t71.168 0.512l61.44 0 38.912 0q25.6 1.024 43.52-4.096t17.92-22.528q0-14.336 1.024-32.256t1.024-32.256q0-23.552 12.8-29.696t32.256 9.216q19.456 16.384 45.568 38.4t52.736 45.056 52.736 45.568 47.616 39.936z" p-id="6443"&gt;&lt;/path&gt;&lt;/svg&gt;</value>
+  </data>
+  <data name="HomeIcon" xml:space="preserve">
+    <value>&lt;svg t="1755130842851" class="icon" viewBox="0 0 1025 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7366" width="200" height="200"&gt;&lt;path d="M779 1024H595V827.6c0-14.4-11.6-26-26-26h-93.2c-14.4 0-26 11.8-26 26V1024H251c-54.8 0-99.4-44.6-99.4-99.4V600.2l-112.2-35-9-9c-26.6-26.6-26.6-69.6 0-96.2L470 20.4c12.8-12.8 29.8-20 48-20s35.2 7 48 20l439.6 439.8c12.8 12.8 20 30 19.8 48 0 18.2-7.2 35.2-20 48l-9 9L878 600.4v324.2c0.2 54.8-44.2 99.4-99 99.4z" p-id="7367"&gt;&lt;/path&gt;&lt;/svg&gt;</value>
+  </data>
+  <data name="historicalRecords" xml:space="preserve">
+    <value>&lt;svg t="1755131064483" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="11454" width="200" height="200"&gt;&lt;path d="M512.5 98.29c-227.84 0-412.54 184.7-412.54 412.54s184.7 412.54 412.54 412.54 412.54-184.7 412.54-412.54S740.34 98.29 512.5 98.29z m249.28 661.82c-32.4 32.4-70.1 57.82-112.08 75.58-43.42 18.37-89.59 27.68-137.21 27.68-47.62 0-93.78-9.31-137.2-27.68-41.97-17.75-79.68-43.18-112.08-75.58-32.4-32.4-57.82-70.1-75.58-112.08-18.37-43.42-27.68-89.59-27.68-137.21 0-47.62 9.31-93.78 27.68-137.21 17.75-41.97 43.18-79.68 75.58-112.08s70.1-57.82 112.08-75.58c43.42-18.37 89.59-27.68 137.21-27.68 47.62 0 93.78 9.31 137.21 27.68 41.97 17.75 79.68 43.18 112.08 75.58s57.82 70.1 75.58 112.08c18.37 43.42 27.68 89.59 27.68 137.21 0 47.62-9.31 93.78-27.68 137.21-17.77 41.97-43.19 79.68-75.59 112.08z" p-id="11455"&gt;&lt;/path&gt;&lt;path d="M738.68 674.81L542 497.48V248.27c0-16.57-13.43-30-30-30s-30 13.43-30 30v262.55c0 8.5 3.6 16.59 9.91 22.28L698.5 719.37a29.906 29.906 0 0 0 20.08 7.72c8.2 0 16.37-3.34 22.29-9.91 11.1-12.3 10.12-31.27-2.19-42.37z" p-id="11456"&gt;&lt;/path&gt;&lt;/svg&gt;</value>
+  </data>
+  <data name="hp_icon" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\hp_icon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="冰魔导师" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\冰魔导师_Profession.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="冰魔导师_Opacity10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\冰魔导师_Opacity10.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="巨刃守护者" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\巨刃守护者_Profession.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="巨刃守护者_Opacity10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\巨刃守护者_Opacity10.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="雷影剑士" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\雷影剑士_Profession.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="雷影剑士_Opacity10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\雷影剑士_Opacity10.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="灵魂乐手" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\灵魂乐手_Profession.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="灵魂乐手_Opacity10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\灵魂乐手_Opacity10.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="青岚骑士" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\青岚骑士_Profession.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="青岚骑士_Opacity10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\青岚骑士_Opacity10.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="森语者" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\森语者_Profession.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="森语者_Opacity10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\森语者_Opacity10.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="神盾骑士" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\神盾骑士_Profession.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="神盾骑士_Opacity10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\神盾骑士_Opacity10.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="神射手" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\神射手_Profession.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="神射手_Opacity10" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\神射手_Opacity10.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="AlimamaShuHeiTi" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Fonts\AlimamaShuHeiTi-Bold.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>阿里妈妈数黑体</comment>
+  </data>
+  <data name="HarmonyOS_Sans" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Fonts\HarmonyOS_Sans_SC_Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>HarmonyOS Sans</comment>
+  </data>
+  <data name="SAOWelcomeTT" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Fonts\SAOWelcomeTT-Regular.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>SAO Welcome TT</comment>
+  </data>
+  <data name="reference" xml:space="preserve">
+    <value>&lt;svg t="1755404127609" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6193" width="200" height="200"&gt;&lt;path d="M821.043 233.882c-7.065-0.512-13.926 2.048-18.944 7.065s-7.577 11.879-7.065 18.944v520.5c-1.844 27.75-23.86 49.97-51.61 52.019H289.69c-31.028 0-67.072-26.01-67.072-52.02v-58.265c0-26.01 31.027-41.984 62.054-41.984h433.254c7.066 0.512 13.927-2.048 18.944-7.066s7.578-11.878 7.066-18.944V228.864c0.512-26.726-10.445-52.429-30.31-70.349-19.764-18.022-46.388-26.624-72.91-23.552H289.69c-57.037 0-113.664 31.437-113.664 94.003v572.519c9.42 48.025 49.459 84.07 98.099 88.473h469.811c55.398 0 100.966-43.622 103.22-99.02V260.71c-0.82-14.028-11.982-25.19-26.01-26.01v-0.818z m-99.737 499.507h-419.43c-14.337 0-26.01 11.673-26.01 26.01 0 14.335 11.673 26.009 26.01 26.009h419.43c14.336 0 26.01-11.674 26.01-26.01 0-14.336-11.674-26.01-26.01-26.01z m0 0" p-id="6194"&gt;&lt;/path&gt;&lt;/svg&gt;</value>
+  </data>
+  <data name="ApplicationIcon_256x256" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\ApplicationIcon.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>应用程序图标PNG原图</comment>
+  </data>
+  <data name="HarmonyOS_Sans_SC_Bold" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Fonts\HarmonyOS_Sans_SC_Bold.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <comment>HarmonyOS Sans SC Bold</comment>
+  </data>
+  <data name="Npc" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\NPC.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="NpcWhite" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\NpcWhite.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="承伤" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\承伤.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="承伤白色" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\承伤白色.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="伤害" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\伤害.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="伤害白色" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\伤害白色.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="治疗" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\治疗.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="治疗白色" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\治疗白色.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="皇冠" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\皇冠.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="皇冠白" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Images\皇冠白.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="diaryIcon" xml:space="preserve">
+    <value>&lt;svg t="1755665363494" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="6610" width="200" height="200"&gt;&lt;path d="M872 63.9H154c-19.9 0-36 16.1-36 36L98 794.6V885.6h0.8c5.8 41.9 41.7 74.2 85.2 74.2h708c19.9 0 36-16.1 36-36 0 0-43.7-10.7-43.7-47.7s43.7-52.4 43.7-52.4v-28.4-8.3h-0.2L908 99.9c0-19.9-16.1-36-36-36z m-109.3 248c19.9 0 36-16.1 36-36V107.6h65.8l19.6 679.3H141.9l19.6-679.3h446.4V276c0 19.9 16.1 36 36 36l59.4-30 59.4 29.9z m-111.1-52.8V107.6H755v151.5l-32-16.2-19.7-9.9-19.7 9.9-32 16.2zM184.1 916c-23.4 0-42.4-19-42.4-42.4s19-42.4 42.4-42.4h668.6c-7.4 12.6-12.1 27.4-12.1 44.7 0 14.4 3.4 27.9 9.8 40H184.1v0.1z" p-id="6611"&gt;&lt;/path&gt;&lt;/svg&gt;</value>
+  </data>
+  <data name="moduleIcon" xml:space="preserve">
+    <value>&lt;svg t="1755922612322" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="11643" width="200" height="200"&gt;&lt;path d="M440.507964 511.963431L92.738519 357.277337a63.849154 63.849154 0 0 0-60.045997 0A62.313263 62.313263 0 0 0 0 411.179773v394.723805a62.166988 62.166988 0 0 0 35.54489 56.315978l348.500821 154.905506a64.361117 64.361117 0 0 0 28.377402 6.8018 66.408971 66.408971 0 0 0 31.010356-8.849653 63.264053 63.264053 0 0 0 32.399971-53.975573V565.865867A63.629741 63.629741 0 0 0 440.507964 511.963431z m520.081708-256.713092c14.481251-30.717806-0.073138-66.774659-32.546247-80.451396L561.404471 10.458682a122.35926 122.35926 0 0 0-99.028355 0L95.810299 174.798943a62.459539 62.459539 0 0 0-32.546246 30.790943c-14.408114 30.717806 0.146275 66.774659 32.546246 80.451397l385.727877 172.019713c9.361617 4.680809 19.747161 7.313763 30.498393 7.533176a76.794515 76.794515 0 0 0 30.425255-7.533176l385.727877-172.019713a63.117777 63.117777 0 0 0 32.399971-30.790944zM1023.926862 805.976716V411.326048a62.678952 62.678952 0 0 0-32.692522-53.902435 63.264053 63.264053 0 0 0-58.875794-1.389615L582.175559 511.963431a62.898364 62.898364 0 0 0-34.082137 53.975573v396.405971c0.292551 22.087565 12.433398 42.419827 32.399971 53.902436 9.507892 5.046497 20.185987 7.752589 31.010357 7.752589 9.87358 0 19.674023-2.194129 28.377401-6.8018l349.890437-154.905507a62.166988 62.166988 0 0 0 34.155274-56.315977z" p-id="11644"&gt;&lt;/path&gt;&lt;/svg&gt;</value>
+  </data>
+  <data name="IconFont" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Fonts\iconfont.ttf;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Window_About_Title" xml:space="preserve">
+    <value>关于</value>
+  </data>
+  <data name="About_Intro_Primary" xml:space="preserve">
+    <value>一款专为《星痕共鸣》玩家打造的战斗数据统计工具。</value>
+  </data>
+  <data name="About_Intro_Details" xml:space="preserve">
+    <value>该工具无需修改游戏客户端，不违反游戏服务条款。该工具旨在帮助玩家更好地理解战斗数据，减少不必要的精力消耗，提升游戏体验。使用该工具前，请确保不会将数据结果用于战力歧视等破坏游戏社区环境的行为。</value>
+  </data>
+  <data name="About_Version_Label" xml:space="preserve">
+    <value>当前版本号：</value>
+  </data>
+  <data name="About_Developers_Label" xml:space="preserve">
+    <value>当前版本的开发者们（排名不分先后）:</value>
+  </data>
+  <data name="About_Developer_Lead" xml:space="preserve">
+    <value>惊奇猫猫盒（anying1073：项目发起者）</value>
+  </data>
+  <data name="About_Developer_RocyJune" xml:space="preserve">
+    <value>露詩（Rocy-June）</value>
+  </data>
+  <data name="About_Developer_QingLan" xml:space="preserve">
+    <value>青岚宗王腾</value>
+  </data>
+  <data name="About_Developer_Ihonliu" xml:space="preserve">
+    <value>尻鸭（ihonliu）</value>
+  </data>
+  <data name="About_OpenSource_Prefix" xml:space="preserve">
+    <value>本项目于</value>
+  </data>
+  <data name="About_OpenSource_RepositoryUrl" xml:space="preserve">
+    <value>https://github.com/anying1073/StarResonanceDps</value>
+  </data>
+  <data name="About_OpenSource_Suffix" xml:space="preserve">
+    <value>中开源，如在使用中遇到问题可以直接提出 Issue。</value>
+  </data>
+  <data name="About_Contribution" xml:space="preserve">
+    <value>如果你想为本项目贡献代码，欢迎 Fork 之后提交 Pull Request。</value>
+  </data>
+  <data name="About_Community_Invite" xml:space="preserve">
+    <value>无法访问 GitHub 或者想要寻求游戏伙伴也可以加群：</value>
+  </data>
+  <data name="About_Community_GroupOne" xml:space="preserve">
+    <value>678150498（1群）</value>
+  </data>
+  <data name="About_Community_GroupTwo" xml:space="preserve">
+    <value>1022797551（2群）</value>
+  </data>
+  <data name="About_Thanks_Prefix" xml:space="preserve">
+    <value>在此感谢</value>
+  </data>
+  <data name="About_Thanks_RepositoryUrl" xml:space="preserve">
+    <value>https://github.com/dmlgzs/StarResonanceDamageCounter</value>
+  </data>
+  <data name="About_Thanks_Suffix" xml:space="preserve">
+    <value>项目对于本项目的帮助于支持</value>
+  </data>
+  <data name="About_Copyright" xml:space="preserve">
+    <value>Copyright (C) 2025 anying1073/StarResonanceDps Team.</value>
+  </data>
+  <data name="About_PoweredBy" xml:space="preserve">
+    <value>Powered by .NET 8, Licensed under the GNU AGPL v3.</value>
+  </data>
+  <data name="Window_DamageReference_Title" xml:space="preserve">
+    <value>伤害参考</value>
+  </data>
+  <data name="DamageReference_Header_Title" xml:space="preserve">
+    <value>Skill Breakdown</value>
+  </data>
+  <data name="DamageReference_Ribbon_Title" xml:space="preserve">
+    <value>伤害参考</value>
+  </data>
+  <data name="DamageReference_Profession_All" xml:space="preserve">
+    <value>全职业</value>
+  </data>
+  <data name="Profession_Stormblade" xml:space="preserve">
+    <value>雷影剑士</value>
+  </data>
+  <data name="Profession_FrostMage" xml:space="preserve">
+    <value>冰魔导师</value>
+  </data>
+  <data name="Profession_WindKnight" xml:space="preserve">
+    <value>青岚骑士</value>
+  </data>
+  <data name="Profession_VerdantOracle" xml:space="preserve">
+    <value>森语者</value>
+  </data>
+  <data name="Profession_HeavyGuardian" xml:space="preserve">
+    <value>巨刃守护者</value>
+  </data>
+  <data name="Profession_Marksman" xml:space="preserve">
+    <value>神射手</value>
+  </data>
+  <data name="Profession_ShieldKnight" xml:space="preserve">
+    <value>神盾骑士</value>
+  </data>
+  <data name="Profession_SoulMusician" xml:space="preserve">
+    <value>灵魂乐手</value>
+  </data>
+  <data name="DamageReference_Table_Title" xml:space="preserve">
+    <value>伤害参考</value>
+  </data>
+  <data name="DamageReference_NoData" xml:space="preserve">
+    <value>暂无数据</value>
+  </data>
+  <data name="DamageReference_Disclaimer" xml:space="preserve">
+    <value>以上数据仅供娱乐与参考，严禁用于战力歧视等破坏游戏社区环境的行为；一经发现，永久取消该功能的使用资格。</value>
+  </data>
+  <data name="Window_Debug_Title" xml:space="preserve">
+    <value>Debug View</value>
+  </data>
+  <data name="Debug_LoadPcap" xml:space="preserve">
+    <value>Load PCAP</value>
+  </data>
+  <data name="Debug_AddSampleData" xml:space="preserve">
+    <value>AddSampleData</value>
+  </data>
+  <data name="Debug_ClearLogs" xml:space="preserve">
+    <value>Clear Logs</value>
+  </data>
+  <data name="Debug_AddTestLog" xml:space="preserve">
+    <value>Add Test Log</value>
+  </data>
+  <data name="Debug_SaveLogs" xml:space="preserve">
+    <value>Save Logs</value>
+  </data>
+  <data name="Debug_AutoScroll" xml:space="preserve">
+    <value>Auto Scroll</value>
+  </data>
+  <data name="Debug_Filter_Level" xml:space="preserve">
+    <value>Level:</value>
+  </data>
+  <data name="Debug_Filter_Label" xml:space="preserve">
+    <value>Filter:</value>
+  </data>
+  <data name="Debug_Filter_Tooltip" xml:space="preserve">
+    <value>Filter logs by message or category content</value>
+  </data>
+  <data name="Debug_Header_Time" xml:space="preserve">
+    <value>Time</value>
+  </data>
+  <data name="Debug_Header_Level" xml:space="preserve">
+    <value>Level</value>
+  </data>
+  <data name="Debug_Header_Category" xml:space="preserve">
+    <value>Category</value>
+  </data>
+  <data name="Debug_Header_Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="Debug_Status_TotalPrefix" xml:space="preserve">
+    <value>总计：</value>
+  </data>
+  <data name="Debug_Status_TotalSuffix" xml:space="preserve">
+    <value> 条日志</value>
+  </data>
+  <data name="Debug_Status_FilteredPrefix" xml:space="preserve">
+    <value>过滤：</value>
+  </data>
+  <data name="Debug_Status_FilteredSuffix" xml:space="preserve">
+    <value> 条日志</value>
+  </data>
+  <data name="Debug_Status_LastPrefix" xml:space="preserve">
+    <value>最新：</value>
+  </data>
+  <data name="Debug_ThemeTestText" xml:space="preserve">
+    <value>主题切换测试文本</value>
+  </data>
+  <data name="Debug_Button_PcapTest" xml:space="preserve">
+    <value>PCAP 测试</value>
+  </data>
+  <data name="Debug_Button_SkillBreakdown" xml:space="preserve">
+    <value>技能详情窗口</value>
+  </data>
+  <data name="Debug_Button_DamageReference" xml:space="preserve">
+    <value>伤害参考窗口</value>
+  </data>
+  <data name="Debug_Button_Settings" xml:space="preserve">
+    <value>设置窗口</value>
+  </data>
+  <data name="Debug_Button_About" xml:space="preserve">
+    <value>关于窗口</value>
+  </data>
+  <data name="Debug_Group_Title" xml:space="preserve">
+    <value>调试功能</value>
+  </data>
+  <data name="MainView_Header_Title" xml:space="preserve">
+    <value>别查我 D P S</value>
+  </data>
+  <data name="MainView_PluginList_Title" xml:space="preserve">
+    <value>插件列表</value>
+  </data>
+  <data name="MainView_Plugin_Label_Intro" xml:space="preserve">
+    <value>简介：</value>
+  </data>
+  <data name="MainView_Plugin_DpsTool_Title" xml:space="preserve">
+    <value>DPS工具</value>
+  </data>
+  <data name="MainView_Plugin_DpsTool_Description" xml:space="preserve">
+    <value>提供DPS统计、技能分解等功能</value>
+  </data>
+  <data name="MainView_Plugin_Label_Author" xml:space="preserve">
+    <value>作者：</value>
+  </data>
+  <data name="MainView_Plugin_Author_OfficialTeam" xml:space="preserve">
+    <value>[官方] 别查我DPS 开发团队</value>
+  </data>
+  <data name="MainView_Plugin_AutoStart" xml:space="preserve">
+    <value>自启动</value>
+  </data>
+  <data name="Common_Action_Open" xml:space="preserve">
+    <value>开启</value>
+  </data>
+  <data name="MainView_Plugin_ModuleSolver_Title" xml:space="preserve">
+    <value>模组求解器</value>
+  </data>
+  <data name="MainView_Plugin_ModuleSolver_Description" xml:space="preserve">
+    <value>提供模组快速计算最优解功能</value>
+  </data>
+  <data name="MainView_Plugin_WorldBoss_Title" xml:space="preserve">
+    <value>野外BOSS状态查看器</value>
+  </data>
+  <data name="MainView_Plugin_WorldBoss_Description" xml:space="preserve">
+    <value>通过大量的玩家在线数据互助，提供各线路的野外BOSS存活状态等信息</value>
+  </data>
+  <data name="MainView_Plugin_PigTracker_Title" xml:space="preserve">
+    <value>小猪娜宝状态查看器</value>
+  </data>
+  <data name="MainView_Plugin_PigTracker_Description" xml:space="preserve">
+    <value>通过大量的玩家在线数据互助，提供小猪娜宝的线路与位置信息</value>
+  </data>
+  <data name="MainView_Debug_Group_Title" xml:space="preserve">
+    <value>调试功能</value>
+  </data>
+  <data name="MainView_Debug_ThemeTest" xml:space="preserve">
+    <value>主题切换测试文本</value>
+  </data>
+  <data name="MainView_Debug_Button_PcapTest" xml:space="preserve">
+    <value>PCAP 测试</value>
+  </data>
+  <data name="MainView_Debug_Button_SkillBreakdown" xml:space="preserve">
+    <value>技能详情窗口</value>
+  </data>
+  <data name="MainView_Debug_Button_DamageReference" xml:space="preserve">
+    <value>伤害参考窗口</value>
+  </data>
+  <data name="MainView_Debug_Button_Settings" xml:space="preserve">
+    <value>设置窗口</value>
+  </data>
+  <data name="MainView_Debug_Button_About" xml:space="preserve">
+    <value>关于窗口</value>
+  </data>
+  <data name="Window_ModuleSolve_Title" xml:space="preserve">
+    <value>模组求解器</value>
+  </data>
+  <data name="ModuleSolve_Header_Title" xml:space="preserve">
+    <value>模组求解器</value>
+  </data>
+  <data name="ModuleSolve_TargetProperties_Title" xml:space="preserve">
+    <value>目标词条和等级（0为默认）[可输入文字索引]</value>
+  </data>
+  <data name="ModuleSolve_Property1_Label" xml:space="preserve">
+    <value>属性1：</value>
+  </data>
+  <data name="ModuleSolve_Property2_Label" xml:space="preserve">
+    <value>属性2：</value>
+  </data>
+  <data name="ModuleSolve_Property3_Label" xml:space="preserve">
+    <value>属性3：</value>
+  </data>
+  <data name="ModuleSolve_Property4_Label" xml:space="preserve">
+    <value>属性4：</value>
+  </data>
+  <data name="ModuleSolve_Property5_Label" xml:space="preserve">
+    <value>属性5：</value>
+  </data>
+  <data name="ModuleSolve_ExpectedLevel_Label" xml:space="preserve">
+    <value>期望等级：</value>
+  </data>
+  <data name="ModuleSolve_ExcludeProperties_Title" xml:space="preserve">
+    <value>排除词条（与目标词条冲突）[可输入文字索引]</value>
+  </data>
+  <data name="ModuleSolve_ModuleType_Label" xml:space="preserve">
+    <value>模组类型：</value>
+  </data>
+  <data name="ModuleSolve_ModuleType_All" xml:space="preserve">
+    <value>全部</value>
+  </data>
+  <data name="ModuleSolve_ModuleType_Offense" xml:space="preserve">
+    <value>攻击模组</value>
+  </data>
+  <data name="ModuleSolve_ModuleType_Defense" xml:space="preserve">
+    <value>防御模组</value>
+  </data>
+  <data name="ModuleSolve_ModuleType_Support" xml:space="preserve">
+    <value>辅助模组</value>
+  </data>
+  <data name="ModuleSolve_Sort_Label" xml:space="preserve">
+    <value>排序方式：</value>
+  </data>
+  <data name="ModuleSolve_Sort_Attribute" xml:space="preserve">
+    <value>属性优先</value>
+  </data>
+  <data name="ModuleSolve_Sort_Level" xml:space="preserve">
+    <value>等级优先</value>
+  </data>
+  <data name="ModuleSolve_Analyze_Button" xml:space="preserve">
+    <value>分析模组</value>
+  </data>
+  <data name="ModuleSolve_UsingTip" xml:space="preserve">
+    <value>打开此界面后需要过图或者重新登陆一次才能进行分析【右键属性选项为清空当前选项】</value>
+  </data>
+  <data name="Window_SkillBreakdown_Title" xml:space="preserve">
+    <value>技能详情</value>
+  </data>
+  <data name="SkillBreakdown_Header_Title" xml:space="preserve">
+    <value>技能详情</value>
+  </data>
+  <data name="SkillBreakdown_Card_RealtimeChart" xml:space="preserve">
+    <value>DPS/HPS/DTPS实时曲线图</value>
+  </data>
+  <data name="SkillBreakdown_Placeholder_LineChart" xml:space="preserve">
+    <value>假装这里有个折线图</value>
+  </data>
+  <data name="SkillBreakdown_Card_ShareChart" xml:space="preserve">
+    <value>技能占比分布图</value>
+  </data>
+  <data name="SkillBreakdown_Placeholder_PieChart" xml:space="preserve">
+    <value>假装这里有个饼图</value>
+  </data>
+  <data name="SkillBreakdown_Card_DamageDistribution" xml:space="preserve">
+    <value>伤害分布</value>
+  </data>
+  <data name="SkillBreakdown_Placeholder_BarChart" xml:space="preserve">
+    <value>假装这里有个条形图</value>
+  </data>
+  <data name="SkillBreakdown_Section_DamageInfo" xml:space="preserve">
+    <value>伤害信息</value>
+  </data>
+  <data name="SkillBreakdown_Label_TotalDamage" xml:space="preserve">
+    <value>总伤害</value>
+  </data>
+  <data name="SkillBreakdown_Value_TotalDamage" xml:space="preserve">
+    <value>42.64K</value>
+  </data>
+  <data name="SkillBreakdown_Label_Dps" xml:space="preserve">
+    <value>秒伤</value>
+  </data>
+  <data name="SkillBreakdown_Value_Dps" xml:space="preserve">
+    <value>29.01K</value>
+  </data>
+  <data name="SkillBreakdown_Label_HitCount" xml:space="preserve">
+    <value>命中次数</value>
+  </data>
+  <data name="SkillBreakdown_Value_HitCount" xml:space="preserve">
+    <value>6</value>
+  </data>
+  <data name="SkillBreakdown_Label_CritRate" xml:space="preserve">
+    <value>暴击率</value>
+  </data>
+  <data name="SkillBreakdown_Value_CritRate" xml:space="preserve">
+    <value>16.67%</value>
+  </data>
+  <data name="SkillBreakdown_Label_LuckRate" xml:space="preserve">
+    <value>幸运率</value>
+  </data>
+  <data name="SkillBreakdown_Value_LuckRate" xml:space="preserve">
+    <value>0%</value>
+  </data>
+  <data name="SkillBreakdown_Label_CritCount" xml:space="preserve">
+    <value>暴击次数</value>
+  </data>
+  <data name="SkillBreakdown_Value_CritCount" xml:space="preserve">
+    <value>1</value>
+  </data>
+  <data name="SkillBreakdown_Label_NormalDamage" xml:space="preserve">
+    <value>普通伤害</value>
+  </data>
+  <data name="SkillBreakdown_Value_NormalDamage" xml:space="preserve">
+    <value>28.71K</value>
+  </data>
+  <data name="SkillBreakdown_Label_CritDamage" xml:space="preserve">
+    <value>暴击伤害</value>
+  </data>
+  <data name="SkillBreakdown_Value_CritDamage" xml:space="preserve">
+    <value>13.92K</value>
+  </data>
+  <data name="SkillBreakdown_Label_LuckCount" xml:space="preserve">
+    <value>幸运次数</value>
+  </data>
+  <data name="SkillBreakdown_Value_LuckCount" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="SkillBreakdown_Label_LuckDamage" xml:space="preserve">
+    <value>幸运伤害</value>
+  </data>
+  <data name="SkillBreakdown_Value_LuckDamage" xml:space="preserve">
+    <value>0</value>
+  </data>
+  <data name="SkillBreakdown_Label_AverageDamage" xml:space="preserve">
+    <value>平均伤害</value>
+  </data>
+  <data name="SkillBreakdown_Value_AverageDamage" xml:space="preserve">
+    <value>7106</value>
+  </data>
+  <data name="SkillBreakdown_Label_DamageTakenCount" xml:space="preserve">
+    <value>受击次数</value>
+  </data>
+  <data name="SkillBreakdown_Value_DamageTakenCount" xml:space="preserve">
+    <value>3</value>
+  </data>
+  <data name="SkillBreakdown_Placeholder_Form" xml:space="preserve">
+    <value>假装这里有个表单</value>
+  </data>
+  <data name="SkillBreakdown_Info_Name" xml:space="preserve">
+    <value>--测试名称--</value>
+  </data>
+  <data name="SkillBreakdown_Info_Uid" xml:space="preserve">
+    <value>UID: 123456</value>
+  </data>
+  <data name="SkillBreakdown_Info_Power" xml:space="preserve">
+    <value>战力: 25000</value>
+  </data>
+  <data name="SkillBreakdown_Info_Level" xml:space="preserve">
+    <value>等级: 60</value>
+  </data>
+  <data name="SkillBreakdown_Info_Badge" xml:space="preserve">
+    <value>臂章: 190</value>
+  </data>
+  <data name="SkillBreakdown_Tab_Output" xml:space="preserve">
+    <value>输出</value>
+  </data>
+  <data name="SkillBreakdown_Tab_Healing" xml:space="preserve">
+    <value>治疗</value>
+  </data>
+  <data name="SkillBreakdown_Tab_Tanking" xml:space="preserve">
+    <value>承伤</value>
+  </data>
+  <data name="SkillBreakdown_Tab_Summary" xml:space="preserve">
+    <value>Summary</value>
+  </data>
+  <data name="SkillBreakdown_Tab_Details" xml:space="preserve">
+    <value>Details</value>
+  </data>
+  <data name="SkillBreakdown_Placeholder_Details" xml:space="preserve">
+    <value>详情占位</value>
+  </data>
+  <data name="SkillBreakdown_Tab_Graph" xml:space="preserve">
+    <value>Graph</value>
+  </data>
+  <data name="SkillBreakdown_Placeholder_Graph" xml:space="preserve">
+    <value>图表占位</value>
+  </data>
+  <data name="DpsStatistics_TestButton_Content" xml:space="preserve">
+    <value>T</value>
+  </data>
+  <data name="DpsStatistics_TestButton_Tooltip" xml:space="preserve">
+    <value>添加测试数据</value>
+  </data>
+  <data name="Common_Dash" xml:space="preserve">
+    <value>-</value>
+  </data>
+</root>

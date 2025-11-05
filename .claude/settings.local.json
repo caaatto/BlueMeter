@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Select-Object -First 20 -ExpandProperty FullName)",
+      "Bash(git log:*)",
+      "Bash(dotnet build:*)",
+      "Bash(Select-Object -First 50)",
+      "Bash(taskkill:*)",
+      "Bash(dotnet clean:*)",
+      "Bash($null)",
+      "Bash(Get-ChildItem -Force)",
+      "Bash(Select-Object -First 20 -ExpandProperty Name)",
+      "Bash(git init:*)",
+      "Bash(git config:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -1,0 +1,47 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:StarResonanceDpsAnalysis.WPF.Controls">
+
+    <Style x:Key="LeftDecorationStyle" TargetType="Border">
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="Background" Value="#2297F4" />
+        <Setter Property="Margin" Value="-20,-10,0,-10" />
+        <Setter Property="Width" Value="3" />
+    </Style>
+    <Style TargetType="controls:CardControl">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="controls:CardControl">
+                    <Border Style="{StaticResource CardBorderBaseStyle}">
+                        <StackPanel>
+                            <!--  Bind Content and ContentTemplate correctly for header  -->
+                            <Grid x:Name="PART_Header">
+                                <Border Height="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Grid, AncestorLevel=1}}" Style="{StaticResource LeftDecorationStyle}" />
+                                <ContentPresenter Content="{TemplateBinding Header}" ContentTemplate="{TemplateBinding HeaderTemplate}" />
+                            </Grid>
+                            <!--  Header content separator  -->
+                            <Separator
+                                x:Name="PART_HeaderSeparator"
+                                Margin="0,0,0,20"
+                                Style="{StaticResource HorizontalSeparatorStyle}" />
+                            <!--  Content section  -->
+                            <ContentPresenter
+                                x:Name="PART_Content"
+                                Content="{TemplateBinding Content}"
+                                ContentTemplate="{TemplateBinding ContentTemplate}" />
+                        </StackPanel>
+                    </Border>
+
+                    <ControlTemplate.Triggers>
+                        <!--  Hide header and separator if there's no header  -->
+                        <Trigger Property="Header" Value="{x:Null}">
+                            <Setter TargetName="PART_Header" Property="Visibility" Value="Collapsed" />
+                            <Setter TargetName="PART_HeaderSeparator" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

@@ -1,0 +1,352 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib">
+
+    <!--  Ant Design - like brushes and metrics  -->
+    <Color x:Key="AntBorderColor">#FFD9D9D9</Color>
+    <Color x:Key="AntHoverColor">#FF40A9FF</Color>
+    <Color x:Key="AntPrimaryColor">#FF1890FF</Color>
+    <Color x:Key="AntBackgroundColor">#FFFFFFFF</Color>
+    <Color x:Key="AntDisabledColor">#FFF5F5F5</Color>
+
+    <SolidColorBrush x:Key="AntBorderBrush" Color="{StaticResource AntBorderColor}" />
+    <SolidColorBrush x:Key="AntHoverBrush" Color="{StaticResource AntHoverColor}" />
+    <SolidColorBrush x:Key="AntPrimaryBrush" Color="{StaticResource AntPrimaryColor}" />
+    <SolidColorBrush x:Key="AntBackgroundBrush" Color="{StaticResource AntBackgroundColor}" />
+    <SolidColorBrush x:Key="AntDisabledBrush" Color="{StaticResource AntDisabledColor}" />
+
+    <sys:Double x:Key="AntCornerRadiusValue">6</sys:Double>
+    <CornerRadius
+        x:Key="AntCornerRadius"
+        BottomLeft="{StaticResource AntCornerRadiusValue}"
+        BottomRight="{StaticResource AntCornerRadiusValue}"
+        TopLeft="{StaticResource AntCornerRadiusValue}"
+        TopRight="{StaticResource AntCornerRadiusValue}" />
+    <Thickness x:Key="AntControlPadding">6,4,6,4</Thickness>
+
+    <!--  Plain ToggleButton style (no hover visuals)  -->
+    <Style x:Key="PlainToggleButton" TargetType="ToggleButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ToggleButton">
+                    <ContentPresenter />
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  TextBox style  -->
+    <Style x:Key="AntTextBoxStyle" TargetType="TextBox">
+        <Setter Property="Background" Value="{StaticResource AntBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource AntBorderBrush}" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Padding" Value="{StaticResource AntControlPadding}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border
+                        x:Name="Bd"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource AntCornerRadius}">
+                        <ScrollViewer x:Name="PART_ContentHost" Margin="0" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AntHoverBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AntPrimaryBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource AntDisabledBrush}" />
+                            <Setter Property="Foreground" Value="#FFAAAAAA" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  ComboBox style  -->
+    <Style x:Key="AntComboBoxStyle" TargetType="ComboBox">
+        <Setter Property="Background" Value="{StaticResource AntBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource AntBorderBrush}" />
+        <Setter Property="Padding" Value="{StaticResource AntControlPadding}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBox">
+                    <Grid>
+                        <!--  Main clickable area that covers the entire ComboBox  -->
+                        <ToggleButton
+                            x:Name="ToggleButton"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1"
+                            ClickMode="Press"
+                            IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Border
+                                        x:Name="Bd"
+                                        Background="{TemplateBinding Background}"
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="{StaticResource AntCornerRadius}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*" />
+                                                <ColumnDefinition Width="Auto" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <ContentPresenter
+                                                x:Name="ContentSite"
+                                                Grid.Column="0"
+                                                Margin="8,2,6,2"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                Content="{Binding SelectionBoxItem, RelativeSource={RelativeSource AncestorType=ComboBox}}"
+                                                ContentTemplate="{Binding SelectionBoxItemTemplate, RelativeSource={RelativeSource AncestorType=ComboBox}}"
+                                                ContentTemplateSelector="{Binding ItemTemplateSelector, RelativeSource={RelativeSource AncestorType=ComboBox}}"
+                                                IsHitTestVisible="False" />
+
+                                            <Path
+                                                Grid.Column="1"
+                                                Margin="6,0,6,0"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Data="M 0 0 L 4 4 L 8 0 Z"
+                                                Fill="Black" />
+                                        </Grid>
+                                    </Border>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+                        </ToggleButton>
+
+                        <!--  Popup aligned to left: width bound to ComboBox ActualWidth  -->
+                        <Popup
+                            x:Name="PART_Popup"
+                            AllowsTransparency="True"
+                            Focusable="False"
+                            HorizontalOffset="0"
+                            IsOpen="{TemplateBinding IsDropDownOpen}"
+                            Placement="Bottom"
+                            PopupAnimation="Fade">
+                            <Border
+                                Width="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=ComboBox}}"
+                                Padding="2"
+                                Background="{StaticResource AntBackgroundBrush}"
+                                BorderBrush="{StaticResource AntBorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="{StaticResource AntCornerRadius}">
+                                <ScrollViewer CanContentScroll="True" HorizontalScrollBarVisibility="Disabled">
+                                    <ItemsPresenter HorizontalAlignment="Stretch" />
+                                </ScrollViewer>
+                            </Border>
+                        </Popup>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="HasItems" Value="False">
+                            <Setter TargetName="PART_Popup" Property="Visibility" Value="Collapsed" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="#FFAAAAAA" />
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ToggleButton" Property="BorderBrush" Value="{StaticResource AntHoverBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="ToggleButton" Property="BorderBrush" Value="{StaticResource AntPrimaryBrush}" />
+                        </Trigger>
+                        <!--  Match Popup border width if width changes after open  -->
+                        <Trigger Property="IsDropDownOpen" Value="True">
+                            <Setter TargetName="PART_Popup" Property="HorizontalOffset" Value="0" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style TargetType="ComboBoxItem">
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="MinHeight" Value="32" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ComboBoxItem">
+                    <Border
+                        x:Name="Bd"
+                        MinHeight="{TemplateBinding MinHeight}"
+                        Padding="{TemplateBinding Padding}"
+                        Background="Transparent">
+                        <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsHighlighted" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="#FFF0F5FF" />
+                        </Trigger>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="Bd" Property="Background" Value="#FFE6F7FF" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter Property="Foreground" Value="#FFAAAAAA" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  Slider style  -->
+    <Style x:Key="AntSliderStyle" TargetType="Slider">
+        <Setter Property="Height" Value="24" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Slider">
+                    <Grid>
+                        <!--  Background track - changed to blue  -->
+                        <Border
+                            Height="4"
+                            VerticalAlignment="Center"
+                            Background="{StaticResource AntPrimaryBrush}"
+                            CornerRadius="2" />
+                        <Track
+                            x:Name="PART_Track"
+                            IsDirectionReversed="{TemplateBinding IsDirectionReversed}"
+                            Maximum="{TemplateBinding Maximum}"
+                            Minimum="{TemplateBinding Minimum}"
+                            Value="{Binding Path=Value, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+                            <Track.DecreaseRepeatButton>
+                                <RepeatButton
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Command="Slider.DecreaseLarge">
+                                    <RepeatButton.Template>
+                                        <ControlTemplate TargetType="RepeatButton">
+                                            <!--  Empty template to remove hover rectangle  -->
+                                            <Rectangle Fill="Transparent" />
+                                        </ControlTemplate>
+                                    </RepeatButton.Template>
+                                </RepeatButton>
+                            </Track.DecreaseRepeatButton>
+                            <Track.IncreaseRepeatButton>
+                                <RepeatButton
+                                    Background="Transparent"
+                                    BorderThickness="0"
+                                    Command="Slider.IncreaseLarge">
+                                    <RepeatButton.Template>
+                                        <ControlTemplate TargetType="RepeatButton">
+                                            <!--  Empty template to remove hover rectangle  -->
+                                            <Rectangle Fill="Transparent" />
+                                        </ControlTemplate>
+                                    </RepeatButton.Template>
+                                </RepeatButton>
+                            </Track.IncreaseRepeatButton>
+                            <Track.Thumb>
+                                <Thumb
+                                    x:Name="Thumb"
+                                    Width="14"
+                                    Height="14"
+                                    Background="White"
+                                    BorderBrush="#FFCCCCCC"
+                                    BorderThickness="1">
+                                    <Thumb.Template>
+                                        <ControlTemplate TargetType="Thumb">
+                                            <Ellipse
+                                                Fill="White"
+                                                Stroke="#FFCCCCCC"
+                                                StrokeThickness="1" />
+                                        </ControlTemplate>
+                                    </Thumb.Template>
+                                </Thumb>
+                            </Track.Thumb>
+                        </Track>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Thumb" Property="Opacity" Value="0.5" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  Ant Design Button styles  -->
+    <Style x:Key="AntButtonStyle" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource AntBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource AntBorderBrush}" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Padding" Value="{StaticResource AntControlPadding}" />
+        <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border
+                        x:Name="Bd"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{StaticResource AntCornerRadius}">
+                        <ContentPresenter
+                            Margin="{TemplateBinding Padding}"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            RecognizesAccessKey="True" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AntHoverBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.9" />
+                        </Trigger>
+                        <Trigger Property="IsKeyboardFocused" Value="True">
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AntPrimaryBrush}" />
+                        </Trigger>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="Bd" Property="Background" Value="{StaticResource AntDisabledBrush}" />
+                            <Setter Property="Foreground" Value="#FFAAAAAA" />
+                            <Setter TargetName="Bd" Property="BorderBrush" Value="{StaticResource AntBorderBrush}" />
+                            <Setter TargetName="Bd" Property="Opacity" Value="0.8" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <Style
+        x:Key="AntPrimaryButtonStyle"
+        BasedOn="{StaticResource AntButtonStyle}"
+        TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource AntPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource AntPrimaryBrush}" />
+        <Setter Property="Foreground" Value="White" />
+        <Style.Triggers>
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource AntHoverBrush}" />
+                <Setter Property="BorderBrush" Value="{StaticResource AntHoverBrush}" />
+                <Setter Property="Foreground" Value="White" />
+            </Trigger>
+            <Trigger Property="IsPressed" Value="True">
+                <Setter Property="Opacity" Value="0.95" />
+            </Trigger>
+            <Trigger Property="IsEnabled" Value="False">
+                <Setter Property="Background" Value="{StaticResource AntDisabledBrush}" />
+                <Setter Property="BorderBrush" Value="{StaticResource AntBorderBrush}" />
+                <Setter Property="Foreground" Value="#FFAAAAAA" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+</ResourceDictionary>

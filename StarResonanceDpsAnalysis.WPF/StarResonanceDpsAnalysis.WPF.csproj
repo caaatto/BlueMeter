@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <Platforms>x64</Platforms>
+    <Version>3.0.0</Version>
+    <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
+  </PropertyGroup>
+  <PropertyGroup Label="MultilingualAppToolkit">
+    <MultilingualAppToolkitVersion>4.0.0</MultilingualAppToolkitVersion>
+    <MultilingualFallbackLanguage>en-US</MultilingualFallbackLanguage>
+    <TranslationReport Condition="'$(Configuration)' == 'Release'">true</TranslationReport>
+    <SuppressPseudoWarning Condition="'$(Configuration)' == 'Debug'">true</SuppressPseudoWarning>
+    <MATProjectType>AnonResx</MATProjectType>
+    <ApplicationIcon>ApplicationIcon.ico</ApplicationIcon>
+    <NeutralLanguage>en-US</NeutralLanguage>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\Multilingual App Toolkit\Microsoft.Multilingual.ResxResources.targets" Label="MultilingualAppToolkit" Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\Multilingual App Toolkit\v$(MultilingualAppToolkitVersion)\Microsoft.Multilingual.ResxResources.targets')" />
+  <Target Name="MATPrerequisite" BeforeTargets="PrepareForBuild" Condition="!Exists('$(MSBuildExtensionsPath)\Microsoft\Multilingual App Toolkit\Microsoft.Multilingual.ResxResources.targets')" Label="MultilingualAppToolkit">
+    <Warning Text="$(MSBuildProjectFile) is Multilingual build enabled, but the Multilingual App Toolkit is unavailable during the build. If building with Visual Studio, please check to ensure that toolkit is properly installed." />
+  </Target>
+  <ItemGroup>
+    <Compile Remove="Logging\**" />
+    <EmbeddedResource Remove="Logging\**" />
+    <None Remove="Logging\**" />
+    <Page Remove="Logging\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ApplicationIcon.ico" />
+    <Content Include="appsettings.Development.json">
+      <CopyToOutputDirectory Condition="'$(Configuration)'!='Release'">PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <!-- Link WinForm default monster names to WPF output for fallback -->
+    <!-- Copy localization JSON files -->
+    <Content Include="Localization\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Remove="App.xaml" />
+    <Compile Include="Logging\WpfLogEvents.cs" />
+    <Page Include="App.xaml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <ClassNamePostfix>Keys</ClassNamePostfix>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\Resources.en-US.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Hardcodet.NotifyIcon.Wpf" />
+    <PackageReference Include="Ihon.ResXKeyCodeGenerator">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Serilog.Extensions.Logging.File" />
+    <PackageReference Include="WPFLocalizeExtension" />
+    <PackageReference Include="CommunityToolkit.Mvvm" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" />
+    <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" />
+    <PackageReference Include="System.Reactive" />
+    <!-- Serilog observable sink -->
+    <PackageReference Include="Serilog" />
+    <PackageReference Include="Serilog.Extensions.Hosting" />
+    <PackageReference Include="Serilog.Extensions.Logging" />
+    <PackageReference Include="Serilog.Sinks.Console" />
+    <PackageReference Include="Serilog.Sinks.Observable" />
+    <PackageReference Include="Serilog.Settings.Configuration" />
+    <!-- Add the Serilog file sink to support rolling file names like logs-YYYYMMDD.log -->
+    <PackageReference Include="Serilog.Sinks.File" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\StarResonanceDpsAnalysis.Assets\StarResonanceDpsAnalysis.Assets.csproj" />
+    <ProjectReference Include="..\StarResonanceDpsAnalysis.Core\StarResonanceDpsAnalysis.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\Fonts\AlimamaShuHeiTi-Bold.ttf" />
+    <Resource Include="Assets\Fonts\HarmonyOS_Sans_SC_Bold.ttf" />
+    <Resource Include="Assets\Fonts\HarmonyOS_Sans_SC_Regular.ttf" />
+    <Resource Include="Assets\Fonts\iconfont.ttf" />
+    <Resource Include="Assets\Fonts\SAOWelcomeTT-Regular.ttf" />
+    <Resource Include="Assets\Images\ApplicationIcon.ico" />
+    <Resource Include="Assets\Images\ApplicationIcon.png" />
+    <Resource Include="Assets\Images\cancel_hover.png" />
+    <Resource Include="Assets\Images\cancel_normal.png" />
+    <Resource Include="Assets\Images\cb_temp\gold_pig_tmp.png" />
+    <Resource Include="Assets\Images\Crown.png" />
+    <Resource Include="Assets\Images\Classes_FrostMage.png" />
+    <Resource Include="Assets\Images\Classes_HeavyGuardian.png" />
+    <Resource Include="Assets\Images\Classes_VerdantOracle.png" />
+    <Resource Include="Assets\Images\Classes_Stormblade.png" />
+    <Resource Include="Assets\Images\Classes_Marksman.png" />
+    <Resource Include="Assets\Images\Classes_ShieldKnight.png" />
+    <Resource Include="Assets\Images\Classes_SoulMusician.png" />
+    <Resource Include="Assets\Images\Classes_WIndKnight.png" />
+    <Resource Include="Assets\Images\ok_hover.png" />
+    <Resource Include="Assets\Images\ok_normal.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="Data\DebugData\debugData.en-US.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\DebugData\debugData.zh-CN.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Monster\monster.en-US.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Data\Monster\monster.zh-CN.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,14 @@
+{
+    "root": true,
+    "dependentFileProviders": {
+        "add": {
+            "extensionToExtension": {
+                "add": {
+                    ".Development.json": [ ".json" ],
+                    ".function.xaml.cs": [ ".xaml" ],
+                    ".xaml.function.cs": [ ".xaml" ]
+                }
+            }
+        }
+    }
+}

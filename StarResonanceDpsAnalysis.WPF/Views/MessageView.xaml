@@ -1,0 +1,66 @@
+﻿<Window
+    x:Class="StarResonanceDpsAnalysis.WPF.Views.MessageView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ctrl="clr-namespace:StarResonanceDpsAnalysis.WPF.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:StarResonanceDpsAnalysis.WPF.Views"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Title="Message"
+    Width="400"
+    SizeToContent="Height"
+    Style="{StaticResource TransparentWindow}"
+    WindowStartupLocation="CenterOwner"
+    mc:Ignorable="d">
+
+    <Window.Resources>
+
+        <Style x:Key="ContentBorder" TargetType="Border">
+            <Setter Property="MinHeight" Value="120" />
+            <Setter Property="Padding" Value="15,12,15,12" />
+        </Style>
+
+        <Style
+            x:Key="ContentText"
+            BasedOn="{StaticResource NormalTextBlockBaseStyle}"
+            TargetType="TextBlock">
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="TextTrimming" Value="None" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="14" />
+        </Style>
+
+    </Window.Resources>
+
+    <Border Background="#ECEBE9" Style="{StaticResource ShadowWindowBorder}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ctrl:Header
+                x:Name="HeaderControl"
+                Title="{Binding Title}"
+                Grid.Row="0" />
+
+            <!--  Auto-sized content area. Height grows with text.  -->
+            <Border Grid.Row="1" Style="{StaticResource ContentBorder}">
+                <TextBlock
+                    x:Name="ContentTextBlock"
+                    Style="{StaticResource ContentText}"
+                    Text="{Binding Content}" />
+            </Border>
+
+            <ctrl:Footer
+                Grid.Row="2"
+                Height="50"
+                Background="#FFF"
+                CancelClick="Footer_CancelClick"
+                ConfirmClick="Footer_ConfirmClick" />
+
+        </Grid>
+    </Border>
+</Window>

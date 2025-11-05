@@ -16,7 +16,7 @@ namespace BlueMeter.WinForm.Core.test
         {
             if (payload == null || payload.Length == 0) return false;
 
-            SocialData social = null;
+            SocialData? social = null;
 
             // 1) 服务器返回的社交数据
             if (TryParse<GetSocialDataReply>(payload, out var reply) && reply.Data != null)

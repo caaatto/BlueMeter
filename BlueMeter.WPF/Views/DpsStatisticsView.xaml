@@ -356,16 +356,27 @@
                         TopLeft="{StaticResource MainCornerRadiusDouble}"
                         TopRight="{StaticResource MainCornerRadiusDouble}" />
                 </Border.CornerRadius>
-                <Border.Background>
-                    <SolidColorBrush>
-                        <SolidColorBrush.Color>
-                            <MultiBinding Converter="{StaticResource ConditionalPercentToColorConverter}" ConverterParameter="#BABABA">
-                                <Binding Path="AppConfig.Opacity" />
-                                <Binding Path="AppConfig.MouseThroughEnabled" />
-                            </MultiBinding>
-                        </SolidColorBrush.Color>
-                    </SolidColorBrush>
-                </Border.Background>
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <SolidColorBrush>
+                                    <SolidColorBrush.Color>
+                                        <MultiBinding Converter="{StaticResource ConditionalPercentToColorConverter}" ConverterParameter="#BABABA">
+                                            <Binding Path="AppConfig.Opacity" />
+                                            <Binding Path="AppConfig.MouseThroughEnabled" />
+                                        </MultiBinding>
+                                    </SolidColorBrush.Color>
+                                </SolidColorBrush>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding AppConfig.ShowBackgroundInDpsMeter}" Value="True">
+                                <Setter Property="Background" Value="#80BABABA" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
                 <!--  顶部栏,Grid 一般不设置属性  -->
                 <Grid Margin="2">
                     <!--  统计类型标注  -->
@@ -618,16 +629,27 @@
             </Border>
 
             <Border Grid.Row="1">
-                <Border.Background>
-                    <SolidColorBrush>
-                        <SolidColorBrush.Color>
-                            <MultiBinding Converter="{StaticResource ConditionalPercentToColorConverter}" ConverterParameter="#191919">
-                                <Binding Path="AppConfig.Opacity" />
-                                <Binding Path="AppConfig.MouseThroughEnabled" />
-                            </MultiBinding>
-                        </SolidColorBrush.Color>
-                    </SolidColorBrush>
-                </Border.Background>
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <SolidColorBrush>
+                                    <SolidColorBrush.Color>
+                                        <MultiBinding Converter="{StaticResource ConditionalPercentToColorConverter}" ConverterParameter="#191919">
+                                            <Binding Path="AppConfig.Opacity" />
+                                            <Binding Path="AppConfig.MouseThroughEnabled" />
+                                        </MultiBinding>
+                                    </SolidColorBrush.Color>
+                                </SolidColorBrush>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding AppConfig.ShowBackgroundInDpsMeter}" Value="True">
+                                <Setter Property="Background" Value="#CC191919" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
                 <ctrl:SortedDpsControl
                     ItemTemplate="{StaticResource ProgressBarDataTemplate}"
                     ItemsSource="{Binding CurrentStatisticData.Data}"
@@ -639,16 +661,27 @@
                 Grid.Row="2"
                 Height="5"
                 ClipToBounds="True">
-                <Border.Background>
-                    <SolidColorBrush>
-                        <SolidColorBrush.Color>
-                            <MultiBinding Converter="{StaticResource ConditionalPercentToColorConverter}" ConverterParameter="#191919">
-                                <Binding Path="AppConfig.Opacity" />
-                                <Binding Path="AppConfig.MouseThroughEnabled" />
-                            </MultiBinding>
-                        </SolidColorBrush.Color>
-                    </SolidColorBrush>
-                </Border.Background>
+                <Border.Style>
+                    <Style TargetType="Border">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <SolidColorBrush>
+                                    <SolidColorBrush.Color>
+                                        <MultiBinding Converter="{StaticResource ConditionalPercentToColorConverter}" ConverterParameter="#191919">
+                                            <Binding Path="AppConfig.Opacity" />
+                                            <Binding Path="AppConfig.MouseThroughEnabled" />
+                                        </MultiBinding>
+                                    </SolidColorBrush.Color>
+                                </SolidColorBrush>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding AppConfig.ShowBackgroundInDpsMeter}" Value="True">
+                                <Setter Property="Background" Value="#CC191919" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
 
                 <!--  TODO: 当 DataStorage 触发 ServerConnectionStateChanged 时, 隐藏该 Grid  -->
                 <Rectangle x:Name="LoadingStripe" Style="{StaticResource LoadingBlockRectangle}">
@@ -692,18 +725,28 @@
 
             <Border
                 x:Name="ContentBorder"
-                Grid.Row="3"
-                Style="{StaticResource FooterContentBorder}">
-                <Border.Background>
-                    <SolidColorBrush>
-                        <SolidColorBrush.Color>
-                            <MultiBinding Converter="{StaticResource ConditionalPercentToColorConverter}" ConverterParameter="#BABABA">
-                                <Binding Path="DataContext.AppConfig.Opacity" RelativeSource="{RelativeSource AncestorType=Window}" />
-                                <Binding Path="DataContext.AppConfig.MouseThroughEnabled" RelativeSource="{RelativeSource AncestorType=Window}" />
-                            </MultiBinding>
-                        </SolidColorBrush.Color>
-                    </SolidColorBrush>
-                </Border.Background>
+                Grid.Row="3">
+                <Border.Style>
+                    <Style TargetType="Border" BasedOn="{StaticResource FooterContentBorder}">
+                        <Setter Property="Background">
+                            <Setter.Value>
+                                <SolidColorBrush>
+                                    <SolidColorBrush.Color>
+                                        <MultiBinding Converter="{StaticResource ConditionalPercentToColorConverter}" ConverterParameter="#BABABA">
+                                            <Binding Path="DataContext.AppConfig.Opacity" RelativeSource="{RelativeSource AncestorType=Window}" />
+                                            <Binding Path="DataContext.AppConfig.MouseThroughEnabled" RelativeSource="{RelativeSource AncestorType=Window}" />
+                                        </MultiBinding>
+                                    </SolidColorBrush.Color>
+                                </SolidColorBrush>
+                            </Setter.Value>
+                        </Setter>
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding DataContext.AppConfig.ShowBackgroundInDpsMeter, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                <Setter Property="Background" Value="#80BABABA" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
                 <Grid Margin="6">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />

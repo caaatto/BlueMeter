@@ -47,12 +47,20 @@
         </Style>
 
         <Style x:Key="PluginListBorder" TargetType="Border">
-            <Setter Property="Background" Value="#FFF" />
+            <Setter Property="Background">
+                <Setter.Value>
+                    <Binding Path="AppConfig.BackgroundOnlyMode" Converter="{StaticResource BackgroundOnlyModeToBackgroundConverter}" />
+                </Setter.Value>
+            </Setter>
             <Setter Property="CornerRadius" Value="10" />
         </Style>
 
         <Style x:Key="PluginDetailBorder" TargetType="Border">
-            <Setter Property="Background" Value="#FFF" />
+            <Setter Property="Background">
+                <Setter.Value>
+                    <Binding Path="AppConfig.BackgroundOnlyMode" Converter="{StaticResource BackgroundOnlyModeToBackgroundConverter}" />
+                </Setter.Value>
+            </Setter>
             <Setter Property="CornerRadius" Value="10" />
         </Style>
 

@@ -1,0 +1,151 @@
+<UserControl
+    x:Class="BlueMeter.WPF.Controls.ControlBox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    d:DesignHeight="30"
+    d:DesignWidth="150"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <Color x:Key="NMM_HoverColor">#EFEFEF</Color>
+        <Color x:Key="Close_HoverColor">#E81123</Color>
+
+        <Style x:Key="ButtonBase" TargetType="Button">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="0" />
+        </Style>
+
+        <Style
+            x:Key="NMM_ButtonBase"
+            BasedOn="{StaticResource ButtonBase}"
+            TargetType="Button">
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation
+                                Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
+                                To="{StaticResource NMM_HoverColor}"
+                                Duration="0:0:0.3" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation
+                                Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
+                                To="Transparent"
+                                Duration="0:0:0.3" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style
+            x:Key="MinimizeButton"
+            BasedOn="{StaticResource NMM_ButtonBase}"
+            TargetType="Button">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="Blue" />
+                    <!--<SolidColorBrush Color="Transparent"/>-->
+                </Setter.Value>
+            </Setter>
+
+            <EventSetter Event="Click" Handler="MinimizeButton_Click" />
+        </Style>
+
+        <Style
+            x:Key="MaximizeButton"
+            BasedOn="{StaticResource NMM_ButtonBase}"
+            TargetType="Button">
+            <Setter Property="Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="Green" />
+                    <!--<SolidColorBrush Color="Transparent"/>-->
+                </Setter.Value>
+            </Setter>
+
+            <EventSetter Event="Click" Handler="MaximizeButton_Click" />
+        </Style>
+
+        <Style
+            x:Key="CloseButton"
+            BasedOn="{StaticResource ButtonBase}"
+            TargetType="Button">
+            <EventSetter Event="Click" Handler="CloseButton_Click" />
+        </Style>
+
+        <Style x:Key="CloseBorder" TargetType="Border">
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation
+                                Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
+                                To="{StaticResource Close_HoverColor}"
+                                Duration="0:0:0.3" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation
+                                Storyboard.TargetProperty="(Button.Background).(SolidColorBrush.Color)"
+                                To="Transparent"
+                                Duration="0:0:0.3" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <SolidColorBrush Color="Red" />
+                    <!--<SolidColorBrush Color="Transparent"/>-->
+                </Setter.Value>
+            </Setter>
+            <Setter Property="CornerRadius">
+                <Setter.Value>
+                    <CornerRadius
+                        BottomLeft="0"
+                        BottomRight="0"
+                        TopLeft="0"
+                        TopRight="{StaticResource MainCornerRadiusDouble}" />
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
+    <Border>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button
+                x:Name="MinimizeButton"
+                Grid.Column="0"
+                Style="{StaticResource MinimizeButton}" />
+            <Button
+                x:Name="MaximizeButton"
+                Grid.Column="1"
+                Style="{StaticResource MaximizeButton}" />
+            <Button
+                x:Name="CloseButton"
+                Grid.Column="2"
+                Style="{StaticResource CloseButton}">
+                <Border Style="{StaticResource CloseBorder}" />
+            </Button>
+        </Grid>
+    </Border>
+</UserControl>

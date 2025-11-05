@@ -1,0 +1,65 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:controls="clr-namespace:BlueMeter.WPF.Controls">
+
+    <!--  CardHeader default template  -->
+    <Style TargetType="{x:Type controls:CardHeader}">
+        <Style.Resources>
+            <Style x:Key="TitleStrip" TargetType="Border">
+                <Setter Property="Width" Value="3" />
+                <Setter Property="Height" Value="24" />
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="VerticalAlignment" Value="Top" />
+                <Setter Property="Background" Value="#2297F4" />
+            </Style>
+            <Style
+                x:Key="SectionTitleText"
+                BasedOn="{StaticResource NormalTextBlockBaseStyle}"
+                TargetType="TextBlock">
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="Margin" Value="20,0,0,10" />
+                <Setter Property="FontSize" Value="18" />
+                <Setter Property="Foreground" Value="#2297F4" />
+            </Style>
+            <Style
+                x:Key="SectionSubTitleText"
+                BasedOn="{StaticResource NormalTextBlockBaseStyle}"
+                TargetType="TextBlock">
+                <Setter Property="HorizontalAlignment" Value="Right" />
+                <Setter Property="VerticalAlignment" Value="Center" />
+                <Setter Property="TextAlignment" Value="Right" />
+                <Setter Property="Margin" Value="0,0,10,6" />
+                <Setter Property="Foreground" Value="#2297F4" />
+                <Setter Property="TextWrapping" Value="WrapWithOverflow" />
+            </Style>
+        </Style.Resources>
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type controls:CardHeader}">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition />
+                        </Grid.ColumnDefinitions>
+
+                        <!--  Decoration  -->
+                        <Border Style="{StaticResource TitleStrip}" />
+
+                        <!--  Title  -->
+                        <TextBlock
+                            Grid.Column="0"
+                            Style="{StaticResource SectionTitleText}"
+                            Text="{TemplateBinding Title}" />
+
+                        <!--  Subtitle  -->
+                        <TextBlock
+                            Grid.Column="1"
+                            Style="{StaticResource SectionSubTitleText}"
+                            Text="{TemplateBinding Subtitle}" />
+                    </Grid>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+</ResourceDictionary>

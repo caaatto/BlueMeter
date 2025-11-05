@@ -20,7 +20,7 @@ This document describes all bug fixes and memory leaks that were identified and 
 ## Memory Leak Fixes
 
 ### 1. DebugFunctions - PropertyChanged Event Leak
-**File:** `StarResonanceDpsAnalysis.WPF\ViewModels\DebugFunctions.cs`
+**File:** `BlueMeter.WPF\ViewModels\DebugFunctions.cs`
 
 **Problem:**
 - Line 72: `PropertyChanged += OnPropertyChanged;` was never unsubscribed
@@ -39,7 +39,7 @@ Event handlers create strong references. When an object subscribes to its own ev
 ---
 
 ### 2. MainViewModel - CultureChanged Event Leak
-**File:** `StarResonanceDpsAnalysis.WPF\ViewModels\MainViewModel.cs`
+**File:** `BlueMeter.WPF\ViewModels\MainViewModel.cs`
 
 **Problem:**
 - Line 61: `_localizationManager.CultureChanged += OnCultureChanged;` was never unsubscribed
@@ -61,7 +61,7 @@ This is a classic "singleton holding transient" memory leak pattern. When a long
 ---
 
 ### 3. DpsStatisticsSubViewModel - CollectionChanged Event Leak
-**File:** `StarResonanceDpsAnalysis.WPF\ViewModels\DpsStatisticsSubViewModel.cs`
+**File:** `BlueMeter.WPF\ViewModels\DpsStatisticsSubViewModel.cs`
 
 **Problem:**
 - Line 57: `_data.CollectionChanged += DataChanged;` subscribed to collection events
@@ -85,7 +85,7 @@ Local functions in C# create closures that capture variables from the surroundin
 ---
 
 ### 4. SettingsViewModel - Multiple Event Subscription Leaks
-**File:** `StarResonanceDpsAnalysis.WPF\ViewModels\SettingsViewModel.cs`
+**File:** `BlueMeter.WPF\ViewModels\SettingsViewModel.cs`
 
 **Problem:**
 - Line 111: `localization.CultureChanged += OnCultureChanged` - singleton → transient leak
@@ -117,9 +117,9 @@ Static events are particularly dangerous because they're never garbage collected
 
 ### 1. Theme Color Selection Not Working
 **Files:**
-- `StarResonanceDpsAnalysis.WPF\Config\AppConfig.cs` (lines 80-84)
-- `StarResonanceDpsAnalysis.WPF\Views\SettingsView.xaml` (lines 683-688)
-- `StarResonanceDpsAnalysis.WPF\Views\SettingsView.xaml.cs` (lines 32-39)
+- `BlueMeter.WPF\Config\AppConfig.cs` (lines 80-84)
+- `BlueMeter.WPF\Views\SettingsView.xaml` (lines 683-688)
+- `BlueMeter.WPF\Views\SettingsView.xaml.cs` (lines 32-39)
 
 **Problem:**
 Theme color buttons in Settings were purely decorative with no functionality. They had no Click handlers or Command bindings. Users could not change the window theme color.
@@ -165,9 +165,9 @@ To enable instant updates without restarting, `MainViewModel` subscribes to `ICo
 
 ### 2. Background Image Selection Not Working
 **Files:**
-- `StarResonanceDpsAnalysis.WPF\Config\AppConfig.cs` (lines 86-90)
-- `StarResonanceDpsAnalysis.WPF\Views\SettingsView.xaml` (line 745)
-- `StarResonanceDpsAnalysis.WPF\Views\SettingsView.xaml.cs` (lines 41-54)
+- `BlueMeter.WPF\Config\AppConfig.cs` (lines 86-90)
+- `BlueMeter.WPF\Views\SettingsView.xaml` (line 745)
+- `BlueMeter.WPF\Views\SettingsView.xaml.cs` (lines 41-54)
 
 **Problem:**
 "Select Image" button for background image had no functionality. Button had no Click handler or Command binding. Users could not set a custom background image.
@@ -327,7 +327,7 @@ Now the converter properly handles loading the image, creating the ImageBrush wi
 ```
 Steps:
 - Open Task Manager
-- Find StarResonanceDpsAnalysis.exe
+- Find BlueMeter.exe
 - Note initial memory usage
 - Perform repetitive operations:
   * Open/close Settings 50+ times

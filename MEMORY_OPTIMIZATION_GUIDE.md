@@ -1,4 +1,4 @@
-# ?? Memory Optimization Guide for StarResonanceDpsAnalysis
+# ?? Memory Optimization Guide for BlueMeter
 
 ## Overview
 This guide provides comprehensive memory optimization strategies implemented to significantly reduce memory usage across the entire project.

@@ -1,0 +1,91 @@
+<UserControl
+    x:Class="BlueMeter.WPF.Controls.SkillPopupControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="root"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Background="Transparent"
+    mc:Ignorable="d">
+    <!--  确保能接收鼠标  -->
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="PanelBgBrush" Color="#CC0F1720" />
+        <SolidColorBrush x:Key="AccentYellow" Color="#FFD430" />
+        <ItemsPanelTemplate x:Key="StackItemsPanel">
+            <StackPanel IsItemsHost="True" Orientation="Vertical" />
+        </ItemsPanelTemplate>
+    </UserControl.Resources>
+
+    <Border
+        Padding="10"
+        Background="{StaticResource PanelBgBrush}"
+        CornerRadius="8"
+        IsHitTestVisible="True">
+        <Border.Effect>
+            <DropShadowEffect
+                BlurRadius="8"
+                Opacity="0.55"
+                ShadowDepth="0" />
+        </Border.Effect>
+
+        <StackPanel>
+            <TextBlock
+                Margin="0,0,0,8"
+                FontSize="18"
+                FontWeight="Bold"
+                Foreground="White"
+                Text="{Binding Title, ElementName=root}" />
+
+            <ScrollViewer
+                MaxHeight="360"
+                Focusable="False"
+                VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsPanel="{StaticResource StackItemsPanel}"
+                              ItemsSource="{Binding ItemsSource, ElementName=root}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border
+                                Margin="0,6,0,6"
+                                Padding="6"
+                                Background="#00000000"
+                                CornerRadius="6">
+                                <StackPanel>
+                                    <TextBlock
+                                        FontSize="14"
+                                        FontWeight="Bold"
+                                        Foreground="{StaticResource AccentYellow}"
+                                        Text="{Binding SkillName}"
+                                        TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Margin="0,4,0,0" Foreground="White">
+                                        <Run Text="总伤害: " />
+                                        <Run FontWeight="Bold" Text="{Binding TotalDamage}" />
+                                    </TextBlock>
+                                    <TextBlock Margin="0,4,0,0">
+                                        <Run Text="命中: " />
+                                        <Run
+                                            FontWeight="Bold"
+                                            Foreground="{StaticResource AccentYellow}"
+                                            Text="{Binding HitCount}" />
+                                        <Run Text="    暴击次数: " />
+                                        <Run
+                                            FontWeight="Bold"
+                                            Foreground="{StaticResource AccentYellow}"
+                                            Text="{Binding CritCount}" />
+                                        <Run Text="    平均伤害: " />
+                                        <Run
+                                            FontWeight="Bold"
+                                            Foreground="{StaticResource AccentYellow}"
+                                            Text="{Binding AvgDamage}" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </StackPanel>
+    </Border>
+</UserControl>

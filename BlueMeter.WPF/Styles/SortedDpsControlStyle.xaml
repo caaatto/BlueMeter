@@ -1,0 +1,65 @@
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:ctrl="clr-namespace:BlueMeter.WPF.Controls">
+
+    <Style TargetType="ctrl:SortedDpsControl">
+        <!-- <Setter Property="IsHitTestVisible" Value="False" /> -->
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ctrl:SortedDpsControl">
+                    <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                        <ListBox
+                            x:Name="PART_ListBox"
+                            HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Stretch"
+                            AlternationCount="10000"
+                            Background="Transparent"
+                            BorderBrush="Transparent"
+                            BorderThickness="0"
+                            ItemTemplate="{Binding ItemTemplate, RelativeSource={RelativeSource TemplatedParent}}"
+                            ItemsSource="{Binding ItemsSource, RelativeSource={RelativeSource TemplatedParent}}"
+                            ScrollViewer.CanContentScroll="True"
+                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                            SelectedItem="{Binding SelectedItem, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}">
+
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <!-- <Setter Property="Background" Value="Transparent" /> -->
+                                    <!-- <Setter Property="BorderBrush" Value="Transparent" /> -->
+                                    <!-- <Setter Property="BorderThickness" Value="0" /> -->
+                                    <!-- <Setter Property="Padding" Value="0" /> -->
+                                    <!-- <Setter Property="Margin" Value="0" /> -->
+                                    <!-- <Setter Property="Template"> -->
+                                    <!--     <Setter.Value> -->
+                                    <!--         <ControlTemplate TargetType="ListBoxItem"> -->
+                                    <!--  <Border  -->
+                                    <!--  Background="{TemplateBinding Background}"  -->
+                                    <!--  BorderBrush="{TemplateBinding BorderBrush}"  -->
+                                    <!--  BorderThickness="{TemplateBinding BorderThickness}"  -->
+                                    <!--  Padding="{TemplateBinding Padding}">  -->
+                                    <!--  <ContentPresenter  -->
+                                    <!--  HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  -->
+                                    <!--  VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />  -->
+                                    <!--             </Border> -->
+                                    <!--  ~1~ No triggers = no selection visual feedback @1@  -->
+                                    <!--         </ControlTemplate> -->
+                                    <!--     </Setter.Value> -->
+                                    <!-- </Setter> -->
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <ctrl:AnimatedStackPanel />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                        </ListBox>
+                    </Border>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

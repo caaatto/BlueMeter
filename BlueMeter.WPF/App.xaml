@@ -1,0 +1,33 @@
+<Application
+    x:Class="BlueMeter.WPF.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:lex="http://wpflocalizeextension.codeplex.com"
+    xmlns:themes="clr-namespace:BlueMeter.WPF.Themes">
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- <lex:ResxLocalizationProvider.DefaultAssembly Value="BlueMeter.WPF" /> -->
+            <!-- <lex:ResxLocalizationProvider.DefaultDictionary Value="Properties.Resources" /> -->
+            <ResourceDictionary.MergedDictionaries>
+                <themes:ThemesDictionary Theme="Light" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/BaseStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/ButtonStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/MenuStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/FooterStyles.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/TestThemeStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/Classes/Classes.Images.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/SeparatorStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/CardControlStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Converters/ConveterDictionary.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/AntControls.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/SwitchControl.xaml" />
+
+                <!--  Load SortedDpsControl default style  -->
+                <ResourceDictionary Source="pack://application:,,,/Styles/SortedDpsControlStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/DpsIndicatorControlStyle.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/ImageResourceDictionary.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/Styles/CardHeaderStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

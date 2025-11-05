@@ -55,7 +55,7 @@
             <Setter Property="CornerRadius" Value="5" />
             <Setter Property="Background">
                 <Setter.Value>
-                    <Binding Path="AppConfig.BackgroundOnlyMode" Converter="{StaticResource BackgroundOnlyModeToBackgroundConverter}" />
+                    <Binding Path="DataContext.AppConfig.BackgroundOnlyMode" RelativeSource="{RelativeSource AncestorType=Window}" Converter="{StaticResource BackgroundOnlyModeToBackgroundConverter}" />
                 </Setter.Value>
             </Setter>
         </Style>
@@ -108,7 +108,7 @@
             <Setter Property="CornerRadius" Value="5" />
             <Setter Property="Background">
                 <Setter.Value>
-                    <Binding Path="AppConfig.BackgroundOnlyMode" Converter="{StaticResource BackgroundOnlyModeToBackgroundConverter}" />
+                    <Binding Path="DataContext.AppConfig.BackgroundOnlyMode" RelativeSource="{RelativeSource AncestorType=Window}" Converter="{StaticResource BackgroundOnlyModeToBackgroundConverter}" />
                 </Setter.Value>
             </Setter>
         </Style>

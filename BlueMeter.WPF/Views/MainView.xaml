@@ -49,7 +49,7 @@
         <Style x:Key="PluginListBorder" TargetType="Border">
             <Setter Property="Background">
                 <Setter.Value>
-                    <Binding Path="AppConfig.BackgroundOnlyMode" Converter="{StaticResource BackgroundOnlyModeToBackgroundConverter}" />
+                    <Binding Path="DataContext.AppConfig.BackgroundOnlyMode" RelativeSource="{RelativeSource AncestorType=Window}" Converter="{StaticResource BackgroundOnlyModeToBackgroundConverter}" />
                 </Setter.Value>
             </Setter>
             <Setter Property="CornerRadius" Value="10" />
@@ -58,7 +58,7 @@
         <Style x:Key="PluginDetailBorder" TargetType="Border">
             <Setter Property="Background">
                 <Setter.Value>
-                    <Binding Path="AppConfig.BackgroundOnlyMode" Converter="{StaticResource BackgroundOnlyModeToBackgroundConverter}" />
+                    <Binding Path="DataContext.AppConfig.BackgroundOnlyMode" RelativeSource="{RelativeSource AncestorType=Window}" Converter="{StaticResource BackgroundOnlyModeToBackgroundConverter}" />
                 </Setter.Value>
             </Setter>
             <Setter Property="CornerRadius" Value="10" />

@@ -41,7 +41,7 @@
     </DrawingImage>
 
     <!--  神盾骑士 (ShieldKnight)  -->
-    <BitmapImage x:Key="ClassesShieldKnightIcon" UriSource="pack://application:,,,/Assets/Images/Classes_ShieldKnight.png" />
+    <BitmapImage x:Key="ClassesShieldKnightIcon" UriSource="pack://application:,,,/Assets/Images/ShieldKnight_Profession.png" />
     <!-- <BitmapImage x:Key="{x:Static models:Classes.ShieldKnight}" UriSource="pack://application:,,,/Assets/Images/Classes_ShieldKnight.png" /> -->
     <DrawingImage x:Key="{x:Static models:Classes.ShieldKnight}" RenderOptions.EdgeMode="Aliased">
         <DrawingImage.Drawing>
@@ -55,7 +55,7 @@
     </DrawingImage>
 
     <!--  巨刃守卫者 (HeavyGuardian)  -->
-    <BitmapImage x:Key="ClassesHeavyGuardianIcon" UriSource="pack://application:,,,/Assets/Images/Classes_HeavyGuardian.png" />
+    <BitmapImage x:Key="ClassesHeavyGuardianIcon" UriSource="pack://application:,,,/Assets/Images/HeavyGuardian_Profession.png" />
     <!-- <BitmapImage x:Key="{x:Static models:Classes.HeavyGuardian}" UriSource="pack://application:,,,/Assets/Images/Classes_HeavyGuardian.png" /> -->
     <DrawingImage x:Key="{x:Static models:Classes.HeavyGuardian}" RenderOptions.EdgeMode="Aliased">
         <DrawingImage.Drawing>
@@ -69,7 +69,7 @@
     </DrawingImage>
 
     <!--  雷影剑士 (Stormblade)  -->
-    <BitmapImage x:Key="ClassesStormbladeIcon" UriSource="pack://application:,,,/Assets/Images/Classes_Stormblade.png" />
+    <BitmapImage x:Key="ClassesStormbladeIcon" UriSource="pack://application:,,,/Assets/Images/Stormblade_Profession.png" />
     <!-- <BitmapImage x:Key="{x:Static models:Classes.Stormblade}" UriSource="pack://application:,,,/Assets/Images/Classes_Stormblade.png" /> -->
     <DrawingImage x:Key="{x:Static models:Classes.Stormblade}" RenderOptions.EdgeMode="Aliased">
         <DrawingImage.Drawing>
@@ -83,7 +83,7 @@
     </DrawingImage>
 
     <!--  青岚骑士 (WindKnight)  -->
-    <BitmapImage x:Key="ClassesWindKnightIcon" UriSource="pack://application:,,,/Assets/Images/Classes_WIndKnight.png" />
+    <BitmapImage x:Key="ClassesWindKnightIcon" UriSource="pack://application:,,,/Assets/Images/WindKnight_Profession.png" />
     <!-- <BitmapImage x:Key="{x:Static models:Classes.WindKnight}" UriSource="pack://application:,,,/Assets/Images/Classes_WIndKnight.png" /> -->
     <DrawingImage x:Key="{x:Static models:Classes.WindKnight}" RenderOptions.EdgeMode="Aliased">
         <DrawingImage.Drawing>
@@ -97,7 +97,7 @@
     </DrawingImage>
 
     <!--  冰魔导师 (FrostMage)  -->
-    <BitmapImage x:Key="ClassesFrostMageIcon" UriSource="pack://application:,,,/Assets/Images/Classes_FrostMage.png" />
+    <BitmapImage x:Key="ClassesFrostMageIcon" UriSource="pack://application:,,,/Assets/Images/FrostMage_Profession.png" />
     <!-- <BitmapImage x:Key="{x:Static models:Classes.FrostMage}" UriSource="pack://application:,,,/Assets/Images/Classes_FrostMage.png" /> -->
     <DrawingImage x:Key="{x:Static models:Classes.FrostMage}" RenderOptions.EdgeMode="Aliased">
         <DrawingImage.Drawing>
@@ -108,7 +108,7 @@
     </DrawingImage>
 
     <!--  神射手 (Marksman)  -->
-    <BitmapImage x:Key="ClassesMarksmanIcon" UriSource="pack://application:,,,/Assets/Images/Classes_Marksman.png" />
+    <BitmapImage x:Key="ClassesMarksmanIcon" UriSource="pack://application:,,,/Assets/Images/Marksman_Profession.png" />
     <!-- <BitmapImage x:Key="{x:Static models:Classes.Marksman}" UriSource="pack://application:,,,/Assets/Images/Classes_Marksman.png" /> -->
     <DrawingImage x:Key="{x:Static models:Classes.Marksman}" RenderOptions.EdgeMode="Aliased">
         <DrawingImage.Drawing>
@@ -124,7 +124,7 @@
 
 
     <!--  森语者 (VerdantOracle)  -->
-    <BitmapImage x:Key="ClassesIconVerdantOracleIcon" UriSource="pack://application:,,,/Assets/Images/Classes_VerdantOracle.png" />
+    <BitmapImage x:Key="ClassesIconVerdantOracleIcon" UriSource="pack://application:,,,/Assets/Images/VerdantOracle_Profession.png" />
     <!-- <BitmapImage x:Key="{x:Static models:Classes.VerdantOracle}" UriSource="pack://application:,,,/Assets/Images/Classes_VerdantOracle.png" /> -->
     <DrawingImage x:Key="{x:Static models:Classes.VerdantOracle}" RenderOptions.EdgeMode="Aliased">
         <DrawingImage.Drawing>
@@ -138,7 +138,7 @@
     </DrawingImage>
 
     <!--  灵魂乐手 (SoulMusician)  -->
-    <BitmapImage x:Key="ClassesIconShieldKnightIcon" UriSource="pack://application:,,,/Assets/Images/Classes_SoulMusician.png" />
+    <BitmapImage x:Key="ClassesIconShieldKnightIcon" UriSource="pack://application:,,,/Assets/Images/SoulMusician_Profession.png" />
     <!-- <BitmapImage x:Key="{x:Static models:Classes.SoulMusician}" UriSource="pack://application:,,,/Assets/Images/Classes_SoulMusician.png" /> -->
     <DrawingImage x:Key="{x:Static models:Classes.SoulMusician}" RenderOptions.EdgeMode="Aliased">
         <DrawingImage.Drawing>

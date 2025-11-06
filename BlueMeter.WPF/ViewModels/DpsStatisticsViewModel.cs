@@ -64,9 +64,6 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
     [ObservableProperty] private string _battleStatusLabel = string.Empty;
     private Dictionary<long, PlayerInfo>? _historicalPlayerInfos;
     private Dictionary<long, DpsData>? _historicalDpsData;
-    private Dictionary<long, PlayerInfo>? _snapshotPlayerInfos;
-    private Dictionary<long, DpsData>? _snapshotDpsData;
-    private TimeSpan _snapshotBattleDuration;
 
     /// <inheritdoc/>
     public DpsStatisticsViewModel(IApplicationControlService appControlService,
@@ -585,19 +582,47 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
             _logger.LogInformation("Loading historical encounter: {EncounterId} from {StartTime}",
                 encounterData.EncounterId, encounterData.StartTime);
 
+            _logger.LogInformation("Encounter has {PlayerCount} players in PlayerStats", encounterData.PlayerStats.Count);
+
             // Create PlayerInfo dictionary
             _historicalPlayerInfos = new Dictionary<long, PlayerInfo>();
             _historicalDpsData = new Dictionary<long, DpsData>();
 
             foreach (var playerStats in encounterData.PlayerStats.Values)
             {
+                _logger.LogInformation("Processing player UID={UID}, Name={Name}, TotalDamage={Damage}, IsNpc={IsNpc}",
+                    playerStats.UID, playerStats.Name, playerStats.TotalAttackDamage, playerStats.IsNpcData);
+
                 // Create PlayerInfo using factory method
                 var playerInfo = Core.Data.Database.EncounterService.CreatePlayerInfoFromEncounter(playerStats);
+
+                // FINAL FALLBACK: If name is still "Unknown", check current live PlayerInfo
+                if (string.IsNullOrEmpty(playerInfo.Name) || playerInfo.Name == "Unknown" || playerInfo.Name.StartsWith("UID:"))
+                {
+                    if (_storage.ReadOnlyPlayerInfoDatas.TryGetValue(playerStats.UID, out var livePlayerInfo))
+                    {
+                        if (!string.IsNullOrEmpty(livePlayerInfo.Name) && livePlayerInfo.Name != "Unknown")
+                        {
+                            _logger.LogInformation("Using LIVE player name for UID={UID}: '{Name}' (was: '{OldName}')",
+                                playerStats.UID, livePlayerInfo.Name, playerInfo.Name);
+
+                            // Update with live data
+                            playerInfo = livePlayerInfo;
+                        }
+                    }
+                }
+
                 _historicalPlayerInfos[playerStats.UID] = playerInfo;
+
+                _logger.LogInformation("Created PlayerInfo: UID={UID}, Name={Name}, Class={Class}, Spec={Spec}",
+                    playerInfo.UID, playerInfo.Name, playerInfo.Class, playerInfo.Spec);
 
                 // Create DpsData using factory method
                 var dpsData = Core.Data.Database.EncounterService.CreateDpsDataFromEncounter(playerStats, encounterData.DurationMs);
                 _historicalDpsData[playerStats.UID] = dpsData;
+
+                _logger.LogInformation("Created DpsData: UID={UID}, TotalDamage={Damage}, TotalHeal={Heal}, Skills={SkillCount}",
+                    dpsData.UID, dpsData.TotalAttackDamage, dpsData.TotalHeal, dpsData.ReadOnlySkillDataList.Count);
             }
 
             // Update UI on dispatcher thread

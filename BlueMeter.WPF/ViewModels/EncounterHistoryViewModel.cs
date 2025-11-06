@@ -148,6 +148,57 @@ public partial class EncounterHistoryViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private async Task DeleteAllHistoryAsync()
+    {
+        var result = MessageBox.Show(
+            $"⚠️ WARNING ⚠️\n\n" +
+            $"This will delete ALL {Encounters.Count} encounters from the database!\n\n" +
+            "This action CANNOT be undone.\n\n" +
+            "Are you absolutely sure you want to delete the entire history?",
+            "Delete All History",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning);
+
+        if (result != MessageBoxResult.Yes)
+        {
+            StatusMessage = "Delete cancelled";
+            return;
+        }
+
+        IsLoading = true;
+        StatusMessage = "Deleting all encounters...";
+
+        try
+        {
+            var deletedCount = await DataStorageExtensions.DeleteAllEncountersAsync();
+
+            StatusMessage = $"Successfully deleted {deletedCount} encounter(s)";
+
+            // Refresh the list
+            await RefreshEncountersAsync();
+
+            MessageBox.Show(
+                $"Successfully deleted {deletedCount} encounter(s) from the database.",
+                "History Cleared",
+                MessageBoxButton.OK,
+                MessageBoxImage.Information);
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Error deleting encounters: {ex.Message}";
+            MessageBox.Show(
+                $"An error occurred while deleting encounters:\n\n{ex.Message}",
+                "Error",
+                MessageBoxButton.OK,
+                MessageBoxImage.Error);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    [RelayCommand]
     private void Close()
     {
         RequestClose?.Invoke();
@@ -174,6 +225,7 @@ public partial class EncounterSummaryViewModel : BaseViewModel
     public long TotalHealing => _encounter.TotalHealing;
     public int PlayerCount => _encounter.PlayerCount;
     public bool IsActive => _encounter.IsActive;
+    public string BossName => _encounter.BossName;
 
     public string DisplayName => _encounter.DisplayName;
     public string FormattedStartTime => StartTime.ToString("yyyy-MM-dd HH:mm:ss");

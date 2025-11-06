@@ -160,13 +160,69 @@ public class EncounterRepository
             .Include(e => e.PlayerStats)
             .FirstOrDefaultAsync(e => e.Id == encounterId);
 
-        if (encounter == null) return;
+        if (encounter == null)
+        {
+            DebugLogger.Log($"[UpdateEncounterTotalsAsync] Encounter ID {encounterId} not found!");
+            return;
+        }
 
-        encounter.TotalDamage = encounter.PlayerStats.Sum(s => s.TotalAttackDamage);
-        encounter.TotalHealing = encounter.PlayerStats.Sum(s => s.TotalHeal);
-        encounter.PlayerCount = encounter.PlayerStats.Count;
+        DebugLogger.Log($"[UpdateEncounterTotalsAsync] Updating encounter {encounter.EncounterId}");
+        DebugLogger.Log($"[UpdateEncounterTotalsAsync] PlayerStats count: {encounter.PlayerStats.Count}");
+
+        var totalDamage = encounter.PlayerStats.Sum(s => s.TotalAttackDamage);
+        var totalHealing = encounter.PlayerStats.Sum(s => s.TotalHeal);
+        var playerCount = encounter.PlayerStats.Count(s => !s.IsNpcData);
+
+        DebugLogger.Log($"[UpdateEncounterTotalsAsync] Calculated: TotalDamage={totalDamage}, TotalHealing={totalHealing}, PlayerCount={playerCount}");
+
+        encounter.TotalDamage = totalDamage;
+        encounter.TotalHealing = totalHealing;
+        encounter.PlayerCount = playerCount;
+
+        // Identify primary target/boss (NPC with most damage taken)
+        var primaryTarget = encounter.PlayerStats
+            .Where(s => s.IsNpcData && s.TotalTakenDamage > 0)
+            .OrderByDescending(s => s.TotalTakenDamage)
+            .FirstOrDefault();
+
+        if (primaryTarget != null)
+        {
+            encounter.BossName = primaryTarget.NameSnapshot;
+            encounter.BossUID = primaryTarget.PlayerUID;
+
+            // If name is Unknown, try to get from Player table
+            if (string.IsNullOrEmpty(encounter.BossName) || encounter.BossName == "Unknown")
+            {
+                encounter.BossName = primaryTarget.Player.Name ?? "Unknown Target";
+            }
+
+            DebugLogger.Log($"[UpdateEncounterTotalsAsync] Identified primary target: {encounter.BossName} (UID={encounter.BossUID}, TakenDamage={primaryTarget.TotalTakenDamage})");
+        }
+        else
+        {
+            encounter.BossName = "Unknown";
+            encounter.BossUID = null;
+            DebugLogger.Log($"[UpdateEncounterTotalsAsync] No NPCs found, setting BossName to 'Unknown'");
+        }
+
+        // Calculate duration from player ticks if not already set
+        if (encounter.DurationMs == 0 && encounter.PlayerStats.Any())
+        {
+            // Find the longest duration from all players
+            var maxTick = encounter.PlayerStats.Max(s => s.LastLoggedTick);
+            var minTick = encounter.PlayerStats.Where(s => s.StartLoggedTick > 0).Min(s => s.StartLoggedTick);
+
+            // Convert from Windows ticks to milliseconds
+            // Windows ticks are 100-nanosecond intervals
+            var durationTicks = maxTick - minTick;
+            encounter.DurationMs = durationTicks / 10000; // Convert to milliseconds
+
+            DebugLogger.Log($"[UpdateEncounterTotalsAsync] Calculated DurationMs: {encounter.DurationMs}ms (from ticks {minTick} to {maxTick})");
+        }
 
         await _context.SaveChangesAsync();
+
+        DebugLogger.Log($"[UpdateEncounterTotalsAsync] Saved: BossName={encounter.BossName}, TotalDamage={encounter.TotalDamage}, TotalHealing={encounter.TotalHealing}, PlayerCount={encounter.PlayerCount}, Duration={encounter.DurationMs}ms");
     }
 
     /// <summary>
@@ -231,6 +287,31 @@ public class EncounterRepository
     public async Task<List<PlayerEntity>> GetAllPlayersAsync()
     {
         return await _context.Players.ToListAsync();
+    }
+
+    /// <summary>
+    /// Delete all encounters and their statistics
+    /// </summary>
+    public async Task<int> DeleteAllEncountersAsync()
+    {
+        DebugLogger.Log("[DeleteAllEncountersAsync] Starting to delete all encounters...");
+
+        // Get count before deletion
+        var count = await _context.Encounters.CountAsync();
+        DebugLogger.Log($"[DeleteAllEncountersAsync] Found {count} encounters to delete");
+
+        // Delete all player encounter stats first (foreign key constraint)
+        var statsCount = await _context.PlayerEncounterStats.CountAsync();
+        _context.PlayerEncounterStats.RemoveRange(_context.PlayerEncounterStats);
+        await _context.SaveChangesAsync();
+        DebugLogger.Log($"[DeleteAllEncountersAsync] Deleted {statsCount} player stats");
+
+        // Delete all encounters
+        _context.Encounters.RemoveRange(_context.Encounters);
+        await _context.SaveChangesAsync();
+        DebugLogger.Log($"[DeleteAllEncountersAsync] Deleted {count} encounters");
+
+        return count;
     }
 
     /// <summary>

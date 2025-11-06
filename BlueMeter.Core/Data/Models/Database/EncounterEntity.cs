@@ -69,6 +69,17 @@ public class EncounterEntity
     public int PlayerCount { get; set; }
 
     /// <summary>
+    /// Primary target/boss name (NPC with most damage taken)
+    /// </summary>
+    [MaxLength(200)]
+    public string? BossName { get; set; }
+
+    /// <summary>
+    /// UID of the primary target/boss
+    /// </summary>
+    public long? BossUID { get; set; }
+
+    /// <summary>
     /// Navigation property for player statistics
     /// </summary>
     public virtual ICollection<PlayerEncounterStatsEntity> PlayerStats { get; set; } = new List<PlayerEncounterStatsEntity>();

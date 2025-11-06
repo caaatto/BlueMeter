@@ -105,17 +105,29 @@ public class EncounterService
 
         var encounters = await repository.GetRecentEncountersAsync(count);
 
-        return encounters.Select(e => new EncounterSummary
+        DebugLogger.Log($"[GetRecentEncountersAsync] Found {encounters.Count} encounters in database");
+
+        var result = encounters.Select(e =>
         {
-            EncounterId = e.EncounterId,
-            StartTime = e.StartTime,
-            EndTime = e.EndTime,
-            DurationMs = e.DurationMs,
-            TotalDamage = e.TotalDamage,
-            TotalHealing = e.TotalHealing,
-            PlayerCount = e.PlayerCount,
-            IsActive = e.IsActive
+            DebugLogger.Log($"[GetRecentEncountersAsync] Encounter {e.EncounterId}: StartTime={e.StartTime}, Duration={e.DurationMs}ms");
+            DebugLogger.Log($"[GetRecentEncountersAsync]   BossName={e.BossName}, TotalDamage={e.TotalDamage}, TotalHealing={e.TotalHealing}, PlayerCount={e.PlayerCount}");
+
+            return new EncounterSummary
+            {
+                EncounterId = e.EncounterId,
+                StartTime = e.StartTime,
+                EndTime = e.EndTime,
+                DurationMs = e.DurationMs,
+                TotalDamage = e.TotalDamage,
+                TotalHealing = e.TotalHealing,
+                PlayerCount = e.PlayerCount,
+                IsActive = e.IsActive,
+                BossName = e.BossName ?? "Unknown"
+            };
         }).ToList();
+
+        DebugLogger.Log($"[GetRecentEncountersAsync] Returning {result.Count} encounter summaries");
+        return result;
     }
 
     /// <summary>
@@ -127,7 +139,15 @@ public class EncounterService
         var repository = new EncounterRepository(context);
 
         var encounter = await repository.GetEncounterWithStatsAsync(encounterId);
-        if (encounter == null) return null;
+        if (encounter == null)
+        {
+            DebugLogger.Log($"[LoadEncounterAsync] Encounter {encounterId} not found in database");
+            return null;
+        }
+
+        DebugLogger.Log($"[LoadEncounterAsync] Loading encounter {encounterId}");
+        DebugLogger.Log($"[LoadEncounterAsync] StartTime: {encounter.StartTime}, Duration: {encounter.DurationMs}ms");
+        DebugLogger.Log($"[LoadEncounterAsync] PlayerStats count: {encounter.PlayerStats.Count}");
 
         var encounterData = new EncounterData
         {
@@ -140,10 +160,22 @@ public class EncounterService
 
         foreach (var stats in encounter.PlayerStats)
         {
+            DebugLogger.Log($"[LoadEncounterAsync] Processing UID={stats.PlayerUID}, NameSnapshot='{stats.NameSnapshot}', Player.Name='{stats.Player.Name}'");
+            DebugLogger.Log($"[LoadEncounterAsync]   Damage={stats.TotalAttackDamage}, Heal={stats.TotalHeal}, IsNpc={stats.IsNpcData}");
+            DebugLogger.Log($"[LoadEncounterAsync]   Player.Class={stats.Player.Class}, Player.Spec={stats.Player.Spec}");
+
+            // Use NameSnapshot first, fallback to Player.Name if snapshot is "Unknown" or empty
+            var name = stats.NameSnapshot;
+            if (string.IsNullOrEmpty(name) || name == "Unknown")
+            {
+                name = stats.Player.Name ?? $"UID: {stats.PlayerUID}";
+                DebugLogger.Log($"[LoadEncounterAsync]   Name fallback applied: '{name}'");
+            }
+
             var playerData = new PlayerEncounterData
             {
                 UID = stats.PlayerUID,
-                Name = stats.NameSnapshot,
+                Name = name,
                 CombatPower = stats.CombatPowerSnapshot,
                 Level = stats.LevelSnapshot,
                 TotalAttackDamage = stats.TotalAttackDamage,
@@ -155,9 +187,12 @@ public class EncounterService
                 SkillDataJson = stats.SkillDataJson
             };
 
+            DebugLogger.Log($"[LoadEncounterAsync]   Final PlayerData: Name='{playerData.Name}', Class={playerData.Class}");
+
             encounterData.PlayerStats[stats.PlayerUID] = playerData;
         }
 
+        DebugLogger.Log($"[LoadEncounterAsync] Loaded {encounterData.PlayerStats.Count} players successfully");
         return encounterData;
     }
 
@@ -209,6 +244,17 @@ public class EncounterService
         var repository = new EncounterRepository(context);
 
         await repository.CleanupOldEncountersAsync(keepCount);
+    }
+
+    /// <summary>
+    /// Delete all encounters from database
+    /// </summary>
+    public async Task<int> DeleteAllEncountersAsync()
+    {
+        using var context = _contextFactory();
+        var repository = new EncounterRepository(context);
+
+        return await repository.DeleteAllEncountersAsync();
     }
 
     /// <summary>
@@ -287,6 +333,7 @@ public class EncounterSummary
     public long TotalHealing { get; set; }
     public int PlayerCount { get; set; }
     public bool IsActive { get; set; }
+    public string BossName { get; set; } = "Unknown";
 
     public string DisplayName => $"{StartTime:yyyy-MM-dd HH:mm:ss} - {FormatDuration()} ({PlayerCount} players)";
 

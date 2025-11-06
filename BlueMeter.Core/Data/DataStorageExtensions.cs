@@ -160,6 +160,16 @@ public static class DataStorageExtensions
         await _encounterService.CleanupOldEncountersAsync(keepCount);
     }
 
+    /// <summary>
+    /// Delete all encounters from database
+    /// </summary>
+    public static async Task<int> DeleteAllEncountersAsync()
+    {
+        if (_encounterService == null) return 0;
+
+        return await _encounterService.DeleteAllEncountersAsync();
+    }
+
     // Event handlers
 
     private static async void OnNewSectionCreated()

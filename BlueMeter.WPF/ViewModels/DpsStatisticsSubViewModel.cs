@@ -548,11 +548,14 @@ public partial class DpsStatisticsSubViewModel : BaseViewModel, IDisposable
     /// </summary>
     public void UpdateHistoricalData(IReadOnlyDictionary<long, DpsData> dpsDataDict, IReadOnlyDictionary<long, PlayerInfo> playerInfoDict)
     {
-        _logger.LogDebug("Updating historical data");
+        _logger.LogDebug("Updating historical data for type: {Type}", _type);
 
         // Clear existing data first
         _dispatcher.Invoke(() => Data.Clear());
         DataDictionary.Clear();
+
+        // Create list to hold slots that will be added
+        var slotsToAdd = new List<StatisticDataViewModel>();
 
         // Update all slots with their data
         foreach (var kvp in dpsDataDict)
@@ -560,36 +563,55 @@ public partial class DpsStatisticsSubViewModel : BaseViewModel, IDisposable
             var uid = kvp.Key;
             var dpsData = kvp.Value;
 
-            var slot = GetOrAddStatisticDataViewModel(dpsData);
             var value = GetValueForType(dpsData);
+
+            // Skip if this statistic type has no value
+            if (value == 0)
+            {
+                _logger.LogTrace("Skipping UID {Uid} - no value for type {Type}", uid, _type);
+                continue;
+            }
 
             // Calculate duration once
             var duration = (dpsData.LastLoggedTick - (dpsData.StartLoggedTick ?? 0)).ConvertToUnsigned();
 
-            // Update slot values
-            slot.Value = value;
-            slot.Duration = duration;
-            slot.SkillList = BuildSkillListSnapshot(dpsData);
+            // Get player info from historical dictionary (NOT from _storage!)
+            PlayerInfo? playerInfo = null;
+            playerInfoDict.TryGetValue(uid, out playerInfo);
 
-            // Update player info if available
-            if (playerInfoDict.TryGetValue(uid, out var playerInfo))
+            // Create new slot with historical data
+            var slot = new StatisticDataViewModel(_debugFunctions)
             {
-                slot.Player.Name = playerInfo.Name ?? $"UID: {uid}";
-                slot.Player.Class = playerInfo.ProfessionID.GetClassNameById();
-                slot.Player.Spec = playerInfo.Spec;
-                slot.Player.Uid = playerInfo.UID;
-                slot.Player.PowerLevel = playerInfo.CombatPower ?? 0;
-                slot.Player.IsNpc = dpsData.IsNpcData;
-            }
-            else
-            {
-                slot.Player.Name = $"UID: {uid}";
-                slot.Player.Class = Classes.Unknown;
-                slot.Player.Spec = ClassSpec.Unknown;
-                slot.Player.Uid = uid;
-                slot.Player.IsNpc = dpsData.IsNpcData;
-            }
+                Index = 999, // Will be updated after sorting
+                Value = value,
+                Duration = duration,
+                Player = new PlayerInfoViewModel
+                {
+                    Uid = uid,
+                    Class = playerInfo?.ProfessionID.GetClassNameById() ?? Classes.Unknown,
+                    Guild = "Unknown", // Guild info not available in historical data
+                    Name = playerInfo?.Name ?? $"UID: {uid}",
+                    Spec = playerInfo?.Spec ?? ClassSpec.Unknown,
+                    PowerLevel = playerInfo?.CombatPower ?? 0,
+                    IsNpc = dpsData.IsNpcData
+                },
+                SkillList = BuildSkillListSnapshot(dpsData),
+            };
+
+            slotsToAdd.Add(slot);
+            _logger.LogTrace("Added slot for {Name} ({Uid}) with value {Value}", slot.Player.Name, uid, value);
         }
+
+        // Add all slots to collection on dispatcher thread
+        _dispatcher.Invoke(() =>
+        {
+            foreach (var slot in slotsToAdd)
+            {
+                Data.Add(slot);
+            }
+        });
+
+        _logger.LogDebug("Added {Count} slots to Data collection", slotsToAdd.Count);
 
         // Batch calculate percentages
         if (Data.Count > 0)
@@ -605,12 +627,14 @@ public partial class DpsStatisticsSubViewModel : BaseViewModel, IDisposable
                 slot.PercentOfMax = hasMaxValue ? slot.Value / (double)maxValue * 100 : 0;
                 slot.Percent = hasTotalValue ? slot.Value / totalValue : 0;
             }
+
+            _logger.LogDebug("Calculated percentages for {Count} slots", Data.Count);
         }
 
         // Sort data in place
         SortSlotsInPlace();
 
-        _logger.LogDebug("Historical data updated");
+        _logger.LogInformation("Historical data updated successfully - {Count} players displayed for {Type}", Data.Count, _type);
     }
 
     // MEMORY LEAK FIX: Implement IDisposable to unsubscribe from CollectionChanged event (line 61).

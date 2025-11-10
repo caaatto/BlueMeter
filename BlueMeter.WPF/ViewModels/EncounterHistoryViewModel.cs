@@ -131,9 +131,9 @@ public partial class EncounterHistoryViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    private async Task DeleteSelectedEncounterAsync()
+    private Task DeleteSelectedEncounterAsync()
     {
-        if (SelectedEncounter == null) return;
+        if (SelectedEncounter == null) return Task.CompletedTask;
 
         var result = MessageBox.Show(
             $"Are you sure you want to delete this encounter?\n\n{SelectedEncounter.DisplayName}",
@@ -141,10 +141,11 @@ public partial class EncounterHistoryViewModel : BaseViewModel
             MessageBoxButton.YesNo,
             MessageBoxImage.Question);
 
-        if (result != MessageBoxResult.Yes) return;
+        if (result != MessageBoxResult.Yes) return Task.CompletedTask;
 
         // TODO: Implement delete functionality in EncounterService
         StatusMessage = "Delete functionality not yet implemented";
+        return Task.CompletedTask;
     }
 
     [RelayCommand]

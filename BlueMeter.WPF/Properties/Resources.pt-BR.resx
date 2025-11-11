@@ -481,7 +481,7 @@
     <value>Autor:</value>
   </data>
   <data name="MainView_Plugin_Author_OfficialTeam" xml:space="preserve">
-    <value>[Oficial] StarResonanceToolBox Team</value>
+    <value>Catto</value>
   </data>
   <data name="MainView_Plugin_AutoStart" xml:space="preserve">
     <value>Iniciar com o aplicativo</value>

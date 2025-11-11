@@ -19,9 +19,9 @@
 
     <!-- Text Colors -->
     <Color x:Key="Text.Primary">#FFFFFF</Color>
-    <Color x:Key="Text.Secondary">#B4BCD6</Color>
-    <Color x:Key="Text.Tertiary">#6B7280</Color>
-    <Color x:Key="Text.Muted">#4B5563</Color>
+    <Color x:Key="Text.Secondary">#D4DDE8</Color>
+    <Color x:Key="Text.Tertiary">#8B95A8</Color>
+    <Color x:Key="Text.Muted">#6B7280</Color>
 
     <!-- Border & Outline Colors -->
     <Color x:Key="Border.Default">#2A3547</Color>

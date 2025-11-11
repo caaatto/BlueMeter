@@ -161,7 +161,7 @@
             x:Key="PluginListIntro"
             BasedOn="{StaticResource NormalTextBlockBaseStyle}"
             TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#B4BCD6" />
+            <Setter Property="Foreground" Value="#D4DDE8" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Margin" Value="0,25,0,0" />
         </Style>
@@ -171,7 +171,7 @@
             BasedOn="{StaticResource NormalTextBlockBaseStyle}"
             TargetType="TextBlock">
             <Setter Property="FontSize" Value="12" />
-            <Setter Property="Foreground" Value="#6B7280" />
+            <Setter Property="Foreground" Value="#8B95A8" />
         </Style>
 
         <Style x:Key="PluginStateBorderBase" TargetType="Border">
@@ -296,6 +296,17 @@
 
         <Style x:Key="PluginDetailIntroBorder" TargetType="Border">
             <Setter Property="Padding" Value="20,10,20,10" />
+        </Style>
+
+        <Style x:Key="PluginDetailIntroLabel" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#D4DDE8" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="Medium" />
+        </Style>
+
+        <Style x:Key="PluginDetailIntroValue" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="FontSize" Value="12" />
         </Style>
 
     </Window.Resources>
@@ -699,20 +710,24 @@
                                                     <TextBlock
                                                         Grid.Row="0"
                                                         Grid.Column="0"
+                                                        Style="{StaticResource PluginDetailIntroLabel}"
                                                         Text="{lex:Loc Key={x:Static loc:ResourcesKeys.MainView_Plugin_Label_Author}}" />
                                                     <TextBlock
                                                         Grid.Row="0"
                                                         Grid.Column="2"
+                                                        Style="{StaticResource PluginDetailIntroValue}"
                                                         Text="{lex:Loc Key={x:Static loc:ResourcesKeys.MainView_Plugin_Author_OfficialTeam}}"
                                                         TextWrapping="Wrap" />
 
                                                     <TextBlock
                                                         Grid.Row="1"
                                                         Grid.Column="0"
+                                                        Style="{StaticResource PluginDetailIntroLabel}"
                                                         Text="{lex:Loc Key={x:Static loc:ResourcesKeys.MainView_Plugin_Label_Intro}}" />
                                                     <TextBlock
                                                         Grid.Row="1"
                                                         Grid.Column="2"
+                                                        Style="{StaticResource PluginDetailIntroValue}"
                                                         Text="{Binding Description}"
                                                         TextWrapping="Wrap" />
                                                 </Grid>

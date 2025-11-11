@@ -481,7 +481,7 @@
     <value>作者：</value>
   </data>
   <data name="MainView_Plugin_Author_OfficialTeam" xml:space="preserve">
-    <value>[官方] 星痕工具箱 开发团队</value>
+    <value>Catto</value>
   </data>
   <data name="MainView_Plugin_AutoStart" xml:space="preserve">
     <value>跟随软件本体自启动</value>

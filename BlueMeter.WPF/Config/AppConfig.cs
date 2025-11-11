@@ -152,6 +152,12 @@ public partial class AppConfig : ObservableObject
     [ObservableProperty]
     private bool _debugEnabled = false;
 
+    /// <summary>
+    /// Plugin AutoStart-Status (Dictionary: Plugin Name -> AutoStart enabled)
+    /// </summary>
+    [ObservableProperty]
+    private Dictionary<string, bool> _pluginAutoStartStates = [];
+
     public AppConfig Clone()
     {
         // TODO: Add unittest

@@ -13,14 +13,17 @@ public sealed partial class PluginListItemViewModel : ObservableObject
 {
     private readonly PluginState _state;
     private readonly LocalizationManager _localizationManager;
+    private readonly Func<PluginListItemViewModel, Task>? _onAutoStartChanged;
 
-    public PluginListItemViewModel(IPlugin plugin, PluginState state, LocalizationManager localizationManager)
+    public PluginListItemViewModel(IPlugin plugin, PluginState state, LocalizationManager localizationManager, Func<PluginListItemViewModel, Task>? onAutoStartChanged = null)
     {
         Plugin = plugin;
         _state = state;
         _localizationManager = localizationManager;
+        _onAutoStartChanged = onAutoStartChanged;
         RunCommand = new RelayCommand(ExecuteRun);
         OpenSettingsCommand = new RelayCommand(ExecuteSettings);
+        ToggleAutoStartCommand = new RelayCommand(ExecuteToggleAutoStart);
     }
 
     public IPlugin Plugin { get; }
@@ -42,6 +45,8 @@ public sealed partial class PluginListItemViewModel : ObservableObject
     public IRelayCommand RunCommand { get; }
 
     public IRelayCommand OpenSettingsCommand { get; }
+
+    public IRelayCommand ToggleAutoStartCommand { get; }
 
     public void RefreshLocalization()
     {
@@ -73,5 +78,24 @@ public sealed partial class PluginListItemViewModel : ObservableObject
         {
             // Swallow for plugins that have not implemented the action yet.
         }
+    }
+
+    private async void ExecuteToggleAutoStart()
+    {
+        // AutoStart state is updated via TwoWay binding, so we just notify the change
+        OnPropertyChanged(nameof(AutoStartText));
+
+        if (_onAutoStartChanged != null)
+        {
+            await _onAutoStartChanged(this);
+        }
+    }
+
+    /// <summary>
+    /// Gets the plugin's unique identifier for config storage.
+    /// </summary>
+    public string GetPluginIdentifier()
+    {
+        return Plugin.GetType().Name;
     }
 }

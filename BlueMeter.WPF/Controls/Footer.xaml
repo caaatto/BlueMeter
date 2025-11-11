@@ -8,7 +8,7 @@
     x:Name="Root"
     d:DesignHeight="50"
     d:DesignWidth="400"
-    Background="#FFF"
+    Background="#12192B"
     mc:Ignorable="d">
 
     <UserControl.Template>
@@ -21,6 +21,8 @@
     <UserControl.Resources>
         <Style x:Key="FooterBorder" TargetType="Border">
             <Setter Property="Background" Value="{Binding Path=Background, RelativeSource={RelativeSource AncestorType=local:Footer}}" />
+            <Setter Property="BorderBrush" Value="#2A3547" />
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
             <Setter Property="CornerRadius">
                 <Setter.Value>
                     <CornerRadius
@@ -28,6 +30,15 @@
                         BottomRight="{StaticResource MainCornerRadiusDouble}"
                         TopLeft="0"
                         TopRight="0" />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect
+                        Color="#00D9FF"
+                        BlurRadius="8"
+                        ShadowDepth="0"
+                        Opacity="0.1" />
                 </Setter.Value>
             </Setter>
         </Style>

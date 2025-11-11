@@ -344,7 +344,7 @@
                 </Border.Style>
             </Border>
 
-            <!--  Theme Color Filter Overlay (over background image, behind UI)  -->
+            <!--  Theme Color Filter Overlay (using theme color for better visibility)  -->
             <Border
                 CornerRadius="{StaticResource MainCornerRadius}"
                 Panel.ZIndex="1">
@@ -352,9 +352,9 @@
                     <Style TargetType="Border">
                         <Setter Property="Background" Value="{x:Null}" />
                         <Style.Triggers>
-                            <!-- Only show color filter when background image is active -->
+                            <!-- Show color filter when background image is active, using theme color -->
                             <DataTrigger Binding="{Binding AppConfig.ShowBackgroundInDpsMeter}" Value="True">
-                                <Setter Property="Background" Value="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeColorOverlayConverter}, ConverterParameter=0.2}" />
+                                <Setter Property="Background" Value="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeColorOverlayConverter}, ConverterParameter=0.4}" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -374,6 +374,9 @@
                 Height="25"
                 VerticalAlignment="Top"
                 Panel.ZIndex="2"
+                Background="#12192B"
+                BorderBrush="#2A3547"
+                BorderThickness="0,0,0,1"
                 MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Border.CornerRadius>
                     <CornerRadius
@@ -382,12 +385,13 @@
                         TopLeft="{StaticResource MainCornerRadiusDouble}"
                         TopRight="{StaticResource MainCornerRadiusDouble}" />
                 </Border.CornerRadius>
-                <Border.Style>
-                    <Style TargetType="Border">
-                        <!-- Panel color based on PanelColorMode setting -->
-                        <Setter Property="Background" Value="{Binding AppConfig.PanelColorMode, Converter={StaticResource PanelColorModeConverter}}" />
-                    </Style>
-                </Border.Style>
+                <Border.Effect>
+                    <DropShadowEffect
+                        Color="#00D9FF"
+                        BlurRadius="8"
+                        ShadowDepth="0"
+                        Opacity="0.1" />
+                </Border.Effect>
                 <!--  顶部栏,Grid 一般不设置属性  -->
                 <Grid Margin="2">
                     <!--  统计类型标注  -->
@@ -639,13 +643,7 @@
                 </Grid>
             </Border>
 
-            <Border Grid.Row="1">
-                <Border.Style>
-                    <Style TargetType="Border">
-                        <!-- Panel content color based on PanelColorMode setting -->
-                        <Setter Property="Background" Value="{Binding AppConfig.PanelColorMode, Converter={StaticResource PanelContentColorModeConverter}}" />
-                    </Style>
-                </Border.Style>
+            <Border Grid.Row="1" Background="Transparent">
                 <ctrl:SortedDpsControl
                     ItemTemplate="{StaticResource ProgressBarDataTemplate}"
                     ItemsSource="{Binding CurrentStatisticData.Data}"
@@ -656,13 +654,8 @@
                 x:Name="LoadingGridHost"
                 Grid.Row="2"
                 Height="5"
+                Background="Transparent"
                 ClipToBounds="True">
-                <Border.Style>
-                    <Style TargetType="Border">
-                        <!-- Panel content color based on PanelColorMode setting -->
-                        <Setter Property="Background" Value="{Binding AppConfig.PanelColorMode, Converter={StaticResource PanelContentColorModeConverter}}" />
-                    </Style>
-                </Border.Style>
 
                 <!--  TODO: 当 DataStorage 触发 ServerConnectionStateChanged 时, 隐藏该 Grid  -->
                 <Rectangle x:Name="LoadingStripe" Style="{StaticResource LoadingBlockRectangle}">
@@ -695,10 +688,10 @@
                     </Rectangle.Triggers>
                     <Rectangle.Fill>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="1, 0">
-                            <GradientStop Offset="0" Color="#00569CD6" />
-                            <GradientStop Offset="0.4" Color="#FF569CD6" />
-                            <GradientStop Offset="0.6" Color="#FF569CD6" />
-                            <GradientStop Offset="1" Color="#00569CD6" />
+                            <GradientStop Offset="0" Color="#0000D9FF" />
+                            <GradientStop Offset="0.4" Color="#FF00D9FF" />
+                            <GradientStop Offset="0.6" Color="#FFA855F7" />
+                            <GradientStop Offset="1" Color="#00A855F7" />
                         </LinearGradientBrush>
                     </Rectangle.Fill>
                 </Rectangle>
@@ -706,11 +699,61 @@
 
             <Border
                 x:Name="ContentBorder"
-                Grid.Row="3">
+                Grid.Row="3"
+                VerticalAlignment="Bottom"
+                Height="25"
+                Opacity="1"
+                Background="#12192B"
+                BorderBrush="#2A3547"
+                BorderThickness="0,1,0,0"
+                MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <Border.CornerRadius>
+                    <CornerRadius
+                        BottomLeft="{StaticResource MainCornerRadiusDouble}"
+                        BottomRight="{StaticResource MainCornerRadiusDouble}"
+                        TopLeft="0"
+                        TopRight="0" />
+                </Border.CornerRadius>
+                <Border.Effect>
+                    <DropShadowEffect
+                        Color="#00D9FF"
+                        BlurRadius="8"
+                        ShadowDepth="0"
+                        Opacity="0.1" />
+                </Border.Effect>
                 <Border.Style>
-                    <Style TargetType="Border" BasedOn="{StaticResource FooterContentBorder}">
-                        <!-- Panel color based on PanelColorMode setting -->
-                        <Setter Property="Background" Value="{Binding DataContext.AppConfig.PanelColorMode, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource PanelColorModeConverter}}" />
+                    <Style TargetType="Border">
+                        <Style.Triggers>
+                            <DataTrigger Value="True">
+                                <DataTrigger.Binding>
+                                    <Binding
+                                        Converter="{StaticResource LessThanToBoolConverter}"
+                                        ConverterParameter="60"
+                                        Path="ActualHeight"
+                                        RelativeSource="{RelativeSource AncestorType=local:DpsStatisticsView}" />
+                                </DataTrigger.Binding>
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetProperty="Opacity"
+                                                To="0"
+                                                Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                                <DataTrigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation
+                                                Storyboard.TargetProperty="Opacity"
+                                                To="1"
+                                                Duration="0:0:0.2" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.ExitActions>
+                            </DataTrigger>
+                        </Style.Triggers>
                     </Style>
                 </Border.Style>
                 <Grid Margin="6">

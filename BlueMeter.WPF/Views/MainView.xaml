@@ -48,21 +48,35 @@
         </Style>
 
         <Style x:Key="PluginListBorder" TargetType="Border">
-            <Setter Property="Background">
+            <Setter Property="Background" Value="#12192B" />
+            <Setter Property="BorderBrush" Value="#2A3547" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Effect">
                 <Setter.Value>
-                    <Binding Path="DataContext.AppConfig.BackgroundOnlyMode" RelativeSource="{RelativeSource AncestorType=Window}" Converter="{StaticResource BackgroundOnlyModeToBackgroundConverter}" />
+                    <DropShadowEffect
+                        Color="#00D9FF"
+                        BlurRadius="10"
+                        ShadowDepth="0"
+                        Opacity="0.2" />
                 </Setter.Value>
             </Setter>
-            <Setter Property="CornerRadius" Value="10" />
         </Style>
 
         <Style x:Key="PluginDetailBorder" TargetType="Border">
-            <Setter Property="Background">
+            <Setter Property="Background" Value="#12192B" />
+            <Setter Property="BorderBrush" Value="#2A3547" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Effect">
                 <Setter.Value>
-                    <Binding Path="DataContext.AppConfig.BackgroundOnlyMode" RelativeSource="{RelativeSource AncestorType=Window}" Converter="{StaticResource BackgroundOnlyModeToBackgroundConverter}" />
+                    <DropShadowEffect
+                        Color="#00D9FF"
+                        BlurRadius="10"
+                        ShadowDepth="0"
+                        Opacity="0.2" />
                 </Setter.Value>
             </Setter>
-            <Setter Property="CornerRadius" Value="10" />
         </Style>
 
         <Style x:Key="DetailTabControl" TargetType="TabControl">
@@ -76,7 +90,8 @@
         </Style>
 
         <Style x:Key="SearchBorder" TargetType="Border">
-            <Setter Property="BorderBrush" Value="#9E9E9E" />
+            <Setter Property="Background" Value="#151D2E" />
+            <Setter Property="BorderBrush" Value="#2A3547" />
             <Setter Property="BorderThickness" Value="0,0,0,1" />
         </Style>
 
@@ -88,7 +103,7 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="FontSize" Value="24" />
-            <Setter Property="Foreground" Value="#C4C4C4" />
+            <Setter Property="Foreground" Value="#00D9FF" />
         </Style>
 
         <Style x:Key="SearchBox" TargetType="TextBox">
@@ -98,12 +113,13 @@
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
             <Setter Property="Padding" Value="50,0,5,0" />
             <Setter Property="FontSize" Value="16" />
         </Style>
 
         <Style x:Key="PluginListTitleBorder" TargetType="Border">
-            <Setter Property="BorderBrush" Value="#EEE" />
+            <Setter Property="BorderBrush" Value="#2A3547" />
             <Setter Property="BorderThickness" Value="0,0,0,1" />
         </Style>
 
@@ -111,8 +127,9 @@
             x:Key="PluginListTitle"
             BasedOn="{StaticResource NormalTextBlockBaseStyle}"
             TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#9E9E9E" />
+            <Setter Property="Foreground" Value="#B4BCD6" />
             <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Margin" Value="20,10,10,10" />
         </Style>
 
@@ -127,23 +144,24 @@
         <Style x:Key="PluginBorder" TargetType="Border">
             <Setter Property="VerticalAlignment" Value="Top" />
             <Setter Property="Padding" Value="20,15,0,15" />
-            <Setter Property="BorderBrush" Value="#EEE" />
-            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
         </Style>
 
         <Style
             x:Key="PluginListName"
             BasedOn="{StaticResource NormalTextBlockBaseStyle}"
             TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#6C8CD8" />
+            <Setter Property="Foreground" Value="#00D9FF" />
             <Setter Property="FontSize" Value="16" />
-            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
 
         <Style
             x:Key="PluginListIntro"
             BasedOn="{StaticResource NormalTextBlockBaseStyle}"
             TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#B4BCD6" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Margin" Value="0,25,0,0" />
         </Style>
@@ -153,11 +171,13 @@
             BasedOn="{StaticResource NormalTextBlockBaseStyle}"
             TargetType="TextBlock">
             <Setter Property="FontSize" Value="12" />
-            <Setter Property="Foreground" Value="#AAA" />
+            <Setter Property="Foreground" Value="#6B7280" />
         </Style>
 
         <Style x:Key="PluginStateBorderBase" TargetType="Border">
-            <Setter Property="Background" Value="#D9E1F9" />
+            <Setter Property="Background" Value="#151D2E" />
+            <Setter Property="BorderBrush" Value="#00D9FF" />
+            <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="8" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Padding" Value="13,3,13,3" />
@@ -182,11 +202,12 @@
             TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="FontSize" Value="9" />
-            <Setter Property="Foreground" Value="#6C8CD8" />
+            <Setter Property="Foreground" Value="#00D9FF" />
+            <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
 
         <Style x:Key="PluginDetailTitleBorder" TargetType="Border">
-            <Setter Property="BorderBrush" Value="#9E9E9E" />
+            <Setter Property="BorderBrush" Value="#2A3547" />
             <Setter Property="BorderThickness" Value="0,0,0,1" />
             <Setter Property="Padding" Value="20,10,20,10" />
         </Style>
@@ -195,9 +216,9 @@
             x:Key="PluginDetailName"
             BasedOn="{StaticResource NormalTextBlockBaseStyle}"
             TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#6C8CD8" />
-            <Setter Property="FontWeight" Value="Bold" />
-            <Setter Property="FontSize" Value="20" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="22" />
             <Setter Property="VerticalAlignment" Value="Top" />
         </Style>
 
@@ -209,6 +230,7 @@
             x:Key="AutoRunText"
             BasedOn="{StaticResource NormalTextBlockBaseStyle}"
             TargetType="TextBlock">
+            <Setter Property="Foreground" Value="#B4BCD6" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="10,0,0,0" />
             <Setter Property="FontSize" Value="12" />
@@ -235,15 +257,16 @@
             x:Key="PluginSettingButton"
             BasedOn="{StaticResource PluginButtonBase}"
             TargetType="Border">
-            <Setter Property="BorderBrush" Value="#EEE" />
-            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Background" Value="#151D2E" />
+            <Setter Property="BorderBrush" Value="#2A3547" />
+            <Setter Property="BorderThickness" Value="1" />
         </Style>
 
         <Style
             x:Key="PluginSettingText"
             BasedOn="{StaticResource PluginTextBase}"
             TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#777" />
+            <Setter Property="Foreground" Value="#B4BCD6" />
         </Style>
 
         <Style
@@ -253,14 +276,22 @@
             <Setter Property="Margin" Value="10,0,0,0" />
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
-            <Setter Property="Background" Value="#D9E1F9" />
+            <Setter Property="Background">
+                <Setter.Value>
+                    <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                        <GradientStop Color="#00D9FF" Offset="0" />
+                        <GradientStop Color="#A855F7" Offset="1" />
+                    </LinearGradientBrush>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style
             x:Key="PluginRunText"
             BasedOn="{StaticResource PluginTextBase}"
             TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#6C8CD8" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
 
         <Style x:Key="PluginDetailIntroBorder" TargetType="Border">
@@ -269,10 +300,10 @@
 
     </Window.Resources>
 
-    <!-- FIX: Apply theme color and background image from AppConfig -->
+    <!-- Modern Dark HUD Background -->
     <Border
         Style="{StaticResource ShadowWindowBorder}"
-        Background="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeColorConverter}, FallbackValue=#ECEBE9}">
+        Background="#0A0E1A">
 
         <!-- Background Image Layer (if configured) - overlayed with low opacity -->
         <Border.Effect>
@@ -322,7 +353,7 @@
             <Border Grid.Row="1" Style="{StaticResource MainContentBorder}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="350" MinWidth="200" />
+                        <ColumnDefinition Width="350" />
                         <ColumnDefinition Width="10" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
@@ -386,28 +417,48 @@
                                     <ListBox.ItemContainerStyle>
                                         <Style TargetType="ListBoxItem">
                                             <Setter Property="Padding" Value="0" />
+                                            <Setter Property="Margin" Value="5,5,5,5" />
                                             <Setter Property="BorderThickness" Value="0" />
                                             <Setter Property="HorizontalAlignment" Value="Stretch" />
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch" />
                                             <Setter Property="Template">
                                                 <Setter.Value>
                                                     <ControlTemplate TargetType="ListBoxItem">
-                                                        <Border x:Name="bb" Style="{StaticResource PluginBorder}">
+                                                        <Border
+                                                            x:Name="bb"
+                                                            Background="#151D2E"
+                                                            BorderBrush="#2A3547"
+                                                            BorderThickness="1"
+                                                            CornerRadius="8"
+                                                            Padding="20,15,20,15">
                                                             <ContentPresenter />
                                                         </Border>
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="IsSelected" Value="True">
-                                                                <Setter TargetName="bb" Property="Background">
+                                                                <Setter TargetName="bb" Property="Background" Value="#1C2738" />
+                                                                <Setter TargetName="bb" Property="BorderBrush" Value="#00D9FF" />
+                                                                <Setter TargetName="bb" Property="BorderThickness" Value="2" />
+                                                                <Setter TargetName="bb" Property="Effect">
                                                                     <Setter.Value>
-                                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                                                            <GradientStop Offset="0" Color="#E8F1F6" />
-                                                                            <GradientStop Offset="1" Color="#FFF" />
-                                                                        </LinearGradientBrush>
+                                                                        <DropShadowEffect
+                                                                            Color="#00D9FF"
+                                                                            BlurRadius="15"
+                                                                            ShadowDepth="0"
+                                                                            Opacity="0.5" />
                                                                     </Setter.Value>
                                                                 </Setter>
                                                             </Trigger>
                                                             <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter TargetName="bb" Property="Background" Value="#F8F8F8" />
+                                                                <Setter TargetName="bb" Property="Background" Value="#1C2738" />
+                                                                <Setter TargetName="bb" Property="Effect">
+                                                                    <Setter.Value>
+                                                                        <DropShadowEffect
+                                                                            Color="#00D9FF"
+                                                                            BlurRadius="8"
+                                                                            ShadowDepth="0"
+                                                                            Opacity="0.3" />
+                                                                    </Setter.Value>
+                                                                </Setter>
                                                             </Trigger>
                                                         </ControlTemplate.Triggers>
                                                     </ControlTemplate>
@@ -452,7 +503,14 @@
                                     Visibility="{Binding IsDebugContentVisible, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BooleanToVisibilityConverter}}">
                                     <ToggleButton.Template>
                                         <ControlTemplate TargetType="ToggleButton">
-                                            <Border x:Name="bb" Style="{StaticResource PluginBorder}">
+                                            <Border
+                                                x:Name="bb"
+                                                Background="#151D2E"
+                                                BorderBrush="#2A3547"
+                                                BorderThickness="1"
+                                                CornerRadius="8"
+                                                Padding="20,15,20,15"
+                                                Margin="5">
                                                 <Grid>
                                                     <Grid.ColumnDefinitions>
                                                         <ColumnDefinition Width="*" />
@@ -473,17 +531,30 @@
 
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="IsChecked" Value="True">
-                                                    <Setter TargetName="bb" Property="Background">
+                                                    <Setter TargetName="bb" Property="Background" Value="#1C2738" />
+                                                    <Setter TargetName="bb" Property="BorderBrush" Value="#00D9FF" />
+                                                    <Setter TargetName="bb" Property="BorderThickness" Value="2" />
+                                                    <Setter TargetName="bb" Property="Effect">
                                                         <Setter.Value>
-                                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
-                                                                <GradientStop Offset="0" Color="#E8F1F6" />
-                                                                <GradientStop Offset="1" Color="#FFF" />
-                                                            </LinearGradientBrush>
+                                                            <DropShadowEffect
+                                                                Color="#00D9FF"
+                                                                BlurRadius="15"
+                                                                ShadowDepth="0"
+                                                                Opacity="0.5" />
                                                         </Setter.Value>
                                                     </Setter>
                                                 </Trigger>
                                                 <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="bb" Property="Background" Value="#F8F8F8" />
+                                                    <Setter TargetName="bb" Property="Background" Value="#1C2738" />
+                                                    <Setter TargetName="bb" Property="Effect">
+                                                        <Setter.Value>
+                                                            <DropShadowEffect
+                                                                Color="#00D9FF"
+                                                                BlurRadius="8"
+                                                                ShadowDepth="0"
+                                                                Opacity="0.3" />
+                                                        </Setter.Value>
+                                                    </Setter>
                                                 </Trigger>
                                             </ControlTemplate.Triggers>
                                         </ControlTemplate>
@@ -500,8 +571,6 @@
 
                         </Grid>
                     </Border>
-
-                    <GridSplitter Grid.Column="1" />
 
                     <Border Grid.Column="2" Style="{StaticResource PluginDetailBorder}">
                         <Grid>
@@ -559,23 +628,53 @@
 
                                                                     <ControlTemplate.Triggers>
                                                                         <Trigger Property="IsMouseOver" Value="True">
-                                                                            <Setter TargetName="bb" Property="Background" Value="#F8F8F8" />
+                                                                            <Setter TargetName="bb" Property="Background" Value="#1C2738" />
+                                                                            <Setter TargetName="bb" Property="BorderBrush" Value="#00D9FF" />
+                                                                            <Setter TargetName="bb" Property="Effect">
+                                                                                <Setter.Value>
+                                                                                    <DropShadowEffect
+                                                                                        Color="#00D9FF"
+                                                                                        BlurRadius="10"
+                                                                                        ShadowDepth="0"
+                                                                                        Opacity="0.4" />
+                                                                                </Setter.Value>
+                                                                            </Setter>
                                                                         </Trigger>
                                                                     </ControlTemplate.Triggers>
                                                                 </ControlTemplate>
                                                             </Button.Template>
                                                         </Button>
 
-                                                        <Button Grid.Column="1" Command="{Binding RunCommand}">
+                                                        <Button Grid.Column="1" Command="{Binding RunCommand}" RenderTransformOrigin="0.5,0.5">
                                                             <Button.Template>
                                                                 <ControlTemplate>
-                                                                    <Border x:Name="bb" Style="{StaticResource PluginRunButton}">
+                                                                    <Border x:Name="bb" Style="{StaticResource PluginRunButton}" RenderTransformOrigin="0.5,0.5">
+                                                                        <Border.Effect>
+                                                                            <DropShadowEffect
+                                                                                Color="#00D9FF"
+                                                                                BlurRadius="10"
+                                                                                ShadowDepth="0"
+                                                                                Opacity="0.3" />
+                                                                        </Border.Effect>
                                                                         <TextBlock Style="{StaticResource PluginRunText}" Text="{lex:Loc Key={x:Static loc:ResourcesKeys.Common_Action_Open}}" />
                                                                     </Border>
 
                                                                     <ControlTemplate.Triggers>
                                                                         <Trigger Property="IsMouseOver" Value="True">
-                                                                            <Setter TargetName="bb" Property="Background" Value="#C8D0E8" />
+                                                                            <Setter TargetName="bb" Property="Effect">
+                                                                                <Setter.Value>
+                                                                                    <DropShadowEffect
+                                                                                        Color="#00D9FF"
+                                                                                        BlurRadius="20"
+                                                                                        ShadowDepth="0"
+                                                                                        Opacity="0.7" />
+                                                                                </Setter.Value>
+                                                                            </Setter>
+                                                                            <Setter TargetName="bb" Property="RenderTransform">
+                                                                                <Setter.Value>
+                                                                                    <ScaleTransform ScaleX="1.05" ScaleY="1.05" />
+                                                                                </Setter.Value>
+                                                                            </Setter>
                                                                         </Trigger>
                                                                     </ControlTemplate.Triggers>
                                                                 </ControlTemplate>

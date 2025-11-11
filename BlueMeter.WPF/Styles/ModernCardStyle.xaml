@@ -1,0 +1,269 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!-- Modern Card Style with Neon Glow Effect -->
+    <Style x:Key="ModernCardStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource BackgroundCardBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect
+                    Color="#00D9FF"
+                    BlurRadius="0"
+                    ShadowDepth="0"
+                    Opacity="0" />
+            </Setter.Value>
+        </Setter>
+        <Style.Triggers>
+            <!-- Hover Effect: Glow + Scale -->
+            <Trigger Property="IsMouseOver" Value="True">
+                <Setter Property="Background" Value="{StaticResource BackgroundCardHoverBrush}" />
+                <Setter Property="BorderBrush" Value="{StaticResource BorderAccentBrush}" />
+                <Setter Property="Effect">
+                    <Setter.Value>
+                        <DropShadowEffect
+                            Color="#00D9FF"
+                            BlurRadius="20"
+                            ShadowDepth="0"
+                            Opacity="0.6" />
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="RenderTransform">
+                    <Setter.Value>
+                        <ScaleTransform ScaleX="1.02" ScaleY="1.02" />
+                    </Setter.Value>
+                </Setter>
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+
+    <!-- Active Module Card Style (with gradient border) -->
+    <Style x:Key="ActiveModuleCardStyle" TargetType="Border" BasedOn="{StaticResource ModernCardStyle}">
+        <Setter Property="BorderBrush" Value="{StaticResource GradientCyanPurpleBrush}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="Effect">
+            <Setter.Value>
+                <DropShadowEffect
+                    Color="#A855F7"
+                    BlurRadius="15"
+                    ShadowDepth="0"
+                    Opacity="0.4" />
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!-- Modern Button Style with Glow -->
+    <Style x:Key="ModernGlowButton" TargetType="Button">
+        <Setter Property="Background" Value="{StaticResource BackgroundCardBrush}" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderAccentBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="Padding" Value="20,10" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border
+                        x:Name="border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="8"
+                        Padding="{TemplateBinding Padding}">
+                        <ContentPresenter
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource BackgroundCardHoverBrush}" />
+                            <Setter TargetName="border" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect
+                                        Color="#00D9FF"
+                                        BlurRadius="15"
+                                        ShadowDepth="0"
+                                        Opacity="0.8" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="border" Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="1.05" ScaleY="1.05" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource BackgroundSecondaryBrush}" />
+                            <Setter TargetName="border" Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="0.98" ScaleY="0.98" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+    </Style>
+
+    <!-- Start Button Style (Gradient) -->
+    <Style x:Key="StartButtonStyle" TargetType="Button" BasedOn="{StaticResource ModernGlowButton}">
+        <Setter Property="Background" Value="{StaticResource GradientCyanPurpleBrush}" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="MinWidth" Value="100" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border
+                        x:Name="border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="8"
+                        Padding="{TemplateBinding Padding}">
+                        <Border.Effect>
+                            <DropShadowEffect
+                                Color="#00D9FF"
+                                BlurRadius="10"
+                                ShadowDepth="0"
+                                Opacity="0.5" />
+                        </Border.Effect>
+                        <ContentPresenter
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center" />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect
+                                        Color="#00D9FF"
+                                        BlurRadius="20"
+                                        ShadowDepth="0"
+                                        Opacity="0.9" />
+                                </Setter.Value>
+                            </Setter>
+                            <Setter TargetName="border" Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="1.05" ScaleY="1.05" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="border" Property="Opacity" Value="0.8" />
+                            <Setter TargetName="border" Property="RenderTransform">
+                                <Setter.Value>
+                                    <ScaleTransform ScaleX="0.98" ScaleY="0.98" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="RenderTransformOrigin" Value="0.5,0.5" />
+    </Style>
+
+    <!-- Module Title Text Style -->
+    <Style x:Key="ModuleTitleStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+    </Style>
+
+    <!-- Module Description Text Style -->
+    <Style x:Key="ModuleDescriptionStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="LineHeight" Value="18" />
+    </Style>
+
+    <!-- Icon Style (for module icons) -->
+    <Style x:Key="ModuleIconStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="32" />
+        <Setter Property="Foreground" Value="{StaticResource AccentCyanBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+
+    <!-- Title Bar Style -->
+    <Style x:Key="TitleBarStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource BackgroundSecondaryBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="Padding" Value="20,15" />
+    </Style>
+
+    <!-- Action Bar Style -->
+    <Style x:Key="ActionBarStyle" TargetType="Border">
+        <Setter Property="Background" Value="{StaticResource BackgroundSecondaryBrush}" />
+        <Setter Property="BorderBrush" Value="{StaticResource BorderDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="Padding" Value="20,15" />
+    </Style>
+
+    <!-- List Box Item Style (for plugin list with modern look) -->
+    <Style x:Key="ModernListBoxItemStyle" TargetType="ListBoxItem">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border
+                        x:Name="ItemBorder"
+                        Background="{StaticResource BackgroundCardBrush}"
+                        BorderBrush="{StaticResource BorderDefaultBrush}"
+                        BorderThickness="1"
+                        CornerRadius="8"
+                        Padding="15,12">
+                        <ContentPresenter />
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsSelected" Value="True">
+                            <Setter TargetName="ItemBorder" Property="Background" Value="{StaticResource BackgroundCardHoverBrush}" />
+                            <Setter TargetName="ItemBorder" Property="BorderBrush" Value="{StaticResource BorderAccentBrush}" />
+                            <Setter TargetName="ItemBorder" Property="BorderThickness" Value="2" />
+                            <Setter TargetName="ItemBorder" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect
+                                        Color="#00D9FF"
+                                        BlurRadius="12"
+                                        ShadowDepth="0"
+                                        Opacity="0.5" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="ItemBorder" Property="Background" Value="{StaticResource BackgroundCardHoverBrush}" />
+                            <Setter TargetName="ItemBorder" Property="Effect">
+                                <Setter.Value>
+                                    <DropShadowEffect
+                                        Color="#00D9FF"
+                                        BlurRadius="8"
+                                        ShadowDepth="0"
+                                        Opacity="0.3" />
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+</ResourceDictionary>

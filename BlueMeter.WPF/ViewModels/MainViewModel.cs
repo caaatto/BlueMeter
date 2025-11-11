@@ -25,6 +25,7 @@ public partial class MainViewModel : BaseViewModel, IDisposable
     private readonly IConfigManager _configManager;
     private readonly ObservableCollection<PluginListItemViewModel> _plugins = [];
     private PluginListItemViewModel? _lastSelectedPlugin;
+    private IPluginManager _pluginManager;
 
     public MainViewModel(
         ApplicationThemeManager themeManager,
@@ -44,6 +45,7 @@ public partial class MainViewModel : BaseViewModel, IDisposable
         _localizationManager = localizationManager;
         _dialogService = dialogService;
         _configManager = configManager;
+        _pluginManager = pluginManager;
 
         Debug = debugFunctions;
         AvailableThemes = [ApplicationTheme.Light, ApplicationTheme.Dark];
@@ -60,11 +62,29 @@ public partial class MainViewModel : BaseViewModel, IDisposable
                 state = new PluginState();
             }
 
-            _plugins.Add(new PluginListItemViewModel(plugin, state, localizationManager));
+            var viewModel = new PluginListItemViewModel(plugin, state, localizationManager, OnPluginAutoStartChanged);
+
+            // Load AutoStart state from config if available
+            var pluginId = viewModel.GetPluginIdentifier();
+            if (_configManager.CurrentConfig.PluginAutoStartStates.TryGetValue(pluginId, out var autoStart))
+            {
+                state.IsAutoStart = autoStart;
+            }
+
+            _plugins.Add(viewModel);
         }
 
         Plugins = new ReadOnlyObservableCollection<PluginListItemViewModel>(_plugins);
         SelectedPlugin = Plugins.FirstOrDefault();
+
+        // Auto-run plugins that have AutoStart enabled
+        foreach (var pluginViewModel in _plugins)
+        {
+            if (pluginViewModel.State.IsAutoStart)
+            {
+                pluginViewModel.RunCommand.Execute(null);
+            }
+        }
 
         _localizationManager.CultureChanged += OnCultureChanged;
 
@@ -81,6 +101,22 @@ public partial class MainViewModel : BaseViewModel, IDisposable
         // The event provides the new config, but we get it from ConfigManager to ensure consistency
         AppConfig = _configManager.CurrentConfig;
         OnPropertyChanged(nameof(AppConfig));
+    }
+
+    /// <summary>
+    /// Callback when a plugin's AutoStart state changes - saves to config.
+    /// </summary>
+    private async Task OnPluginAutoStartChanged(PluginListItemViewModel viewModel)
+    {
+        var config = _configManager.CurrentConfig;
+        var pluginId = viewModel.GetPluginIdentifier();
+        var autoStartState = viewModel.State.IsAutoStart;
+
+        // Update the config
+        config.PluginAutoStartStates[pluginId] = autoStartState;
+
+        // Save to file
+        await _configManager.SaveAsync();
     }
 
     public DebugFunctions Debug { get; }

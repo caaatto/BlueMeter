@@ -612,8 +612,8 @@
 
                                                             <ctrl:SwitchControl
                                                                 Grid.Column="0"
-                                                                IsChecked="{Binding State.IsAutoStart, Mode=OneWay}"
-                                                                IsEnabled="False"
+                                                                IsChecked="{Binding State.IsAutoStart, Mode=TwoWay}"
+                                                                Command="{Binding ToggleAutoStartCommand}"
                                                                 OffContent="{lex:Loc Key={x:Static loc:ResourcesKeys.Settings_Switch_Off}}"
                                                                 OnContent="{lex:Loc Key={x:Static loc:ResourcesKeys.Settings_Switch_On}}" />
 

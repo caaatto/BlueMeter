@@ -10,7 +10,9 @@
     mc:Ignorable="d">
     <UserControl.Resources>
         <Style x:Key="HeaderBorder" TargetType="Border">
-            <Setter Property="Background" Value="#C3C3C3" />
+            <Setter Property="Background" Value="#12192B" />
+            <Setter Property="BorderBrush" Value="#2A3547" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
             <Setter Property="CornerRadius">
                 <Setter.Value>
                     <CornerRadius
@@ -18,6 +20,15 @@
                         BottomRight="0"
                         TopLeft="{StaticResource MainCornerRadiusDouble}"
                         TopRight="{StaticResource MainCornerRadiusDouble}" />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect
+                        Color="#00D9FF"
+                        BlurRadius="8"
+                        ShadowDepth="0"
+                        Opacity="0.1" />
                 </Setter.Value>
             </Setter>
 
@@ -31,6 +42,8 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="FontFamily" Value="pack://application:,,,/Assets/Fonts/#SAO Welcome TT, pack://application:,,,/Assets/Fonts/#阿里妈妈数黑体" />
             <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
         </Style>
     </UserControl.Resources>
     <Border Style="{StaticResource HeaderBorder}">

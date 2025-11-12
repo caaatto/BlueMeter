@@ -101,6 +101,15 @@ public partial class MainViewModel : BaseViewModel, IDisposable
         // FIX: Subscribe to config changes to update AppConfig when settings are saved
         // This allows live updates of theme color and background image
         _configManager.ConfigurationUpdated += OnConfigurationUpdated;
+
+        // Subscribe to ThemeColor changes for live header updates
+        AppConfig.PropertyChanged += (s, e) =>
+        {
+            if (e.PropertyName == nameof(AppConfig.ThemeColor))
+            {
+                HeaderTitle = ThemeDefinitions.GetAppName(AppConfig.ThemeColor);
+            }
+        };
     }
 
     // FIX: Handler for configuration updates - refreshes AppConfig reference

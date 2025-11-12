@@ -102,10 +102,16 @@ public partial class MainViewModel : BaseViewModel, IDisposable
         // This allows live updates of theme color and background image
         _configManager.ConfigurationUpdated += OnConfigurationUpdated;
 
+        // Subscribe to initial AppConfig for live theme header updates
+        SubscribeToThemeColorChanges();
+    }
+
+    private void SubscribeToThemeColorChanges()
+    {
         // Subscribe to ThemeColor changes for live header updates
         AppConfig.PropertyChanged += (s, e) =>
         {
-            if (e.PropertyName == nameof(AppConfig.ThemeColor))
+            if (e.PropertyName == nameof(AppConfig.ThemeColor) && !string.IsNullOrEmpty(AppConfig.ThemeColor))
             {
                 HeaderTitle = ThemeDefinitions.GetAppName(AppConfig.ThemeColor);
             }
@@ -120,6 +126,9 @@ public partial class MainViewModel : BaseViewModel, IDisposable
         // The event provides the new config, but we get it from ConfigManager to ensure consistency
         AppConfig = _configManager.CurrentConfig;
         OnPropertyChanged(nameof(AppConfig));
+
+        // Re-subscribe to the new AppConfig instance for live updates
+        SubscribeToThemeColorChanges();
 
         // Update theme service if theme color changed
         if (!string.IsNullOrEmpty(AppConfig.ThemeColor) && _themeService.ThemeColor != AppConfig.ThemeColor)

@@ -2,6 +2,7 @@
     x:Class="BlueMeter.WPF.Controls.Footer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:BlueMeter.WPF.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:BlueMeter.WPF.Controls"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -19,9 +20,12 @@
     </UserControl.Template>
 
     <UserControl.Resources>
+        <converters:ThemeBackgroundConverter x:Key="ThemeBackgroundConverter" />
+        <converters:ThemeAccentConverter x:Key="ThemeAccentConverter" />
+
         <Style x:Key="FooterBorder" TargetType="Border">
-            <Setter Property="Background" Value="{Binding Path=Background, RelativeSource={RelativeSource AncestorType=local:Footer}}" />
-            <Setter Property="BorderBrush" Value="#2A3547" />
+            <Setter Property="Background" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=dark}" />
+            <Setter Property="BorderBrush" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}" />
             <Setter Property="BorderThickness" Value="0,1,0,0" />
             <Setter Property="CornerRadius">
                 <Setter.Value>
@@ -35,7 +39,7 @@
             <Setter Property="Effect">
                 <Setter.Value>
                     <DropShadowEffect
-                        Color="#00D9FF"
+                        Color="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}"
                         BlurRadius="8"
                         ShadowDepth="0"
                         Opacity="0.1" />

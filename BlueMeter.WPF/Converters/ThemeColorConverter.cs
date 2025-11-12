@@ -6,7 +6,8 @@ using System.Windows.Media;
 namespace BlueMeter.WPF.Converters;
 
 /// <summary>
-/// Converts a hex color string (e.g., "#1690F8") to a SolidColorBrush for theme customization.
+/// Converts a hex color string (e.g., "#1690F8") or special theme names to appropriate brushes.
+/// Supports both solid colors and gradient themes (Rainbow, Sunset, Cyberpunk).
 /// Returns a default brush if the color string is invalid.
 /// </summary>
 public class ThemeColorConverter : IValueConverter
@@ -22,6 +23,27 @@ public class ThemeColorConverter : IValueConverter
     {
         if (value is string colorString && !string.IsNullOrEmpty(colorString))
         {
+            // Handle special gradient themes - use dominant/primary color
+            switch (colorString.ToLower())
+            {
+                case "transparent":
+                    // Return transparent brush for no overlay
+                    return new SolidColorBrush(Color.FromArgb(0, 0, 0, 0));
+
+                case "rainbow":
+                    // Primary color for Rainbow: Magenta (average of pink and blue)
+                    return new SolidColorBrush(Color.FromRgb(255, 0, 127));
+
+                case "sunset":
+                    // Primary color for Sunset: Orange
+                    return new SolidColorBrush(Color.FromRgb(255, 107, 107));
+
+                case "cyberpunk":
+                    // Primary color for Cyberpunk: Magenta/Hot Pink
+                    return new SolidColorBrush(Color.FromRgb(255, 0, 110));
+            }
+
+            // Try parsing as hex color
             try
             {
                 var color = (Color)ColorConverter.ConvertFromString(colorString);

@@ -55,13 +55,16 @@
         <converters:BackgroundImageConverter x:Key="BackgroundImageConverter" />
         <converters:ThemeColorConverter x:Key="ThemeColorConverter" />
         <converters:ThemeColorOverlayConverter x:Key="ThemeColorOverlayConverter" />
+        <converters:ThemeBackgroundConverter x:Key="ThemeBackgroundConverter" />
+        <converters:ThemeAccentConverter x:Key="ThemeAccentConverter" />
+        <converters:ThemeForegroundConverter x:Key="ThemeForegroundConverter" />
         <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
         <converters:PanelColorModeConverter x:Key="PanelColorModeConverter" />
         <converters:PanelContentColorModeConverter x:Key="PanelContentColorModeConverter" />
 
         <Style x:Key="StatisticTypeText" TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Foreground" Value="#FFF" />
+            <Setter Property="Foreground" Value="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeForegroundConverter}, ConverterParameter=text}" />
             <Setter Property="FontFamily" Value="pack://application:,,,/Assets/Fonts/#HarmonyOS Sans SC" />
             <Setter Property="HorizontalAlignment" Value="Center" />
         </Style>
@@ -374,8 +377,8 @@
                 Height="25"
                 VerticalAlignment="Top"
                 Panel.ZIndex="2"
-                Background="#12192B"
-                BorderBrush="#2A3547"
+                Background="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=dark}"
+                BorderBrush="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}"
                 BorderThickness="0,0,0,1"
                 MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Border.CornerRadius>
@@ -387,7 +390,7 @@
                 </Border.CornerRadius>
                 <Border.Effect>
                     <DropShadowEffect
-                        Color="#00D9FF"
+                        Color="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeAccentConverter}}"
                         BlurRadius="8"
                         ShadowDepth="0"
                         Opacity="0.1" />
@@ -703,8 +706,8 @@
                 VerticalAlignment="Bottom"
                 Height="25"
                 Opacity="1"
-                Background="#12192B"
-                BorderBrush="#2A3547"
+                Background="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=dark}"
+                BorderBrush="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}"
                 BorderThickness="0,1,0,0"
                 MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
                 <Border.CornerRadius>
@@ -716,7 +719,7 @@
                 </Border.CornerRadius>
                 <Border.Effect>
                     <DropShadowEffect
-                        Color="#00D9FF"
+                        Color="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeAccentConverter}}"
                         BlurRadius="8"
                         ShadowDepth="0"
                         Opacity="0.1" />
@@ -787,7 +790,7 @@
                         Grid.Column="0"
                         HorizontalAlignment="Left"
                         Text="[LAST]"
-                        Foreground="#FFD700"
+                        Foreground="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeAccentConverter}}"
                         FontWeight="Bold">
                         <TextBlock.Style>
                             <Style TargetType="TextBlock" BasedOn="{StaticResource FooterTextContent}">
@@ -819,7 +822,7 @@
                         HorizontalAlignment="Left"
                         Command="{Binding ReturnToLiveCommand}"
                         Content="[HISTORY]"
-                        Foreground="#FFA500"
+                        Foreground="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeAccentConverter}}"
                         Background="Transparent"
                         BorderThickness="0"
                         FontWeight="Bold"
@@ -848,7 +851,7 @@
                         HorizontalAlignment="Left"
                         Style="{StaticResource FooterTextContent}"
                         Text="{Binding HistoryModeLabel}"
-                        Foreground="#FFA500"
+                        Foreground="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeAccentConverter}}"
                         Visibility="{Binding IsHistoryMode, Converter={StaticResource BoolToVisibilityConverter}}" />
 
                     <TextBlock

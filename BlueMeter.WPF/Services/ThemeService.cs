@@ -38,6 +38,9 @@ public class ThemeService : ObservableObject
     /// </summary>
     public void Initialize(string currentThemeColor)
     {
-        ThemeColor = currentThemeColor;
+        _themeColor = currentThemeColor;
+        _appName = ThemeDefinitions.GetAppName(currentThemeColor);
+        OnPropertyChanged(nameof(ThemeColor));
+        OnPropertyChanged(nameof(AppName));
     }
 }

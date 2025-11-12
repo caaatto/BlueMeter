@@ -184,7 +184,20 @@ public static class ThemeDefinitions
     /// </summary>
     public static string GetAppName(string? colorOrId)
     {
+        if (string.IsNullOrEmpty(colorOrId))
+            return "BlueMeter";
+
         var theme = GetTheme(colorOrId);
-        return theme?.DisplayName ?? "BlueMeter";
+        if (theme != null)
+            return theme.DisplayName;
+
+        // If theme not found in definitions, generate a name from the color
+        // This handles custom colors that users might set
+        if (colorOrId.StartsWith('#') && colorOrId.Length == 7)
+        {
+            return "CustomMeter";
+        }
+
+        return "BlueMeter";
     }
 }

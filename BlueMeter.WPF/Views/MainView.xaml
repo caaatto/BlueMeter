@@ -362,7 +362,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <ctrl:Header Title="{Binding DataContext.ThemeService.AppName, RelativeSource={RelativeSource AncestorType=Window}}" Grid.Row="0" />
+                <ctrl:Header Title="{Binding HeaderTitle}" Grid.Row="0" />
 
             <Border Grid.Row="1" Style="{StaticResource MainContentBorder}">
                 <Grid>

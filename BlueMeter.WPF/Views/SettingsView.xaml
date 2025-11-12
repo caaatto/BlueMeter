@@ -171,7 +171,7 @@
             TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Foreground" Value="{Binding AppConfig.PanelColorMode, Converter={StaticResource PanelTextColorModeConverter}}" />
+            <Setter Property="Foreground" Value="#000000" />
         </Style>
 
         <Style

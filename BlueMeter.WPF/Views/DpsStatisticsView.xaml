@@ -67,6 +67,11 @@
             <Setter Property="Foreground" Value="#000000" />
         </Style>
 
+        <!-- DPS Settings CheckableMenuItem with black text -->
+        <Style x:Key="DpsCheckableMenuItem" TargetType="MenuItem" BasedOn="{StaticResource CheckableMenuItem}">
+            <Setter Property="Foreground" Value="#000000" />
+        </Style>
+
         <Style x:Key="StatisticTypeText" TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Foreground" Value="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeForegroundConverter}, ConverterParameter=text}" />
@@ -515,11 +520,11 @@
                                     <MenuItem
                                         Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_StatisticBoss}}"
                                         IsChecked="False"
-                                        Style="{StaticResource CheckableMenuItem}" />
+                                        Style="{StaticResource DpsCheckableMenuItem}" />
                                     <MenuItem
                                         Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_ShowTotal}}"
                                         IsChecked="False"
-                                        Style="{StaticResource CheckableMenuItem}" />
+                                        Style="{StaticResource DpsCheckableMenuItem}" />
 
                                     <MenuItem Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_PersonalMode}}" />
                                     <!--  记录设置  -->

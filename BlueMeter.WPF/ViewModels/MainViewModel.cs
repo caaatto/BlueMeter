@@ -61,6 +61,9 @@ public partial class MainViewModel : BaseViewModel, IDisposable
         _themeService.Initialize(AppConfig.ThemeColor ?? "#1690F8");
         ThemeService = _themeService;
 
+        // Initialize header title with current theme name
+        HeaderTitle = ThemeDefinitions.GetAppName(AppConfig.ThemeColor);
+
         var pluginStates = pluginManager.GetPluginStates();
         foreach (var plugin in pluginManager.GetPlugins())
         {
@@ -114,6 +117,12 @@ public partial class MainViewModel : BaseViewModel, IDisposable
         {
             _themeService.ThemeColor = AppConfig.ThemeColor;
         }
+
+        // Update header title when theme changes
+        if (!string.IsNullOrEmpty(AppConfig.ThemeColor))
+        {
+            HeaderTitle = ThemeDefinitions.GetAppName(AppConfig.ThemeColor);
+        }
     }
 
     /// <summary>
@@ -153,6 +162,9 @@ public partial class MainViewModel : BaseViewModel, IDisposable
 
     [ObservableProperty]
     private bool _isDebugTabActive;
+
+    [ObservableProperty]
+    private string _headerTitle = "BlueMeter";
 
     partial void OnThemeChanged(ApplicationTheme value)
     {

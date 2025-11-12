@@ -9,6 +9,16 @@ namespace BlueMeter.Core.Data;
 
 public static class PcapReplay
 {
+    /// <summary>
+    /// Safely get next packet without using ref parameters in async context.
+    /// </summary>
+    private static (GetPacketStatus, RawCapture?) GetNextPacketSafe(CaptureFileReaderDevice dev)
+    {
+        PacketCapture capture;
+        var status = dev.GetNextPacket(out capture);
+        return (status, status == GetPacketStatus.PacketRead ? capture.GetPacket() : null);
+    }
+
     /// <inheritdoc cref="ReplayFileAsync(string,BlueMeter.Core.Analyze.PacketAnalyzer,bool,double,System.Threading.CancellationToken)"/>
     public static Task ReplayFileAsync(this IPacketAnalyzer analyzer, string filePath, bool realtime = true,
         double speed = 1.0, CancellationToken token = default)
@@ -51,16 +61,14 @@ public static class PcapReplay
             while (!token.IsCancellationRequested)
             {
                 // Use the parameterless GetNextPacket() which returns RawCapture (null on EOF).
-                PacketCapture ee;
-                var rr = dev.GetNextPacket(out ee);
-                if (rr == GetPacketStatus.NoRemainingPackets)
+                var (status, raw) = GetNextPacketSafe(dev);
+                if (status == GetPacketStatus.NoRemainingPackets)
                     break;
-                if (rr is GetPacketStatus.Error or GetPacketStatus.ReadTimeout)
+                if (status is GetPacketStatus.Error or GetPacketStatus.ReadTimeout)
                     continue;
 
-                if (rr != GetPacketStatus.PacketRead)
+                if (status != GetPacketStatus.PacketRead || raw == null)
                     continue;
-                var raw = ee.GetPacket();
 
                 try
                 {
@@ -132,16 +140,14 @@ public static class PcapReplay
             while (!token.IsCancellationRequested)
             {
                 // Use the parameterless GetNextPacket() which returns RawCapture (null on EOF).
-                PacketCapture ee;
-                var rr = dev.GetNextPacket(out ee);
-                if (rr == GetPacketStatus.NoRemainingPackets)
+                var (status, raw) = GetNextPacketSafe(dev);
+                if (status == GetPacketStatus.NoRemainingPackets)
                     break;
-                if (rr is GetPacketStatus.Error or GetPacketStatus.ReadTimeout)
+                if (status is GetPacketStatus.Error or GetPacketStatus.ReadTimeout)
                     continue;
 
-                if (rr != GetPacketStatus.PacketRead)
+                if (status != GetPacketStatus.PacketRead || raw == null)
                     continue;
-                var raw = ee.GetPacket();
 
                 try
                 {

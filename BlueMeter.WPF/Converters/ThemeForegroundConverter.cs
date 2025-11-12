@@ -21,16 +21,17 @@ public class ThemeForegroundConverter : IValueConverter
             // parameter can specify: "text" (normal text), "label" (labels), "accent" (colored text)
             string type = parameter?.ToString()?.ToLower() ?? "text";
 
-            // Calculate brightness to determine if we need light or dark text
-            double brightness = (baseColor.R + baseColor.G + baseColor.B) / 3.0 / 255.0;
+            // Calculate brightness using relative luminance (more accurate for human perception)
+            // Formula: (0.299 * R + 0.587 * G + 0.114 * B) / 255
+            double brightness = (0.299 * baseColor.R + 0.587 * baseColor.G + 0.114 * baseColor.B) / 255.0;
 
             return type switch
             {
-                "text" => brightness > 0.5
+                "text" => brightness > 0.35
                     ? new SolidColorBrush(Color.FromRgb(0, 0, 0)) // Dark text for light backgrounds
                     : new SolidColorBrush(Color.FromRgb(255, 255, 255)), // Light text for dark backgrounds
 
-                "label" => brightness > 0.5
+                "label" => brightness > 0.35
                     ? new SolidColorBrush(Color.FromRgb(80, 80, 80)) // Dark gray for light backgrounds
                     : new SolidColorBrush(Color.FromRgb(255, 255, 255)), // White text for dark backgrounds
 

@@ -87,7 +87,7 @@ public partial class AppConfig : ObservableObject
     /// 主题颜色（窗口背景色）
     /// </summary>
     [ObservableProperty]
-    private string? _themeColor = "#1690F8";
+    private string? _themeColor = "#0047AB";
 
     /// <summary>
     /// 背景图片路径

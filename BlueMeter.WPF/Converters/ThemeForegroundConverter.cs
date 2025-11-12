@@ -69,7 +69,7 @@ public class ThemeForegroundConverter : IValueConverter
         }
         catch
         {
-            return Color.FromRgb(22, 144, 248);
+            return Color.FromRgb(0, 71, 171); // Cobalt Blue fallback
         }
     }
 

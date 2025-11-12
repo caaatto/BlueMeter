@@ -23,12 +23,12 @@ public static class ThemeDefinitions
     // Default themes - Easy to add more!
     public static readonly List<ThemeDefinition> Themes = new()
     {
-        // Classic Blue (Default)
+        // Classic Blue (Default) - Cobalt Blue
         new ThemeDefinition
         {
-            Id = "#1690F8",
+            Id = "#0047AB",
             DisplayName = "BlueMeter",
-            ColorHex = "#1690F8"
+            ColorHex = "#0047AB"
         },
 
         // Reds

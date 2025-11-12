@@ -338,7 +338,7 @@
     <!--  Main Border: Apply theme color as base background (like MainView)  -->
     <Border
         Style="{StaticResource ShadowWindowBorder}"
-        Background="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeColorConverter}, FallbackValue=#1690F8}">
+        Background="{Binding AppConfig.ThemeColor, Converter={StaticResource ThemeColorConverter}, FallbackValue=#0047AB}">
 
         <Grid>
             <!--  Optional Background Image Layer (on top of theme color)  -->

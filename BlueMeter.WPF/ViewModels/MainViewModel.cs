@@ -58,7 +58,7 @@ public partial class MainViewModel : BaseViewModel, IDisposable
         AppConfig = _configManager.CurrentConfig;
 
         // Initialize ThemeService with current theme color
-        _themeService.Initialize(AppConfig.ThemeColor ?? "#1690F8");
+        _themeService.Initialize(AppConfig.ThemeColor ?? "#0047AB");
         ThemeService = _themeService;
 
         // Initialize header title with current theme name

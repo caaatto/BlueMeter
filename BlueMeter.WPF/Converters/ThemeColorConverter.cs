@@ -12,7 +12,7 @@ namespace BlueMeter.WPF.Converters;
 /// </summary>
 public class ThemeColorConverter : IValueConverter
 {
-    private static readonly SolidColorBrush DefaultBrush = new(Color.FromRgb(22, 144, 248)); // #1690F8
+    private static readonly SolidColorBrush DefaultBrush = new(Color.FromRgb(0, 71, 171)); // #0047AB - Cobalt Blue
 
     static ThemeColorConverter()
     {

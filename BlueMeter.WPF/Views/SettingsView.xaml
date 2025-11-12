@@ -726,7 +726,7 @@
                                                 Text="{lex:Loc Key={x:Static loc:ResourcesKeys.Settings_Theme_WindowColor}}" />
                                             <Border Grid.Column="2" HorizontalAlignment="Right">
                                                 <WrapPanel x:Name="ThemeButtonsPanel">
-                                                    <Button Background="#1690F8" Style="{StaticResource ThemeButton}" Click="ThemeButton_Click" />
+                                                    <Button Background="#0047AB" Style="{StaticResource ThemeButton}" Click="ThemeButton_Click" />
                                                     <Button Background="#FFA9A8" Style="{StaticResource ThemeButton}" Click="ThemeButton_Click" />
                                                     <Button Background="#F7A0DD" Style="{StaticResource ThemeButton}" Click="ThemeButton_Click" />
                                                     <Button Background="#2F2F2F" Style="{StaticResource ThemeButton}" Click="ThemeButton_Click" />

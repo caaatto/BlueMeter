@@ -12,7 +12,7 @@ namespace BlueMeter.WPF.Services;
 public class ThemeService : ObservableObject
 {
     private string _appName = "BlueMeter";
-    private string _themeColor = "#1690F8";
+    private string _themeColor = "#0047AB"; // Cobalt Blue
 
     public string AppName
     {

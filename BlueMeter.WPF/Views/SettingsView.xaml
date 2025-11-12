@@ -45,6 +45,8 @@
         <converters:ThemeColorConverter x:Key="ThemeColorConverter" xmlns:converters="clr-namespace:BlueMeter.WPF.Converters" />
         <converters:ThemeColorOverlayConverter x:Key="ThemeColorOverlayConverter" xmlns:converters="clr-namespace:BlueMeter.WPF.Converters" />
         <converters:PanelColorModeConverter x:Key="PanelColorModeConverter" xmlns:converters="clr-namespace:BlueMeter.WPF.Converters" />
+        <converters:PanelTextColorModeConverter x:Key="PanelTextColorModeConverter" xmlns:converters="clr-namespace:BlueMeter.WPF.Converters" />
+        <converters:PanelBorderColorModeConverter x:Key="PanelBorderColorModeConverter" xmlns:converters="clr-namespace:BlueMeter.WPF.Converters" />
 
         <Style x:Key="SelectedIconfont" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="pack://application:,,,/Assets/Fonts/#IconFont" />
@@ -57,11 +59,7 @@
         <Style x:Key="SettingSectionListBorder" TargetType="Border">
             <Setter Property="Margin" Value="10" />
             <Setter Property="CornerRadius" Value="5" />
-            <Setter Property="Background">
-                <Setter.Value>
-                    <Binding Path="DataContext.AppConfig.BackgroundOnlyMode" RelativeSource="{RelativeSource AncestorType=Window}" Converter="{StaticResource BackgroundOnlyModeToBackgroundConverter}" />
-                </Setter.Value>
-            </Setter>
+            <Setter Property="Background" Value="{Binding AppConfig.PanelColorMode, Converter={StaticResource PanelColorModeConverter}}" />
         </Style>
 
         <Style x:Key="SettingSectionListTitleBorder" TargetType="Border">
@@ -91,13 +89,15 @@
         <Style
             x:Key="SectionListTitleText"
             BasedOn="{StaticResource NormalTextBlockBaseStyle}"
-            TargetType="TextBlock" />
+            TargetType="TextBlock">
+            <Setter Property="Foreground" Value="{Binding AppConfig.PanelColorMode, Converter={StaticResource PanelTextColorModeConverter}}" />
+        </Style>
 
         <Style x:Key="SectionTitlePointer" TargetType="Border">
             <Setter Property="Width" Value="8" />
             <Setter Property="Height" Value="8" />
             <Setter Property="HorizontalAlignment" Value="Right" />
-            <Setter Property="BorderBrush" Value="#000" />
+            <Setter Property="BorderBrush" Value="{Binding AppConfig.PanelColorMode, Converter={StaticResource PanelTextColorModeConverter}}" />
             <Setter Property="BorderThickness" Value="0,1,1,0" />
             <Setter Property="RenderTransform">
                 <Setter.Value>
@@ -110,11 +110,7 @@
             <Setter Property="Margin" Value="10" />
             <Setter Property="Padding" Value="20,20,5,0" />
             <Setter Property="CornerRadius" Value="5" />
-            <Setter Property="Background">
-                <Setter.Value>
-                    <Binding Path="DataContext.AppConfig.BackgroundOnlyMode" RelativeSource="{RelativeSource AncestorType=Window}" Converter="{StaticResource BackgroundOnlyModeToBackgroundConverter}" />
-                </Setter.Value>
-            </Setter>
+            <Setter Property="Background" Value="{Binding AppConfig.PanelColorMode, Converter={StaticResource PanelColorModeConverter}}" />
         </Style>
 
         <Style x:Key="TitleStrip" TargetType="Border">
@@ -148,7 +144,7 @@
 
         <Style x:Key="SectionBorder" TargetType="Border">
             <Setter Property="Background" Value="{Binding AppConfig.PanelColorMode, Converter={StaticResource PanelColorModeConverter}}" />
-            <Setter Property="BorderBrush" Value="#E5E5E5" />
+            <Setter Property="BorderBrush" Value="{Binding AppConfig.PanelColorMode, Converter={StaticResource PanelBorderColorModeConverter}}" />
             <Setter Property="BorderThickness" Value="2" />
             <Setter Property="CornerRadius" Value="10" />
             <Setter Property="Margin" Value="0,0,10,30" />
@@ -165,7 +161,7 @@
             x:Key="SectionFieldBorder"
             BasedOn="{StaticResource SectionFieldBorderBase}"
             TargetType="Border">
-            <Setter Property="BorderBrush" Value="#E5E5E5" />
+            <Setter Property="BorderBrush" Value="{Binding AppConfig.PanelColorMode, Converter={StaticResource PanelBorderColorModeConverter}}" />
             <Setter Property="BorderThickness" Value="0,0,0,2" />
         </Style>
 
@@ -175,6 +171,7 @@
             TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{Binding AppConfig.PanelColorMode, Converter={StaticResource PanelTextColorModeConverter}}" />
         </Style>
 
         <Style
@@ -198,6 +195,7 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="{Binding AppConfig.PanelColorMode, Converter={StaticResource PanelTextColorModeConverter}}" />
         </Style>
 
         <Style x:Key="ThemeButtonBorder" TargetType="Border">

@@ -186,6 +186,13 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Padding" Value="13,3,13,3" />
             <Setter Property="Margin" Value="10,0,10,0" />
+            <Style.Triggers>
+                <!-- Make panels transparent when BackgroundOnlyMode is enabled -->
+                <DataTrigger Binding="{Binding DataContext.AppConfig.BackgroundOnlyMode, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                    <Setter Property="Background" Value="Transparent" />
+                    <Setter Property="BorderThickness" Value="0" />
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
 
         <Style

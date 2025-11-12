@@ -6,7 +6,8 @@ using System.Windows.Media;
 namespace BlueMeter.WPF.Converters;
 
 /// <summary>
-/// Converts a hex color string to a semi-transparent SolidColorBrush for overlay effects.
+/// Converts a hex color string or special theme names to semi-transparent SolidColorBrush for overlay effects.
+/// Supports gradient themes (Rainbow, Sunset, Cyberpunk).
 /// Returns null for "Transparent" theme or invalid colors.
 /// </summary>
 public class ThemeColorOverlayConverter : IValueConverter
@@ -21,29 +22,46 @@ public class ThemeColorOverlayConverter : IValueConverter
                 return null;
             }
 
-            try
-            {
-                var color = (Color)ColorConverter.ConvertFromString(colorString);
+            Color overlayColor;
 
-                // Parse opacity from parameter, default to 0.15 (15%)
-                double opacity = 0.15;
-                if (parameter is string opacityString && double.TryParse(opacityString, out var parsedOpacity))
-                {
-                    opacity = parsedOpacity;
-                }
-
-                var brush = new SolidColorBrush(color)
-                {
-                    Opacity = opacity
-                };
-                brush.Freeze();
-                return brush;
-            }
-            catch
+            // Handle special gradient themes - use dominant color
+            switch (colorString.ToLower())
             {
-                // Invalid color string, return null
-                return null;
+                case "rainbow":
+                    overlayColor = Color.FromRgb(255, 0, 127); // Magenta
+                    break;
+                case "sunset":
+                    overlayColor = Color.FromRgb(255, 107, 107); // Red
+                    break;
+                case "cyberpunk":
+                    overlayColor = Color.FromRgb(255, 0, 110); // Hot Pink
+                    break;
+                default:
+                    try
+                    {
+                        overlayColor = (Color)ColorConverter.ConvertFromString(colorString);
+                    }
+                    catch
+                    {
+                        // Invalid color string, return null
+                        return null;
+                    }
+                    break;
             }
+
+            // Parse opacity from parameter, default to 0.15 (15%)
+            double opacity = 0.15;
+            if (parameter is string opacityString && double.TryParse(opacityString, out var parsedOpacity))
+            {
+                opacity = parsedOpacity;
+            }
+
+            var brush = new SolidColorBrush(overlayColor)
+            {
+                Opacity = opacity
+            };
+            brush.Freeze();
+            return brush;
         }
 
         return null;

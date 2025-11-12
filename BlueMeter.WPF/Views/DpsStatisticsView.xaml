@@ -62,6 +62,10 @@
         <converters:PanelColorModeConverter x:Key="PanelColorModeConverter" />
         <converters:PanelContentColorModeConverter x:Key="PanelContentColorModeConverter" />
 
+        <!-- DPS Settings MenuItem with black text for readability on light background -->
+        <Style x:Key="DpsSettingsMenuItem" TargetType="MenuItem" BasedOn="{StaticResource ModernMenuItem}">
+            <Setter Property="Foreground" Value="#000000" />
+        </Style>
 
         <Style x:Key="StatisticTypeText" TargetType="TextBlock">
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -500,7 +504,7 @@
                                 <ContextMenu Style="{StaticResource ModernContextMenu}">
                                     <!--  只给 MenuItem 应用样式，Separator 不受影响  -->
                                     <ContextMenu.Resources>
-                                        <Style BasedOn="{StaticResource ModernMenuItem}" TargetType="{x:Type MenuItem}" />
+                                        <Style BasedOn="{StaticResource DpsSettingsMenuItem}" TargetType="{x:Type MenuItem}" />
                                     </ContextMenu.Resources>
                                     <MenuItem
                                         Command="{Binding OpenSettingsCommand}"

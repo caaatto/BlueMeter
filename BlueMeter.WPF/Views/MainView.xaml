@@ -57,6 +57,7 @@
             <Setter Property="BorderBrush" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Opacity" Value="{Binding DataContext.AppConfig.BackgroundOnlyMode, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BackgroundOnlyModeOpacityConverter}}" />
             <Setter Property="Effect">
                 <Setter.Value>
                     <DropShadowEffect
@@ -301,7 +302,6 @@
 
         <Style x:Key="PluginDetailIntroBorder" TargetType="Border">
             <Setter Property="Padding" Value="20,10,20,10" />
-            <Setter Property="Opacity" Value="{Binding DataContext.AppConfig.BackgroundOnlyMode, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BackgroundOnlyModeOpacityConverter}}" />
         </Style>
 
         <Style x:Key="PluginDetailIntroLabel" TargetType="TextBlock">

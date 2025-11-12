@@ -187,7 +187,6 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Padding" Value="13,3,13,3" />
             <Setter Property="Margin" Value="10,0,10,0" />
-            <Setter Property="Opacity" Value="{Binding DataContext.AppConfig.BackgroundOnlyMode, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BackgroundOnlyModeOpacityConverter}}" />
         </Style>
 
         <Style

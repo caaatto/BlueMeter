@@ -665,10 +665,10 @@
                                                             </Button.Template>
                                                         </Button>
 
-                                                        <Button Grid.Column="1" Command="{Binding RunCommand}" RenderTransformOrigin="0.5,0.5">
+                                                        <Button Grid.Column="1" Command="{Binding RunCommand}" RenderTransformOrigin="0.5,0.5" IsEnabled="{Binding IsEnabled}">
                                                             <Button.Template>
                                                                 <ControlTemplate>
-                                                                    <Border x:Name="bb" Style="{StaticResource PluginRunButton}" RenderTransformOrigin="0.5,0.5">
+                                                                    <Border x:Name="bb" Style="{StaticResource PluginRunButton}" RenderTransformOrigin="0.5,0.5" Opacity="{Binding IsEnabled, Converter={StaticResource IsEnabledToOpacityConverter}}">
                                                                         <Border.Effect>
                                                                             <DropShadowEffect
                                                                                 Color="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}"

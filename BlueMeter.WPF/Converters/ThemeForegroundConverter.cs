@@ -32,7 +32,7 @@ public class ThemeForegroundConverter : IValueConverter
 
                 "label" => brightness > 0.5
                     ? new SolidColorBrush(Color.FromRgb(80, 80, 80)) // Dark gray for light backgrounds
-                    : new SolidColorBrush(Color.FromRgb(200, 200, 200)), // Light gray for dark backgrounds
+                    : new SolidColorBrush(Color.FromRgb(255, 255, 255)), // White text for dark backgrounds
 
                 "accent" => new SolidColorBrush(BrightenColor(baseColor, 1.2)), // Brightened theme color
 

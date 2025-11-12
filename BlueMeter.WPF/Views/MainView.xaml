@@ -38,6 +38,9 @@
         <converters:ThemeColorConverter x:Key="ThemeColorConverter" />
         <converters:BackgroundImageConverter x:Key="BackgroundImageConverter" />
         <converters:ThemeColorOverlayConverter x:Key="ThemeColorOverlayConverter" />
+        <converters:ThemeBackgroundConverter x:Key="ThemeBackgroundConverter" />
+        <converters:ThemeAccentConverter x:Key="ThemeAccentConverter" />
+        <converters:ThemeForegroundConverter x:Key="ThemeForegroundConverter" />
 
         <Style x:Key="IconFont" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="pack://application:,,,/Assets/Fonts/#IconFont" />
@@ -48,14 +51,14 @@
         </Style>
 
         <Style x:Key="PluginListBorder" TargetType="Border">
-            <Setter Property="Background" Value="#12192B" />
-            <Setter Property="BorderBrush" Value="#2A3547" />
+            <Setter Property="Background" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=dark}" />
+            <Setter Property="BorderBrush" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="10" />
             <Setter Property="Effect">
                 <Setter.Value>
                     <DropShadowEffect
-                        Color="#00D9FF"
+                        Color="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeColorConverter}}"
                         BlurRadius="10"
                         ShadowDepth="0"
                         Opacity="0.2" />
@@ -64,14 +67,14 @@
         </Style>
 
         <Style x:Key="PluginDetailBorder" TargetType="Border">
-            <Setter Property="Background" Value="#12192B" />
-            <Setter Property="BorderBrush" Value="#2A3547" />
+            <Setter Property="Background" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=dark}" />
+            <Setter Property="BorderBrush" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="10" />
             <Setter Property="Effect">
                 <Setter.Value>
                     <DropShadowEffect
-                        Color="#00D9FF"
+                        Color="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeColorConverter}}"
                         BlurRadius="10"
                         ShadowDepth="0"
                         Opacity="0.2" />
@@ -90,8 +93,8 @@
         </Style>
 
         <Style x:Key="SearchBorder" TargetType="Border">
-            <Setter Property="Background" Value="#151D2E" />
-            <Setter Property="BorderBrush" Value="#2A3547" />
+            <Setter Property="Background" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}" />
+            <Setter Property="BorderBrush" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}" />
             <Setter Property="BorderThickness" Value="0,0,0,1" />
         </Style>
 
@@ -103,7 +106,7 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="FontSize" Value="24" />
-            <Setter Property="Foreground" Value="#00D9FF" />
+            <Setter Property="Foreground" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}" />
         </Style>
 
         <Style x:Key="SearchBox" TargetType="TextBox">
@@ -113,13 +116,13 @@
             <Setter Property="BorderBrush" Value="Transparent" />
             <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Background" Value="Transparent" />
-            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="Foreground" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeForegroundConverter}, ConverterParameter=text}" />
             <Setter Property="Padding" Value="50,0,5,0" />
             <Setter Property="FontSize" Value="16" />
         </Style>
 
         <Style x:Key="PluginListTitleBorder" TargetType="Border">
-            <Setter Property="BorderBrush" Value="#2A3547" />
+            <Setter Property="BorderBrush" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}" />
             <Setter Property="BorderThickness" Value="0,0,0,1" />
         </Style>
 
@@ -127,7 +130,7 @@
             x:Key="PluginListTitle"
             BasedOn="{StaticResource NormalTextBlockBaseStyle}"
             TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#B4BCD6" />
+            <Setter Property="Foreground" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeForegroundConverter}, ConverterParameter=label}" />
             <Setter Property="FontSize" Value="16" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Margin" Value="20,10,10,10" />
@@ -152,7 +155,7 @@
             x:Key="PluginListName"
             BasedOn="{StaticResource NormalTextBlockBaseStyle}"
             TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#00D9FF" />
+            <Setter Property="Foreground" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}" />
             <Setter Property="FontSize" Value="16" />
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
@@ -161,7 +164,7 @@
             x:Key="PluginListIntro"
             BasedOn="{StaticResource NormalTextBlockBaseStyle}"
             TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#D4DDE8" />
+            <Setter Property="Foreground" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeForegroundConverter}, ConverterParameter=label}" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Margin" Value="0,25,0,0" />
         </Style>
@@ -171,12 +174,12 @@
             BasedOn="{StaticResource NormalTextBlockBaseStyle}"
             TargetType="TextBlock">
             <Setter Property="FontSize" Value="12" />
-            <Setter Property="Foreground" Value="#8B95A8" />
+            <Setter Property="Foreground" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeForegroundConverter}, ConverterParameter=label}" />
         </Style>
 
         <Style x:Key="PluginStateBorderBase" TargetType="Border">
-            <Setter Property="Background" Value="#151D2E" />
-            <Setter Property="BorderBrush" Value="#00D9FF" />
+            <Setter Property="Background" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}" />
+            <Setter Property="BorderBrush" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}" />
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="CornerRadius" Value="8" />
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -202,12 +205,12 @@
             TargetType="TextBlock">
             <Setter Property="HorizontalAlignment" Value="Center" />
             <Setter Property="FontSize" Value="9" />
-            <Setter Property="Foreground" Value="#00D9FF" />
+            <Setter Property="Foreground" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}" />
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
 
         <Style x:Key="PluginDetailTitleBorder" TargetType="Border">
-            <Setter Property="BorderBrush" Value="#2A3547" />
+            <Setter Property="BorderBrush" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}" />
             <Setter Property="BorderThickness" Value="0,0,0,1" />
             <Setter Property="Padding" Value="20,10,20,10" />
         </Style>
@@ -216,7 +219,7 @@
             x:Key="PluginDetailName"
             BasedOn="{StaticResource NormalTextBlockBaseStyle}"
             TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="Foreground" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeForegroundConverter}, ConverterParameter=text}" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="FontSize" Value="22" />
             <Setter Property="VerticalAlignment" Value="Top" />
@@ -230,7 +233,7 @@
             x:Key="AutoRunText"
             BasedOn="{StaticResource NormalTextBlockBaseStyle}"
             TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#B4BCD6" />
+            <Setter Property="Foreground" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeForegroundConverter}, ConverterParameter=label}" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Margin" Value="10,0,0,0" />
             <Setter Property="FontSize" Value="12" />
@@ -257,8 +260,8 @@
             x:Key="PluginSettingButton"
             BasedOn="{StaticResource PluginButtonBase}"
             TargetType="Border">
-            <Setter Property="Background" Value="#151D2E" />
-            <Setter Property="BorderBrush" Value="#2A3547" />
+            <Setter Property="Background" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}" />
+            <Setter Property="BorderBrush" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=light}" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
 
@@ -266,7 +269,7 @@
             x:Key="PluginSettingText"
             BasedOn="{StaticResource PluginTextBase}"
             TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#B4BCD6" />
+            <Setter Property="Foreground" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeForegroundConverter}, ConverterParameter=label}" />
         </Style>
 
         <Style
@@ -299,13 +302,13 @@
         </Style>
 
         <Style x:Key="PluginDetailIntroLabel" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#D4DDE8" />
+            <Setter Property="Foreground" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeForegroundConverter}, ConverterParameter=label}" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="FontWeight" Value="Medium" />
         </Style>
 
         <Style x:Key="PluginDetailIntroValue" TargetType="TextBlock">
-            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="Foreground" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeForegroundConverter}, ConverterParameter=text}" />
             <Setter Property="FontSize" Value="12" />
         </Style>
 
@@ -437,8 +440,8 @@
                                                     <ControlTemplate TargetType="ListBoxItem">
                                                         <Border
                                                             x:Name="bb"
-                                                            Background="#151D2E"
-                                                            BorderBrush="#2A3547"
+                                                            Background="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}"
+                                                            BorderBrush="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=light}"
                                                             BorderThickness="1"
                                                             CornerRadius="8"
                                                             Padding="20,15,20,15">
@@ -446,13 +449,13 @@
                                                         </Border>
                                                         <ControlTemplate.Triggers>
                                                             <Trigger Property="IsSelected" Value="True">
-                                                                <Setter TargetName="bb" Property="Background" Value="#1C2738" />
-                                                                <Setter TargetName="bb" Property="BorderBrush" Value="#00D9FF" />
+                                                                <Setter TargetName="bb" Property="Background" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=light}" />
+                                                                <Setter TargetName="bb" Property="BorderBrush" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}" />
                                                                 <Setter TargetName="bb" Property="BorderThickness" Value="2" />
                                                                 <Setter TargetName="bb" Property="Effect">
                                                                     <Setter.Value>
                                                                         <DropShadowEffect
-                                                                            Color="#00D9FF"
+                                                                            Color="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeColorConverter}}"
                                                                             BlurRadius="15"
                                                                             ShadowDepth="0"
                                                                             Opacity="0.5" />
@@ -460,11 +463,11 @@
                                                                 </Setter>
                                                             </Trigger>
                                                             <Trigger Property="IsMouseOver" Value="True">
-                                                                <Setter TargetName="bb" Property="Background" Value="#1C2738" />
+                                                                <Setter TargetName="bb" Property="Background" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=light}" />
                                                                 <Setter TargetName="bb" Property="Effect">
                                                                     <Setter.Value>
                                                                         <DropShadowEffect
-                                                                            Color="#00D9FF"
+                                                                            Color="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}"
                                                                             BlurRadius="8"
                                                                             ShadowDepth="0"
                                                                             Opacity="0.3" />
@@ -516,8 +519,8 @@
                                         <ControlTemplate TargetType="ToggleButton">
                                             <Border
                                                 x:Name="bb"
-                                                Background="#151D2E"
-                                                BorderBrush="#2A3547"
+                                                Background="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}"
+                                                BorderBrush="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=light}"
                                                 BorderThickness="1"
                                                 CornerRadius="8"
                                                 Padding="20,15,20,15"
@@ -542,13 +545,13 @@
 
                                             <ControlTemplate.Triggers>
                                                 <Trigger Property="IsChecked" Value="True">
-                                                    <Setter TargetName="bb" Property="Background" Value="#1C2738" />
-                                                    <Setter TargetName="bb" Property="BorderBrush" Value="#00D9FF" />
+                                                    <Setter TargetName="bb" Property="Background" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=light}" />
+                                                    <Setter TargetName="bb" Property="BorderBrush" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}" />
                                                     <Setter TargetName="bb" Property="BorderThickness" Value="2" />
                                                     <Setter TargetName="bb" Property="Effect">
                                                         <Setter.Value>
                                                             <DropShadowEffect
-                                                                Color="#00D9FF"
+                                                                Color="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeColorConverter}}"
                                                                 BlurRadius="15"
                                                                 ShadowDepth="0"
                                                                 Opacity="0.5" />
@@ -556,11 +559,11 @@
                                                     </Setter>
                                                 </Trigger>
                                                 <Trigger Property="IsMouseOver" Value="True">
-                                                    <Setter TargetName="bb" Property="Background" Value="#1C2738" />
+                                                    <Setter TargetName="bb" Property="Background" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=light}" />
                                                     <Setter TargetName="bb" Property="Effect">
                                                         <Setter.Value>
                                                             <DropShadowEffect
-                                                                Color="#00D9FF"
+                                                                Color="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}"
                                                                 BlurRadius="8"
                                                                 ShadowDepth="0"
                                                                 Opacity="0.3" />
@@ -639,12 +642,12 @@
 
                                                                     <ControlTemplate.Triggers>
                                                                         <Trigger Property="IsMouseOver" Value="True">
-                                                                            <Setter TargetName="bb" Property="Background" Value="#1C2738" />
-                                                                            <Setter TargetName="bb" Property="BorderBrush" Value="#00D9FF" />
+                                                                            <Setter TargetName="bb" Property="Background" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=light}" />
+                                                                            <Setter TargetName="bb" Property="BorderBrush" Value="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}" />
                                                                             <Setter TargetName="bb" Property="Effect">
                                                                                 <Setter.Value>
                                                                                     <DropShadowEffect
-                                                                                        Color="#00D9FF"
+                                                                                        Color="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}"
                                                                                         BlurRadius="10"
                                                                                         ShadowDepth="0"
                                                                                         Opacity="0.4" />
@@ -662,7 +665,7 @@
                                                                     <Border x:Name="bb" Style="{StaticResource PluginRunButton}" RenderTransformOrigin="0.5,0.5">
                                                                         <Border.Effect>
                                                                             <DropShadowEffect
-                                                                                Color="#00D9FF"
+                                                                                Color="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}"
                                                                                 BlurRadius="10"
                                                                                 ShadowDepth="0"
                                                                                 Opacity="0.3" />
@@ -675,7 +678,7 @@
                                                                             <Setter TargetName="bb" Property="Effect">
                                                                                 <Setter.Value>
                                                                                     <DropShadowEffect
-                                                                                        Color="#00D9FF"
+                                                                                        Color="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}"
                                                                                         BlurRadius="20"
                                                                                         ShadowDepth="0"
                                                                                         Opacity="0.7" />

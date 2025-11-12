@@ -42,6 +42,7 @@
         <converters:ThemeAccentConverter x:Key="ThemeAccentConverter" />
         <converters:ThemeForegroundConverter x:Key="ThemeForegroundConverter" />
         <converters:ThemeToAppNameConverter x:Key="ThemeToAppNameConverter" />
+        <converters:BackgroundOnlyModeOpacityConverter x:Key="BackgroundOnlyModeOpacityConverter" />
 
         <Style x:Key="IconFont" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="pack://application:,,,/Assets/Fonts/#IconFont" />
@@ -186,13 +187,7 @@
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="Padding" Value="13,3,13,3" />
             <Setter Property="Margin" Value="10,0,10,0" />
-            <Style.Triggers>
-                <!-- Make panels transparent when BackgroundOnlyMode is enabled -->
-                <DataTrigger Binding="{Binding DataContext.AppConfig.BackgroundOnlyMode, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
-                    <Setter Property="Background" Value="Transparent" />
-                    <Setter Property="BorderThickness" Value="0" />
-                </DataTrigger>
-            </Style.Triggers>
+            <Setter Property="Opacity" Value="{Binding DataContext.AppConfig.BackgroundOnlyMode, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource BackgroundOnlyModeOpacityConverter}}" />
         </Style>
 
         <Style

@@ -127,6 +127,7 @@ public partial class App : Application
                 services.AddSingleton<IPlugin, ModuleSolverPlugin>();
                 services.AddSingleton<IPlugin, WorldBossPlugin>();
                 services.AddSingleton<ITrayService, TrayService>();
+                services.AddSingleton<ThemeService>();
 
                 if (_logStream != null) services.AddSingleton<IObservable<LogEvent>>(_logStream);
 

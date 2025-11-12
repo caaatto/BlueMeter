@@ -23,6 +23,7 @@ public partial class MainViewModel : BaseViewModel, IDisposable
     private readonly LocalizationManager _localizationManager;
     private readonly IMessageDialogService _dialogService;
     private readonly IConfigManager _configManager;
+    private readonly ThemeService _themeService;
     private readonly ObservableCollection<PluginListItemViewModel> _plugins = [];
     private PluginListItemViewModel? _lastSelectedPlugin;
     private IPluginManager _pluginManager;
@@ -36,7 +37,8 @@ public partial class MainViewModel : BaseViewModel, IDisposable
         IPluginManager pluginManager,
         LocalizationManager localizationManager,
         IMessageDialogService dialogService,
-        IConfigManager configManager)
+        IConfigManager configManager,
+        ThemeService themeService)
     {
         _themeManager = themeManager;
         _windowManagement = windowManagement;
@@ -45,6 +47,7 @@ public partial class MainViewModel : BaseViewModel, IDisposable
         _localizationManager = localizationManager;
         _dialogService = dialogService;
         _configManager = configManager;
+        _themeService = themeService;
         _pluginManager = pluginManager;
 
         Debug = debugFunctions;
@@ -53,6 +56,10 @@ public partial class MainViewModel : BaseViewModel, IDisposable
 
         // Expose AppConfig for theme color and background image binding
         AppConfig = _configManager.CurrentConfig;
+
+        // Initialize ThemeService with current theme color
+        _themeService.Initialize(AppConfig.ThemeColor ?? "#1690F8");
+        ThemeService = _themeService;
 
         var pluginStates = pluginManager.GetPluginStates();
         foreach (var plugin in pluginManager.GetPlugins())
@@ -101,6 +108,12 @@ public partial class MainViewModel : BaseViewModel, IDisposable
         // The event provides the new config, but we get it from ConfigManager to ensure consistency
         AppConfig = _configManager.CurrentConfig;
         OnPropertyChanged(nameof(AppConfig));
+
+        // Update theme service if theme color changed
+        if (!string.IsNullOrEmpty(AppConfig.ThemeColor) && _themeService.ThemeColor != AppConfig.ThemeColor)
+        {
+            _themeService.ThemeColor = AppConfig.ThemeColor;
+        }
     }
 
     /// <summary>
@@ -125,6 +138,9 @@ public partial class MainViewModel : BaseViewModel, IDisposable
 
     // Exposed for theme color and background image binding in MainView
     public AppConfig AppConfig { get; private set; }
+
+    // Exposed for dynamic header title binding (displays current theme name)
+    public ThemeService ThemeService { get; private set; }
 
     [ObservableProperty]
     private List<ApplicationTheme> _availableThemes = [];

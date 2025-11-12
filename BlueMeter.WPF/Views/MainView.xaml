@@ -623,12 +623,14 @@
                                                                 Grid.Column="0"
                                                                 IsChecked="{Binding State.IsAutoStart, Mode=TwoWay}"
                                                                 Command="{Binding ToggleAutoStartCommand}"
+                                                                IsEnabled="{Binding IsEnabled}"
                                                                 OffContent="{lex:Loc Key={x:Static loc:ResourcesKeys.Settings_Switch_Off}}"
                                                                 OnContent="{lex:Loc Key={x:Static loc:ResourcesKeys.Settings_Switch_On}}" />
 
                                                             <TextBlock
                                                                 Grid.Column="1"
                                                                 Style="{StaticResource AutoRunText}"
+                                                                Opacity="{Binding IsEnabled, Converter={StaticResource IsEnabledToOpacityConverter}}"
                                                                 Text="{lex:Loc Key={x:Static loc:ResourcesKeys.MainView_Plugin_AutoStart}}" />
                                                         </Grid>
                                                     </Grid>

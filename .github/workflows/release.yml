@@ -29,8 +29,18 @@ jobs:
     - name: Publish application
       run: dotnet publish BlueMeter.WPF/BlueMeter.WPF.csproj --configuration Release --output publish --no-build
 
-    - name: Copy launcher scripts and source to publish
+    - name: Organize publish folder
       run: |
+        # Create lib folder for DLLs
+        New-Item -ItemType Directory -Path publish/lib -Force | Out-Null
+
+        # Move DLLs to lib folder
+        Get-ChildItem publish/*.dll | Move-Item -Destination publish/lib/
+
+        # Move other runtime files to lib
+        Get-ChildItem publish/*.pdb | Move-Item -Destination publish/lib/
+
+        # Keep only essential files in root
         Copy-Item setup.bat publish/
         Copy-Item launcher.bat publish/
         Copy-Item BlueMeter.WPF publish/ -Recurse

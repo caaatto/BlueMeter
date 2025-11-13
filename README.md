@@ -8,12 +8,21 @@ The tool does not require modifying the game client and does not violate the gam
 
 ## 🚀 Quick Start
 
-### Option 1: Download & Install (Recommended)
+### Option 1: Installer (Recommended)
 
 1. Go to the [Releases page](https://github.com/caaatto/BlueMeter/releases)
-2. Download the latest `BlueMeter-vX.X.X.zip` file
-3. Extract the ZIP file to a folder of your choice
-4. **Double-click `setup.bat`** to start installation
+2. Download `BlueMeter-Setup-X.X.X.exe`
+3. Run the installer and follow the wizard
+4. Launch BlueMeter from Start Menu or Desktop
+
+**No .NET installation or command line needed!**
+
+### Option 2: Setup Script
+
+1. Go to the [Releases page](https://github.com/caaatto/BlueMeter/releases)
+2. Download the `BlueMeter-vX.X.X.zip` file
+3. Extract the ZIP file
+4. **Double-click `setup.bat`**
 
 The setup script will:
 - Automatically check and install .NET 8.0 SDK (if needed)
@@ -21,10 +30,6 @@ The setup script will:
 - Launch the application
 
 **That's it!** No manual steps needed.
-
-### Option 2: Manual Installation
-
-If `setup.bat` doesn't work, see [INSTALL.md](INSTALL.md) for detailed instructions.
 
 ### Option 3: Build from Source
 

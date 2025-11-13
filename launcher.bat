@@ -6,7 +6,7 @@ setlocal enabledelayedexpansion
 cd /d "%~dp0"
 
 REM Check if EXE exists
-set EXE_PATH=BlueMeter.WPF\bin\Release\net8.0-windows\BlueMeter.WPF.exe
+set EXE_PATH=%CD%\BlueMeter.WPF\bin\Release\net8.0-windows\BlueMeter.WPF.exe
 
 if not exist "%EXE_PATH%" (
     echo.

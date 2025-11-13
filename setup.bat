@@ -83,10 +83,30 @@ if errorlevel 1 (
 echo.
 echo Build completed successfully!
 echo.
-echo Launching BlueMeter...
-echo.
+echo Creating shortcut to BlueMeter...
 
-REM Run the application
-dotnet run --no-build -c Release
+REM Get the path to the built EXE
+set EXE_PATH=%CD%\bin\Release\net8.0-windows\BlueMeter.WPF.exe
+
+REM Go back to root directory
+cd ..
+
+REM Create shortcut using PowerShell
+powershell -NoProfile -Command ^
+    "$WshShell = New-Object -ComObject WScript.Shell; ^
+     $Shortcut = $WshShell.CreateShortcut('%CD%\BlueMeter.lnk'); ^
+     $Shortcut.TargetPath = '%EXE_PATH%'; ^
+     $Shortcut.WorkingDirectory = '%CD%'; ^
+     $Shortcut.IconLocation = '%EXE_PATH%'; ^
+     $Shortcut.Save()"
+
+echo.
+echo ======================================
+echo Setup completed successfully!
+echo ======================================
+echo.
+echo BlueMeter shortcut created in: %CD%\BlueMeter.lnk
+echo You can now run BlueMeter by double-clicking the shortcut.
+echo.
 
 pause

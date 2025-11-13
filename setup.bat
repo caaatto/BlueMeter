@@ -85,10 +85,9 @@ echo ======================================
 echo Build completed successfully!
 echo ======================================
 echo.
-echo BlueMeter has been built!
-echo.
-echo You can find the executable at:
-echo bin/Release/net8.0-windows/BlueMeter.WPF.exe
+echo Launching BlueMeter...
 echo.
 
-pause
+REM Run the application directly
+cd BlueMeter.WPF
+dotnet run --no-build -c Release

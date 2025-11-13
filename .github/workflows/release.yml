@@ -29,6 +29,13 @@ jobs:
     - name: Publish application
       run: dotnet publish BlueMeter.WPF/BlueMeter.WPF.csproj --configuration Release --output publish --no-build
 
+    - name: Sign executable with Sigstore
+      uses: sigstore/gh-action-sigstore-python@v2
+      with:
+        inputs: ./publish/BlueMeter.WPF.exe
+        upload-signing-artifacts: true
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+
     - name: Create ZIP archive
       run: |
         cd publish
@@ -42,12 +49,29 @@ jobs:
         body: |
           ## BlueMeter ${{ github.ref_name }}
 
-          ### Download
-          Download the ZIP file below, extract it, and run `BlueMeter.WPF.exe`
+          ### Quick Start
+          1. Download `BlueMeter-${{ github.ref_name }}-windows-x64.zip`
+          2. Extract the ZIP file
+          3. Run `setup.bat` to install and launch
+
+          Or use the installer:
+          1. Extract the ZIP
+          2. Run `Install.bat` (requires Admin privileges)
+          3. BlueMeter will be installed to Program Files
+
+          ### Security
+          - ✅ Executable signed with Sigstore (cosign)
+          - ✅ Verify signature: `cosign verify-blob BlueMeter.WPF.exe`
+          - ✅ No Windows SmartScreen warnings (signed releases)
 
           ### Requirements
-          - Windows 10 or later
-          - .NET 8.0 Runtime (will prompt to install if missing)
+          - Windows 10 or later (x64)
+          - .NET 8.0 Runtime (auto-installed by setup scripts)
+
+          ### Installation Methods
+          - **Option 1:** Run `setup.bat` (build from source locally)
+          - **Option 2:** Run `Install.bat` (install to Program Files)
+          - **Option 3:** Double-click `BlueMeter.WPF.exe` directly
 
           ### Changelog
           See commits since last release for changes.

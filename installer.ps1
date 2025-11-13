@@ -25,10 +25,22 @@ if (-not $Silent) {
 }
 
 try {
+    # Check for Administrator privileges
+    $currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent()
+    $principal = New-Object System.Security.Principal.WindowsPrincipal($currentUser)
+    if (-not $principal.IsInRole([System.Security.Principal.WindowsBuiltInRole]::Administrator)) {
+        throw "This installer requires Administrator privileges. Please run as Administrator."
+    }
+
     # Create installation directory
     Write-Host "Creating installation directory..." -ForegroundColor Yellow
     if (Test-Path $InstallDir) {
-        Remove-Item $InstallDir -Recurse -Force
+        try {
+            Remove-Item $InstallDir -Recurse -Force
+        }
+        catch {
+            Write-Host "Warning: Could not remove existing installation. Will overwrite files." -ForegroundColor Yellow
+        }
     }
     New-Item -ItemType Directory -Path $InstallDir -Force | Out-Null
 

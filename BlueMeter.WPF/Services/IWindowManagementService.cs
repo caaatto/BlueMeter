@@ -1,4 +1,5 @@
 using BlueMeter.WPF.Views;
+using BlueMeter.WPF.Views.Checklist;
 
 namespace BlueMeter.WPF.Services;
 
@@ -11,5 +12,6 @@ public interface IWindowManagementService
     DamageReferenceView DamageReferenceView { get; }
     ModuleSolveView ModuleSolveView { get; }
     BossTrackerView BossTrackerView { get; }
+    ChecklistWindow ChecklistWindow { get; }
     MainView MainView { get; }
 }

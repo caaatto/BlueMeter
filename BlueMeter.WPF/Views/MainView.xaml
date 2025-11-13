@@ -10,6 +10,7 @@
     xmlns:loc="clr-namespace:BlueMeter.WPF.Properties"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vms="clr-namespace:BlueMeter.WPF.ViewModels"
+    xmlns:checklist="clr-namespace:BlueMeter.WPF.Views.Checklist"
     Title="{lex:Loc Key={x:Static loc:ResourcesKeys.App_Name}}"
     Width="1000"
     Height="650"
@@ -708,41 +709,77 @@
                                             </Border>
 
                                             <Border Grid.Row="1" Style="{StaticResource PluginDetailIntroBorder}">
-                                                <Grid>
-                                                    <Grid.RowDefinitions>
-                                                        <RowDefinition Height="Auto" />
-                                                        <RowDefinition Height="Auto" />
-                                                    </Grid.RowDefinitions>
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="Auto" />
-                                                        <ColumnDefinition Width="10" />
-                                                        <ColumnDefinition Width="*" />
-                                                    </Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="10" />
+                                                            <ColumnDefinition Width="*" />
+                                                        </Grid.ColumnDefinitions>
 
-                                                    <TextBlock
-                                                        Grid.Row="0"
-                                                        Grid.Column="0"
-                                                        Style="{StaticResource PluginDetailIntroLabel}"
-                                                        Text="{lex:Loc Key={x:Static loc:ResourcesKeys.MainView_Plugin_Label_Author}}" />
-                                                    <TextBlock
-                                                        Grid.Row="0"
-                                                        Grid.Column="2"
-                                                        Style="{StaticResource PluginDetailIntroValue}"
-                                                        Text="{lex:Loc Key={x:Static loc:ResourcesKeys.MainView_Plugin_Author_OfficialTeam}}"
-                                                        TextWrapping="Wrap" />
+                                                        <TextBlock
+                                                            Grid.Row="0"
+                                                            Grid.Column="0"
+                                                            Style="{StaticResource PluginDetailIntroLabel}"
+                                                            Text="{lex:Loc Key={x:Static loc:ResourcesKeys.MainView_Plugin_Label_Author}}" />
+                                                        <TextBlock
+                                                            Grid.Row="0"
+                                                            Grid.Column="2"
+                                                            Style="{StaticResource PluginDetailIntroValue}"
+                                                            Text="{lex:Loc Key={x:Static loc:ResourcesKeys.MainView_Plugin_Author_OfficialTeam}}"
+                                                            TextWrapping="Wrap" />
 
-                                                    <TextBlock
-                                                        Grid.Row="1"
-                                                        Grid.Column="0"
-                                                        Style="{StaticResource PluginDetailIntroLabel}"
-                                                        Text="{lex:Loc Key={x:Static loc:ResourcesKeys.MainView_Plugin_Label_Intro}}" />
-                                                    <TextBlock
-                                                        Grid.Row="1"
-                                                        Grid.Column="2"
-                                                        Style="{StaticResource PluginDetailIntroValue}"
-                                                        Text="{Binding Description}"
-                                                        TextWrapping="Wrap" />
-                                                </Grid>
+                                                        <TextBlock
+                                                            Grid.Row="1"
+                                                            Grid.Column="0"
+                                                            Style="{StaticResource PluginDetailIntroLabel}"
+                                                            Text="{lex:Loc Key={x:Static loc:ResourcesKeys.MainView_Plugin_Label_Intro}}" />
+                                                        <TextBlock
+                                                            Grid.Row="1"
+                                                            Grid.Column="2"
+                                                            Style="{StaticResource PluginDetailIntroValue}"
+                                                            Text="{Binding Description}"
+                                                            TextWrapping="Wrap" />
+                                                    </Grid>
+
+                                                    <!-- Checklist Button -->
+                                                    <Button
+                                                        Command="{Binding DataContext.CallChecklistWindowCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                                        Content="Open Daily/Weekly Checklist"
+                                                        Margin="0,20,0,0"
+                                                        Padding="15,10"
+                                                        HorizontalAlignment="Stretch">
+                                                        <Button.Template>
+                                                            <ControlTemplate>
+                                                                <Border x:Name="bb" Style="{StaticResource PluginRunButton}" Padding="15,10" RenderTransformOrigin="0.5,0.5">
+                                                                    <TextBlock Style="{StaticResource PluginRunText}" Text="Open Daily/Weekly Checklist" />
+                                                                </Border>
+                                                                <ControlTemplate.Triggers>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter TargetName="bb" Property="Effect">
+                                                                            <Setter.Value>
+                                                                                <DropShadowEffect
+                                                                                    Color="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}"
+                                                                                    BlurRadius="20"
+                                                                                    ShadowDepth="0"
+                                                                                    Opacity="0.7" />
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                        <Setter TargetName="bb" Property="RenderTransform">
+                                                                            <Setter.Value>
+                                                                                <ScaleTransform ScaleX="1.02" ScaleY="1.02" />
+                                                                            </Setter.Value>
+                                                                        </Setter>
+                                                                    </Trigger>
+                                                                </ControlTemplate.Triggers>
+                                                            </ControlTemplate>
+                                                        </Button.Template>
+                                                    </Button>
+                                                </StackPanel>
                                             </Border>
                                         </Grid>
                                     </DataTemplate>
@@ -757,10 +794,18 @@
                                             <DataTrigger Binding="{Binding IsDebugTabActive}" Value="True">
                                                 <Setter Property="Visibility" Value="Collapsed" />
                                             </DataTrigger>
+                                            <DataTrigger Binding="{Binding IsChecklistActive}" Value="True">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                            </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
                                 </ContentControl.Style>
                             </ContentControl>
+
+                            <!-- Checklist View -->
+                            <Grid Background="Transparent" Visibility="{Binding IsChecklistActive, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                <checklist:ChecklistView DataContext="{Binding ChecklistViewModel}"/>
+                            </Grid>
 
                             <Grid Background="Transparent" Visibility="{Binding IsDebugTabActive, Converter={StaticResource BooleanToVisibilityConverter}}">
                                 <Grid.RowDefinitions>

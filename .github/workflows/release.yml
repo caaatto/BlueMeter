@@ -29,10 +29,15 @@ jobs:
     - name: Publish application
       run: dotnet publish BlueMeter.WPF/BlueMeter.WPF.csproj --configuration Release --output publish --no-build
 
-    - name: Copy launcher scripts
+    - name: Copy launcher scripts and source to publish
       run: |
         Copy-Item setup.bat publish/
         Copy-Item launcher.bat publish/
+        Copy-Item BlueMeter.WPF publish/ -Recurse
+        Copy-Item BlueMeter.Core publish/ -Recurse
+        Copy-Item BlueMeter.Assets publish/ -Recurse
+        Copy-Item BlueMeter.sln publish/
+        Copy-Item Directory.Packages.props publish/
       shell: pwsh
 
     - name: Create ZIP archive

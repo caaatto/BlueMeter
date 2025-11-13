@@ -29,16 +29,12 @@ jobs:
     - name: Publish application
       run: dotnet publish BlueMeter.WPF/BlueMeter.WPF.csproj --configuration Release --output publish --no-build
 
-    - name: Install Sigstore cosign
-      uses: sigstore/cosign-installer@v3
-      with:
-        cosign-release: 'v2.2.0'
-
-    - name: Sign executable with Sigstore
-      env:
-        COSIGN_EXPERIMENTAL: 1
+    - name: Copy installer scripts
       run: |
-        cosign sign-blob --yes ./publish/BlueMeter.WPF.exe > ./publish/BlueMeter.WPF.exe.sig
+        Copy-Item setup.bat publish/
+        Copy-Item setup.ps1 publish/
+        Copy-Item INSTALL.md publish/
+        Copy-Item README.md publish/
       shell: pwsh
 
     - name: Create ZIP archive
@@ -50,35 +46,26 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
-        files: |
-          BlueMeter-${{ github.ref_name }}-windows-x64.zip
-          publish/BlueMeter.WPF.exe.sig
+        files: BlueMeter-${{ github.ref_name }}-windows-x64.zip
         body: |
           ## BlueMeter ${{ github.ref_name }}
 
           ### Quick Start
           1. Download `BlueMeter-${{ github.ref_name }}-windows-x64.zip`
           2. Extract the ZIP file
-          3. Run `setup.bat` to install and launch
+          3. **Double-click `setup.bat`**
 
-          Or use the installer:
-          1. Extract the ZIP
-          2. Run `Install.bat` (requires Admin privileges)
-          3. BlueMeter will be installed to Program Files
-
-          ### Security
-          - ✅ Executable signed with Sigstore (cosign)
-          - ✅ Verify signature: `cosign verify-blob BlueMeter.WPF.exe`
-          - ✅ No Windows SmartScreen warnings (signed releases)
+          The setup script will:
+          - Automatically install .NET 8.0 SDK (if needed)
+          - Build BlueMeter
+          - Launch the application
 
           ### Requirements
           - Windows 10 or later (x64)
-          - .NET 8.0 Runtime (auto-installed by setup scripts)
+          - .NET 8.0 SDK (auto-installed by setup.bat)
 
-          ### Installation Methods
-          - **Option 1:** Run `setup.bat` (build from source locally)
-          - **Option 2:** Run `Install.bat` (install to Program Files)
-          - **Option 3:** Double-click `BlueMeter.WPF.exe` directly
+          ### Troubleshooting
+          See `INSTALL.md` for detailed instructions and troubleshooting.
 
           ### Changelog
           See commits since last release for changes.

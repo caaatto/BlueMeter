@@ -8,16 +8,25 @@ The tool does not require modifying the game client and does not violate the gam
 
 ## 🚀 Quick Start
 
-### Option 1: Download Pre-built Release (Recommended)
+### Option 1: Download & Install (Recommended)
 
 1. Go to the [Releases page](https://github.com/caaatto/BlueMeter/releases)
-2. Download the latest `BlueMeter-vX.X.X-windows-x64.zip` file
+2. Download the latest `BlueMeter-vX.X.X.zip` file
 3. Extract the ZIP file to a folder of your choice
-4. Run `BlueMeter.WPF.exe`
+4. **Double-click `setup.bat`** to start installation
 
-**Note:** If you don't have .NET 8.0 Runtime installed, Windows will prompt you to download it automatically.
+The setup script will:
+- Automatically check and install .NET 8.0 SDK (if needed)
+- Build BlueMeter
+- Launch the application
 
-### Option 2: Build from Source
+**That's it!** No manual steps needed.
+
+### Option 2: Manual Installation
+
+If `setup.bat` doesn't work, see [INSTALL.md](INSTALL.md) for detailed instructions.
+
+### Option 3: Build from Source
 
 #### Prerequisites
 - .NET 8.0 SDK
@@ -26,12 +35,17 @@ The tool does not require modifying the game client and does not violate the gam
 ```bash
 git clone https://github.com/caaatto/BlueMeter.git
 cd BlueMeter
+.\setup.bat
+```
+
+Or manually:
+```bash
 cd BlueMeter.WPF
 dotnet build -c Release
 dotnet run --no-build -c Release
 ```
 
-Or to create a publishable build:
+For a publishable build:
 ```bash
 dotnet publish BlueMeter.WPF/BlueMeter.WPF.csproj -c Release -o publish
 ```

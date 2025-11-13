@@ -29,12 +29,17 @@ jobs:
     - name: Publish application
       run: dotnet publish BlueMeter.WPF/BlueMeter.WPF.csproj --configuration Release --output publish --no-build
 
-    - name: Sign executable with Sigstore
-      uses: sigstore/gh-action-sigstore-python@v2
+    - name: Install Sigstore cosign
+      uses: sigstore/cosign-installer@v3
       with:
-        inputs: ./publish/BlueMeter.WPF.exe
-        upload-signing-artifacts: true
-        github-token: ${{ secrets.GITHUB_TOKEN }}
+        cosign-release: 'v2.2.0'
+
+    - name: Sign executable with Sigstore
+      env:
+        COSIGN_EXPERIMENTAL: 1
+      run: |
+        cosign sign-blob --yes ./publish/BlueMeter.WPF.exe > ./publish/BlueMeter.WPF.exe.sig
+      shell: pwsh
 
     - name: Create ZIP archive
       run: |
@@ -45,7 +50,9 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
-        files: BlueMeter-${{ github.ref_name }}-windows-x64.zip
+        files: |
+          BlueMeter-${{ github.ref_name }}-windows-x64.zip
+          publish/BlueMeter.WPF.exe.sig
         body: |
           ## BlueMeter ${{ github.ref_name }}
 

@@ -8,17 +8,31 @@ The tool does not require modifying the game client and does not violate the gam
 
 ## 🚀 Quick Start
 
+### First Time Setup
 1. Go to the [Releases page](https://github.com/caaatto/BlueMeter/releases)
 2. Download the latest `BlueMeter-vX.X.X-windows-x64.zip`
 3. Extract the ZIP file
-4. **Double-click `setup.bat`** to build and launch BlueMeter
+4. **Double-click `setup.bat`**
 
 The setup script will:
 - Automatically install .NET 8.0 SDK (if needed)
 - Build BlueMeter
 - Ask if you want to launch now
 
-**After that, just use `launcher.bat` to start BlueMeter anytime.**
+### Running BlueMeter
+Once built, simply **double-click `launcher.bat`** to start BlueMeter anytime.
+
+### Folder Structure
+```
+BlueMeter-vX.X.X-windows-x64/
+├── setup.bat              (Run once to build)
+├── launcher.bat           (Run anytime to launch)
+├── BlueMeter.sln          (Solution file)
+├── BlueMeter.WPF/         (Main application source)
+├── BlueMeter.Core/        (Core logic source)
+├── BlueMeter.Assets/      (Assets and fonts source)
+└── lib/                   (All dependencies)
+```
 
 ### Build from Source
 

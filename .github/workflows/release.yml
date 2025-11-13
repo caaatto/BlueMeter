@@ -33,14 +33,15 @@ jobs:
       run: |
         Copy-Item setup.bat publish/
         Copy-Item setup.ps1 publish/
+        Copy-Item launcher.bat publish/
         Copy-Item INSTALL.md publish/
         Copy-Item README.md publish/
       shell: pwsh
 
     - name: Create ZIP archive
       run: |
-        cd publish
-        Compress-Archive -Path * -DestinationPath ../BlueMeter-${{ github.ref_name }}-windows-x64.zip
+        $publishPath = Resolve-Path publish
+        Compress-Archive -Path $publishPath\* -DestinationPath BlueMeter-${{ github.ref_name }}-windows-x64.zip -Force
       shell: pwsh
 
     - name: Create Release

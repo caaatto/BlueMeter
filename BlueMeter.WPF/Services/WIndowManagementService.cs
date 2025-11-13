@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using BlueMeter.WPF.Views;
+using BlueMeter.WPF.Views.Checklist;
 using System.Windows;
 using Microsoft.Extensions.Logging;
 using BlueMeter.WPF.Logging;
@@ -15,6 +16,7 @@ public class WindowManagementService(IServiceProvider provider, ILogger<WindowMa
     private SettingsView? _settingsView;
     private SkillBreakdownView? _skillBreakDownView;
     private BossTrackerView? _bossTrackerView;
+    private ChecklistWindow? _checklistWindow;
 
     public DpsStatisticsView DpsStatisticsView => _dpsStatisticsView ??= CreateDpsStatisticsView();
     public SettingsView SettingsView => _settingsView ??= CreateSettingsView();
@@ -23,6 +25,7 @@ public class WindowManagementService(IServiceProvider provider, ILogger<WindowMa
     public DamageReferenceView DamageReferenceView => _damageReferenceView ??= CreateDamageReferenceView();
     public ModuleSolveView ModuleSolveView => _moduleSolveView ??= CreateModuleSolveView();
     public BossTrackerView BossTrackerView => _bossTrackerView ??= CreateBossTrackerView();
+    public ChecklistWindow ChecklistWindow => _checklistWindow ??= CreateChecklistWindow();
     public MainView MainView => provider.GetRequiredService<MainView>();
 
     private static void ConfigureOwnedToolWindow(Window view)
@@ -122,6 +125,19 @@ public class WindowManagementService(IServiceProvider provider, ILogger<WindowMa
         {
             if (_bossTrackerView == view) _bossTrackerView = null;
             logger.LogDebug(WpfLogEvents.WindowClosed, "Window closed: {Window}", nameof(BossTrackerView));
+        };
+        return view;
+    }
+
+    private ChecklistWindow CreateChecklistWindow()
+    {
+        var view = provider.GetRequiredService<ChecklistWindow>();
+        ConfigureOwnedToolWindow(view);
+        logger.LogDebug(WpfLogEvents.WindowCreated, "Window created: {Window}", nameof(ChecklistWindow));
+        view.Closed += (_, _) =>
+        {
+            if (_checklistWindow == view) _checklistWindow = null;
+            logger.LogDebug(WpfLogEvents.WindowClosed, "Window closed: {Window}", nameof(ChecklistWindow));
         };
         return view;
     }

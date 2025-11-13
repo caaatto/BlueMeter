@@ -7,6 +7,7 @@ using BlueMeter.WPF.Data;
 using BlueMeter.WPF.Localization;
 using BlueMeter.WPF.Models;
 using BlueMeter.WPF.Logging;
+using BlueMeter.WPF.Services.Checklist;
 
 namespace BlueMeter.WPF.Services;
 
@@ -17,7 +18,8 @@ public sealed class ApplicationStartup(
     IGlobalHotkeyService hotkeyService,
     IPacketAnalyzer packetAnalyzer,
     IDataStorage dataStorage,
-    LocalizationManager localization) : IApplicationStartup
+    LocalizationManager localization,
+    IChecklistService checklistService) : IApplicationStartup
 {
     public async Task InitializeAsync()
     {
@@ -27,7 +29,7 @@ public sealed class ApplicationStartup(
             // Apply localization
             localization.Initialize(configManager.CurrentConfig.Language);
 
-            await TryFindBestNetworkAdapter().ConfigureAwait(false);
+            await TryFindBestNetworkAdapter();
 
             dataStorage.LoadPlayerInfoFromFile();
 
@@ -46,9 +48,19 @@ public sealed class ApplicationStartup(
                 logger.LogWarning(dbEx, "Database initialization failed, continuing without database features");
             }
 
+            // Initialize checklist service
+            try
+            {
+                await ((ChecklistService)checklistService).InitializeAsync();
+                logger.LogInformation(WpfLogEvents.StartupInit, "Checklist service initialized successfully");
+            }
+            catch (Exception checklistEx)
+            {
+                logger.LogWarning(checklistEx, "Checklist initialization failed, continuing without checklist features");
+            }
+
             // Start analyzer
             packetAnalyzer.Start();
-            hotkeyService.Start();
             logger.LogInformation(WpfLogEvents.StartupInit, "Startup initialization completed");
         }
         catch (Exception ex)

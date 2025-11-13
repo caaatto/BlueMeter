@@ -53,10 +53,15 @@ public partial class App : Application
 
         // Centralized application startup (localization, adapter, analyzer)
         var appStartup = Host.Services.GetRequiredService<IApplicationStartup>();
-        appStartup.InitializeAsync().Wait();
+        appStartup.InitializeAsync().GetAwaiter().GetResult();
 
         app.MainWindow = Host.Services.GetRequiredService<MainView>();
-        app.MainWindow.Visibility = Visibility.Visible;
+        app.MainWindow.Show();
+
+        // Start hotkey service on UI thread after main window is shown
+        var hotkeyService = Host.Services.GetRequiredService<IGlobalHotkeyService>();
+        hotkeyService.Start();
+
         app.Run();
 
         // Centralized shutdown
@@ -112,6 +117,7 @@ public partial class App : Application
                 services.AddThemes();
                 services.AddWindowManagementService();
                 services.AddMessageDialogService();
+                services.AddChecklistServices();
 
                 services.AddSingleton<DebugFunctions>();
                 services.AddSingleton(CaptureDeviceList.Instance);

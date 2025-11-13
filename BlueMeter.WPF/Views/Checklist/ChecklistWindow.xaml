@@ -1,0 +1,50 @@
+<Window x:Class="BlueMeter.WPF.Views.Checklist.ChecklistWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BlueMeter.WPF.Views.Checklist"
+        xmlns:vm="clr-namespace:BlueMeter.WPF.ViewModels.Checklist"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance Type=vm:ChecklistViewModel}"
+        Title="Daily/Weekly Checklist"
+        Width="450"
+        Height="700"
+        MinWidth="400"
+        MinHeight="500"
+        WindowStartupLocation="CenterScreen"
+        Background="#1E1E1E"
+        ResizeMode="CanResize">
+
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            CaptionHeight="30"
+            ResizeBorderThickness="6"
+            UseAeroCaptionButtons="True"/>
+    </WindowChrome.WindowChrome>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"/> <!-- Title Bar -->
+            <RowDefinition Height="*"/>  <!-- Content -->
+        </Grid.RowDefinitions>
+
+        <!-- Custom Title Bar -->
+        <Border Grid.Row="0"
+                Background="#252526"
+                BorderBrush="#3E3E42"
+                BorderThickness="0,0,0,1">
+            <Grid>
+                <TextBlock Text="Daily/Weekly Checklist"
+                           Foreground="#FFFFFF"
+                           FontSize="12"
+                           VerticalAlignment="Center"
+                           Margin="10,0,0,0"/>
+            </Grid>
+        </Border>
+
+        <!-- Checklist Content -->
+        <local:ChecklistView Grid.Row="1"
+                             x:Name="ChecklistContent"/>
+    </Grid>
+</Window>

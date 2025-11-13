@@ -38,7 +38,8 @@ public partial class MainViewModel : BaseViewModel, IDisposable
         LocalizationManager localizationManager,
         IMessageDialogService dialogService,
         IConfigManager configManager,
-        ThemeService themeService)
+        ThemeService themeService,
+        ViewModels.Checklist.ChecklistViewModel checklistViewModel)
     {
         _themeManager = themeManager;
         _windowManagement = windowManagement;
@@ -49,6 +50,7 @@ public partial class MainViewModel : BaseViewModel, IDisposable
         _configManager = configManager;
         _themeService = themeService;
         _pluginManager = pluginManager;
+        ChecklistViewModel = checklistViewModel;
 
         Debug = debugFunctions;
         AvailableThemes = [ApplicationTheme.Light, ApplicationTheme.Dark];
@@ -169,6 +171,9 @@ public partial class MainViewModel : BaseViewModel, IDisposable
     // Exposed for dynamic header title binding (displays current theme name)
     public ThemeService ThemeService { get; private set; }
 
+    // Exposed for checklist view binding
+    public ViewModels.Checklist.ChecklistViewModel ChecklistViewModel { get; }
+
     [ObservableProperty]
     private List<ApplicationTheme> _availableThemes = [];
 
@@ -180,6 +185,9 @@ public partial class MainViewModel : BaseViewModel, IDisposable
 
     [ObservableProperty]
     private bool _isDebugTabActive;
+
+    [ObservableProperty]
+    private bool _isChecklistActive;
 
     [ObservableProperty]
     private string _headerTitle = "BlueMeter";
@@ -219,6 +227,7 @@ public partial class MainViewModel : BaseViewModel, IDisposable
         {
             _lastSelectedPlugin = value;
             IsDebugTabActive = false;
+            IsChecklistActive = false;
         }
     }
 
@@ -231,8 +240,29 @@ public partial class MainViewModel : BaseViewModel, IDisposable
                 _lastSelectedPlugin = SelectedPlugin;
             }
             SelectedPlugin = null;
+            IsChecklistActive = false;
         }
-        else if (SelectedPlugin is null && _lastSelectedPlugin != null)
+        else if (SelectedPlugin is null && _lastSelectedPlugin != null && !IsChecklistActive)
+        {
+            if (_plugins.Contains(_lastSelectedPlugin))
+            {
+                SelectedPlugin = _lastSelectedPlugin;
+            }
+        }
+    }
+
+    partial void OnIsChecklistActiveChanged(bool value)
+    {
+        if (value)
+        {
+            if (SelectedPlugin != null)
+            {
+                _lastSelectedPlugin = SelectedPlugin;
+            }
+            SelectedPlugin = null;
+            IsDebugTabActive = false;
+        }
+        else if (SelectedPlugin is null && _lastSelectedPlugin != null && !IsDebugTabActive)
         {
             if (_plugins.Contains(_lastSelectedPlugin))
             {
@@ -271,6 +301,21 @@ public partial class MainViewModel : BaseViewModel, IDisposable
     private void CallDamageReferenceView()
     {
         _windowManagement.DamageReferenceView.Show();
+    }
+
+    [RelayCommand]
+    private async Task CallChecklistWindow()
+    {
+        IsChecklistActive = true;
+        IsDebugTabActive = false;
+        if (SelectedPlugin != null)
+        {
+            _lastSelectedPlugin = SelectedPlugin;
+        }
+        SelectedPlugin = null;
+
+        // Initialize checklist if not already done
+        await ChecklistViewModel.InitializeAsync();
     }
 
     [RelayCommand]

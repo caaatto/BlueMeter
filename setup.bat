@@ -85,9 +85,22 @@ echo ======================================
 echo Build completed successfully!
 echo ======================================
 echo.
-echo Launching BlueMeter...
+echo You can now use launcher.bat to start BlueMeter anytime.
 echo.
 
-REM Run the application directly
-cd BlueMeter.WPF
-dotnet run --no-build -c Release
+cd ..
+
+REM Ask user if they want to launch now
+set /p LAUNCH="Launch BlueMeter now? (y/n): "
+if /i "%LAUNCH%"=="y" (
+    echo.
+    echo Launching BlueMeter...
+    echo.
+    start "" "BlueMeter.WPF\bin\Release\net8.0-windows\BlueMeter.WPF.exe"
+) else (
+    echo.
+    echo Setup complete! To launch BlueMeter later, double-click launcher.bat
+    echo.
+)
+
+pause

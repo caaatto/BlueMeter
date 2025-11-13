@@ -2,25 +2,7 @@
 
 ## Quick Start (Recommended)
 
-### Option A: Installer (Recommended - Windows only)
-
-If you have the `BlueMeter-Setup-1.2.1.exe` installer:
-
-1. **Download** the installer from [Releases](https://github.com/caaatto/BlueMeter/releases)
-2. **Run** the `.exe` installer
-3. **Follow** the installation wizard
-4. **Launch** BlueMeter from Start Menu or Desktop shortcut
-
-**Advantages:**
-- No command prompt or configuration needed
-- Professional Windows installer experience
-- Automatic .NET 8.0 runtime detection
-- Start Menu and Desktop shortcuts
-- Easy uninstall via Add/Remove Programs
-
-### Option B: Setup Script
-
-If you have the source files or want to build from scratch:
+### Setup Script
 
 Simply run the setup script from the extracted folder:
 

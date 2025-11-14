@@ -6,6 +6,28 @@ This project is based on [StarResonanceDps](https://github.com/anying1073/StarRe
 
 The tool does not require modifying the game client and does not violate the game's Terms of Service. It is intended to help players better understand combat data, avoid ineffective optimizations, and improve overall gameplay. Please do not use the results to justify power-level discrimination or any behavior that harms the community.
 
+## ✨ Features
+
+- **Real-time DPS Tracking** - See your damage per second live during combat
+- **Detailed Skill Stats** - Check which skills are doing the most damage with full performance breakdown
+- **Combat Replays** - Review past encounters and learn from your mistakes
+- **Daily Checklists** - Manage daily/weekly tasks without alt-tabbing
+- **Customizable UI** - Choose themes, set background images, and adjust transparency to play however you want
+- **Overlay Mode** - Float the window above your game with F6 click-through and F7 always-on-top
+- **Multiple Languages** - English and Chinese fully supported with instant switching
+- **Local Storage Only** - All your combat data stays on your computer, zero online tracking
+
+### Screenshots
+
+**DPS Meter View**
+![DPS Meter](BlueMeter.Assets/Images/dpsMeter.png)
+
+**Menu View**
+![Menu](BlueMeter.Assets/Images/menuView.png)
+
+**Settings**
+![Settings](BlueMeter.Assets/Images/Settings.png)
+
 ## 🚀 Quick Start
 
 ### First Time Setup

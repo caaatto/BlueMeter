@@ -21,11 +21,11 @@ The tool does not require modifying the game client and does not violate the gam
 
 <div align="center">
 
-<img src="BlueMeter.Assets/Images/dpsMeter.png" alt="DPS Meter" width="280" />
-<img src="BlueMeter.Assets/Images/menuView.png" alt="Menu" width="280" />
-<img src="BlueMeter.Assets/Images/Settings.png" alt="Settings" width="280" />
+<img src="BlueMeter.Assets/Images/dpsMeter.png" alt="DPS Meter" width="200" />
+<img src="BlueMeter.Assets/Images/menuView.png" alt="Menu" width="400" />
+<img src="BlueMeter.Assets/Images/Settings.png" alt="Settings" width="300" />
 
-**DPS Meter** • **Menu** • **Settings**
+**DPS Meter** • **Menu** • **Settings** *(fully customizable in Settings)*
 
 </div>
 

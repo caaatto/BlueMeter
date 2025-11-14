@@ -21,10 +21,7 @@ if errorlevel 1 (
     echo.
 
     REM Download and execute .NET installer
-    powershell -NoProfile -ExecutionPolicy Bypass -Command ^
-        "[Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12; ^
-         Invoke-WebRequest -Uri 'https://dot.net/v1/dotnet-install.ps1' -OutFile '$env:TEMP\dotnet-install.ps1'; ^
-         & '$env:TEMP\dotnet-install.ps1' -Channel 8.0 -InstallDir '$env:ProgramFiles\dotnet' -NoPath"
+    powershell -NoProfile -ExecutionPolicy Bypass -Command "try { [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor [Net.SecurityProtocolType]::Tls12 } catch {}; Invoke-WebRequest -Uri 'https://dot.net/v1/dotnet-install.ps1' -OutFile $env:TEMP\dotnet-install.ps1; & $env:TEMP\dotnet-install.ps1 -Channel 8.0 -InstallDir $env:ProgramFiles\dotnet -NoPath"
 
     if errorlevel 1 (
         echo.

@@ -96,6 +96,24 @@ dotnet publish BlueMeter.WPF/BlueMeter.WPF.csproj -c Release -o publish
 ```
 The executable will be in the `publish` folder.
 
+## 📋 System Requirements
+
+BlueMeter requires two dependencies to function properly. The installer will automatically handle both for you:
+
+### .NET 8.0 Desktop Runtime
+**Why it's needed**: BlueMeter is built as a WPF (Windows Presentation Foundation) application using .NET 8.0. The Desktop Runtime provides the core framework and UI libraries needed to run the application.
+
+**Installation**: The installer automatically downloads and installs .NET 8.0 Desktop Runtime if it's not already present on your system.
+
+### Npcap (Network Packet Capture Driver)
+**Why it's needed**: BlueMeter works by capturing and analyzing network packets sent between your game client and the server. This is how it can track your damage, skills, and combat statistics in real-time without modifying the game files or violating Terms of Service. Npcap is the industry-standard packet capture driver that enables this functionality.
+
+**Installation**: The installer will launch the Npcap setup wizard if Npcap is not detected on your system. Simply follow the wizard to complete the installation. If you skip Npcap installation, BlueMeter will remind you to install it when you first launch the app.
+
+**Download manually**: If needed, you can download Npcap from [https://npcap.com](https://npcap.com)
+
+**Note**: Without Npcap, BlueMeter cannot capture network traffic and will not function.
+
 ## 📄 License
 
 [![AGPLv3](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](LICENSE.txt)

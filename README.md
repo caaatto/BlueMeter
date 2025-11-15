@@ -31,21 +31,30 @@ The tool does not require modifying the game client and does not violate the gam
 
 ## 🚀 Quick Start
 
-### First Time Setup
+### Installation Options
+
+#### Option 1: Professional Installer (Recommended) ⭐
 1. Go to the [Releases page](https://github.com/caaatto/BlueMeter/releases)
-2. Download the latest `BlueMeter-vX.X.X-windows-x64.zip`
+2. Download `BlueMeterSetup.exe`
+3. **Double-click `BlueMeterSetup.exe`**
+4. Follow the setup wizard
+5. .NET 8.0 will be automatically installed if needed
+6. BlueMeter will launch automatically after installation
+
+#### Option 2: Portable Build (For Developers)
+1. Go to the [Releases page](https://github.com/caaatto/BlueMeter/releases)
+2. Download `BlueMeter-vX.X.X-windows-x64.zip`
 3. Extract the ZIP file
 4. **Double-click `setup.bat`** (NOT the .exe!)
+5. The setup script will:
+   - Automatically install .NET 8.0 SDK (if needed)
+   - Build BlueMeter
+   - Ask if you want to launch now
 
-The setup script will:
-- Automatically install .NET 8.0 SDK (if needed)
-- Build BlueMeter
-- Ask if you want to launch now
-
-⚠️ **Important**: Do NOT run `BlueMeter.WPF.exe` directly on first launch. Windows SmartScreen may incorrectly flag it as suspicious. Always use `setup.bat` → `launcher.bat` instead. The .exe can be used after initial setup if needed, but may trigger a false warning.
+⚠️ **Important**: Do NOT run `BlueMeter.WPF.exe` directly on first launch. Windows SmartScreen may incorrectly flag it as suspicious. Always use the installer or `setup.bat` → `launcher.bat` instead.
 
 ### Running BlueMeter
-Once built, simply **double-click `launcher.bat`** to start BlueMeter anytime.
+Once installed, simply **double-click `launcher.bat`** (portable) or use the Start Menu shortcut (installer) to start BlueMeter anytime.
 
 ### Folder Structure
 ```

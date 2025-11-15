@@ -107,6 +107,10 @@ I do not welcome individuals or projects that disregard this license, including 
 
 Issues and pull requests to improve the project are welcome!
 
+### Development & Debugging
+
+This project uses **Claude AI** for bug fixes and troubleshooting. For detailed instructions on working with Claude on this codebase, see [CLAUDE.md](CLAUDE.md).
+
 ## ⭐ Support
 
 If this project helps you, please consider giving it a star ⭐

@@ -48,37 +48,45 @@ namespace BlueMeter.WinForm.Extends
 
         private static readonly Dictionary<string, Color> DarkThemeProfessionColorDict = new()
         {
-            { "神射手", Color.FromArgb(0x8e, 0x8b, 0x47) },
-            { "狼弓", Color.FromArgb(0x8e, 0x8b, 0x47) },
-            { "鹰弓", Color.FromArgb(0x8e, 0x8b, 0x47) },
+            // Marksman / 神射手 - Wildpack, Falconry
+            { "神射手", Color.FromArgb(0xA4, 0x83, 0x1D) },
+            { "狼弓", Color.FromArgb(0xA4, 0x83, 0x1D) },
+            { "鹰弓", Color.FromArgb(0xA5, 0x86, 0x1A) },
 
-            { "森语者", Color.FromArgb(0x63, 0x9c, 0x70) },
-            { "惩戒", Color.FromArgb(0x63, 0x9c, 0x70) },
-            { "愈合", Color.FromArgb(0x63, 0x9c, 0x70) },
+            // Verdant Oracle / 森语者 - Lifebind, Smite
+            { "森语者", Color.FromArgb(0x3E, 0x6A, 0x3F) },
+            { "惩戒", Color.FromArgb(0x46, 0x7D, 0x46) },
+            { "愈合", Color.FromArgb(0x3E, 0x6A, 0x3F) },
 
-            { "雷影剑士", Color.FromArgb(0x70, 0x62, 0x9c) },
-            { "居合", Color.FromArgb(0x70, 0x62, 0x9c) },
-            { "月刃", Color.FromArgb(0x70, 0x62, 0x9c) },
+            // Stormblade / 雷影剑士 - Moonstrike, Iaido Slash
+            { "雷影剑士", Color.FromArgb(0xA0, 0x21, 0x2F) },
+            { "居合", Color.FromArgb(0x8C, 0x1B, 0x28) },
+            { "月刃", Color.FromArgb(0xA0, 0x21, 0x2F) },
 
-            { "冰魔导师", Color.FromArgb(0x79, 0x77, 0x9c) },
-            { "冰矛", Color.FromArgb(0x79, 0x77, 0x9c) },
-            { "射线", Color.FromArgb(0x8e, 0x8b, 0x47) },
+            // Frost Mage / 冰魔导师 - Frostbeam, Icicle
+            { "冰魔导师", Color.FromArgb(0x72, 0x50, 0xC7) },
+            { "冰矛", Color.FromArgb(0x6A, 0x7B, 0xFF) },
+            { "射线", Color.FromArgb(0x72, 0x50, 0xC7) },
 
-            { "青岚骑士", Color.FromArgb(0x79, 0x9a, 0x9c) },
-            { "重装", Color.FromArgb(0x79, 0x9a, 0x9c) },
-            { "空枪", Color.FromArgb(0x79, 0x9a, 0x9c) },
+            // Wind Knight / 青岚骑士 - Skyward, Vanguard
+            { "青岚骑士", Color.FromArgb(0x1A, 0x5A, 0x93) },
+            { "重装", Color.FromArgb(0x14, 0x3A, 0x55) },
+            { "空枪", Color.FromArgb(0x1A, 0x5A, 0x93) },
 
-            { "巨刃守护者", Color.FromArgb(0x53, 0x77, 0x58) },
-            { "岩盾", Color.FromArgb(0x53, 0x77, 0x58) },
-            { "格挡", Color.FromArgb(0x53, 0x77, 0x58) },
+            // Heavy Guardian / 巨刃守护者 - Block, Earthfort
+            { "巨刃守护者", Color.FromArgb(0x24, 0x4A, 0x7D) },
+            { "岩盾", Color.FromArgb(0x1F, 0x41, 0x65) },
+            { "格挡", Color.FromArgb(0x24, 0x4A, 0x7D) },
 
-            { "神盾骑士", Color.FromArgb(0x9c, 0x9b, 0x75) },
-            { "防盾", Color.FromArgb(0x9c, 0x9b, 0x75) },
-            { "光盾", Color.FromArgb(0x9c, 0x9b, 0x75) },
+            // Shield Knight / 神盾骑士 - Recovery, Shield
+            { "神盾骑士", Color.FromArgb(0x8A, 0x5B, 0x23) },
+            { "防盾", Color.FromArgb(0xAA, 0x6F, 0x25) },
+            { "光盾", Color.FromArgb(0x8A, 0x5B, 0x23) },
 
-            { "灵魂乐手", Color.FromArgb(0x9c, 0x53, 0x53) },
-            { "协奏", Color.FromArgb(0x9c, 0x53, 0x53) },
-            { "狂音", Color.FromArgb(0x9c, 0x53, 0x53) },
+            // Soul Musician / 灵魂乐手 - Concerto, Dissonance
+            { "灵魂乐手", Color.FromArgb(0x5C, 0x1F, 0x95) },
+            { "协奏", Color.FromArgb(0x5C, 0x1F, 0x95) },
+            { "狂音", Color.FromArgb(0x5B, 0x2B, 0x8A) },
         };
 
         private static Dictionary<string, Image> ProfessionImageDict = new()

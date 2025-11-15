@@ -18,6 +18,9 @@ mono_crash.*
 
 # BlueMeter runtime data
 PlayerInfoCache.dat
+database_implementation/
+translation_stuff/
+fixes/
 
 # Build results
 [Dd]ebug/

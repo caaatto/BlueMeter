@@ -8,7 +8,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
     <Platforms>x64</Platforms>
-    <Version>1.3.1</Version>
+    <Version>1.3.2</Version>
     <SupportedOSPlatformVersion>7.0</SupportedOSPlatformVersion>
     <AssemblyName>BlueMeter.WPF</AssemblyName>
     <RootNamespace>BlueMeter.WPF</RootNamespace>

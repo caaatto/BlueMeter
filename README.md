@@ -112,7 +112,7 @@ If this project helps you, please consider giving it a star ⭐
 
 **Thanks for checking out BlueMeter!** Give it a try and let me know what you think. Every test, feedback, and bug report helps make this tool better for everyone!
 
-<img src="BlueMeter.WPF/Assets/Images/cutedog.png" alt="Cute dog mascot" width="200" />
+<img src="BlueMeter.WPF/Assets/Images/cutedog.png" alt="Cute dog mascot" width="300" />
 
 ### Join the Community
 

@@ -41,7 +41,7 @@ LicenseFile={#SourcePath}\..\LICENSE.txt
 ;PrivilegesRequired=lowest
 OutputBaseFilename=BlueMeterSetup
 SolidCompression=yes
-WizardStyle=modern dynamic
+WizardStyle=modern
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"

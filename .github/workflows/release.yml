@@ -50,6 +50,17 @@ jobs:
         Copy-Item Directory.Packages.props publish/
       shell: pwsh
 
+    - name: Install Inno Setup
+      run: |
+        choco install innosetup -y
+      shell: pwsh
+
+    - name: Build Inno Setup Installer
+      run: |
+        $isccPath = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+        & $isccPath setup\Installer.iss /DSourcePath="${{ github.workspace }}"
+      shell: pwsh
+
     - name: Create ZIP archive
       run: |
         $publishPath = Resolve-Path publish
@@ -59,23 +70,30 @@ jobs:
     - name: Create Release
       uses: softprops/action-gh-release@v1
       with:
-        files: BlueMeter-${{ github.ref_name }}-windows-x64.zip
+        files: |
+          BlueMeter-${{ github.ref_name }}-windows-x64.zip
+          setup/Output/BlueMeterSetup.exe
         body: |
           ## BlueMeter ${{ github.ref_name }}
 
-          ### Quick Start
+          ### 🚀 Installation Options
+
+          #### Option 1: Professional Installer (Recommended for most users)
+          1. Download `BlueMeterSetup.exe`
+          2. Double-click to run the installer
+          3. Follow the setup wizard
+          4. .NET 8.0 will be automatically installed if needed
+          5. BlueMeter will launch automatically after installation
+
+          #### Option 2: Portable Build (For developers/advanced users)
           1. Download `BlueMeter-${{ github.ref_name }}-windows-x64.zip`
           2. Extract the ZIP file
-          3. **Double-click `setup.bat`**
-
-          The setup script will:
-          - Automatically install .NET 8.0 SDK (if needed)
-          - Build BlueMeter
-          - Launch the application
+          3. Double-click `setup.bat`
+          4. The script will build and launch BlueMeter
 
           ### Requirements
           - Windows 10 or later (x64)
-          - .NET 8.0 SDK (auto-installed by setup.bat)
+          - .NET 8.0 (auto-installed by both installation methods)
 
           ### Troubleshooting
           See `INSTALL.md` for detailed instructions and troubleshooting.

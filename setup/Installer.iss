@@ -11,7 +11,7 @@
 #include "CodeDependencies.iss"
 
 #define MyAppName "BlueMeter"
-#define MyAppVersion "1.2.13"
+#define MyAppVersion "1.3.0"
 #define MyAppURL "https://github.com/caaatto/BlueMeter"
 #define MyAppExeName "BlueMeter.WPF.exe"
 

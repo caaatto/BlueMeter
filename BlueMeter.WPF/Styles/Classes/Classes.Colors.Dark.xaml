@@ -21,35 +21,35 @@
     <Color x:Key="ClassesUnknownColor">#FF7A7A7A</Color>
     <SolidColorBrush x:Key="ClassesUnknownBrush" Color="{StaticResource ClassesUnknownColor}" />
 
-    <!--  神盾骑士 (ShieldKnight)  -->
-    <Color x:Key="ClassesShieldKnightColor">#9C9B75</Color>
+    <!--  神盾骑士 (ShieldKnight) - Recovery, Shield  -->
+    <Color x:Key="ClassesShieldKnightColor">#8A5B23</Color>
     <SolidColorBrush x:Key="ClassesShieldKnightBrush" Color="{StaticResource ClassesShieldKnightColor}" />
 
-    <!--  巨刃守卫者 (HeavyGuardian)  -->
-    <Color x:Key="ClassesHeavyGuardianColor">#537758</Color>
+    <!--  巨刃守卫者 (HeavyGuardian) - Block, Earthfort  -->
+    <Color x:Key="ClassesHeavyGuardianColor">#244A7D</Color>
     <SolidColorBrush x:Key="ClassesHeavyGuardianBrush" Color="{StaticResource ClassesHeavyGuardianColor}" />
 
-    <!--  雷影剑士 (Stormblade)  -->
-    <Color x:Key="ClassesStormbladeColor">#70629C</Color>
+    <!--  雷影剑士 (Stormblade) - Moonstrike, Iaido Slash  -->
+    <Color x:Key="ClassesStormbladeColor">#A0212F</Color>
     <SolidColorBrush x:Key="ClassesStormbladeBrush" Color="{StaticResource ClassesStormbladeColor}" />
 
-    <!--  青岚骑士 (WindKnight)  -->
-    <Color x:Key="ClassesWindKnightColor">#799A9C</Color>
+    <!--  青岚骑士 (WindKnight) - Skyward, Vanguard  -->
+    <Color x:Key="ClassesWindKnightColor">#1A5A93</Color>
     <SolidColorBrush x:Key="ClassesWindKnightBrush" Color="{StaticResource ClassesWindKnightColor}" />
 
-    <!--  冰魔导师 (FrostMage)  -->
-    <Color x:Key="ClassesFrostMageColor">#79779C</Color>
+    <!--  冰魔导师 (FrostMage) - Frostbeam, Icicle  -->
+    <Color x:Key="ClassesFrostMageColor">#7250C7</Color>
     <SolidColorBrush x:Key="ClassesFrostMageBrush" Color="{StaticResource ClassesFrostMageColor}" />
 
-    <!--  神射手 (Marksman)  -->
-    <Color x:Key="ClassesMarksmanColor">#8E8B47</Color>
+    <!--  神射手 (Marksman) - Wildpack, Falconry  -->
+    <Color x:Key="ClassesMarksmanColor">#A4831D</Color>
     <SolidColorBrush x:Key="ClassesMarksmanBrush" Color="{StaticResource ClassesMarksmanColor}" />
 
-    <!--  森语者 (VerdantOracle)  -->
-    <Color x:Key="ClassesVerdantOracleColor">#639C70</Color>
+    <!--  森语者 (VerdantOracle) - Lifebind, Smite  -->
+    <Color x:Key="ClassesVerdantOracleColor">#3E6A3F</Color>
     <SolidColorBrush x:Key="ClassesVerdantOracleBrush" Color="{StaticResource ClassesVerdantOracleColor}" />
 
-    <!--  灵魂乐手 (SoulMusician)  -->
-    <Color x:Key="ClassesSoulMusicianColor">#9C5353</Color>
+    <!--  灵魂乐手 (SoulMusician) - Concerto, Dissonance  -->
+    <Color x:Key="ClassesSoulMusicianColor">#5C1F95</Color>
     <SolidColorBrush x:Key="ClassesSoulMusicianBrush" Color="{StaticResource ClassesSoulMusicianColor}" />
 </ResourceDictionary>

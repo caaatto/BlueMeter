@@ -18,6 +18,7 @@
     lex:ResxLocalizationProvider.DefaultDictionary="Resources"
     PreviewKeyDown="Window_PreviewKeyDown"
     Style="{StaticResource TransparentWindow}"
+    Topmost="{Binding AppConfig.TopmostEnabled, Mode=OneWay}"
     mc:Ignorable="d">
 
     <!--  WindowChrome: 开启可拉伸边界  -->
@@ -252,11 +253,11 @@
                                             <TextBlock
                                                 Grid.Column="0"
                                                 Style="{StaticResource CardInfoTitle}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Label_TotalDamage}}" />
+                                                Text="Total Damage:" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Style="{StaticResource CardInfoValue}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Value_TotalDamage}}" />
+                                                Text="{Binding TotalDamage}" />
                                         </Grid>
                                         <Grid Grid.Row="1" Style="{StaticResource FieldLineMB}">
                                             <Grid.ColumnDefinitions>
@@ -266,11 +267,11 @@
                                             <TextBlock
                                                 Grid.Column="0"
                                                 Style="{StaticResource CardInfoTitle}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Label_Dps}}" />
+                                                Text="DPS:" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Style="{StaticResource CardInfoValue}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Value_Dps}}" />
+                                                Text="{Binding Dps}" />
                                         </Grid>
                                         <Grid Grid.Row="2">
                                             <Grid.ColumnDefinitions>
@@ -280,11 +281,11 @@
                                             <TextBlock
                                                 Grid.Column="0"
                                                 Style="{StaticResource CardInfoTitle}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Label_HitCount}}" />
+                                                Text="Hit Count:" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Style="{StaticResource CardInfoValue}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Value_HitCount}}" />
+                                                Text="{Binding TotalHits}" />
                                         </Grid>
                                     </Grid>
 
@@ -305,11 +306,11 @@
                                             <TextBlock
                                                 Grid.Column="0"
                                                 Style="{StaticResource CardInfoTitle}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Label_CritRate}}" />
+                                                Text="Crit Rate:" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Style="{StaticResource CardInfoValue}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Value_CritRate}}" />
+                                                Text="{Binding CritRate}" />
                                         </Grid>
                                         <Grid Grid.Row="1" Style="{StaticResource FieldLineMB}">
                                             <Grid.ColumnDefinitions>
@@ -319,11 +320,11 @@
                                             <TextBlock
                                                 Grid.Column="0"
                                                 Style="{StaticResource CardInfoTitle}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Label_LuckRate}}" />
+                                                Text="Crit Count:" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Style="{StaticResource CardInfoValue}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Value_LuckRate}}" />
+                                                Text="{Binding CritCount}" />
                                         </Grid>
                                         <Grid Grid.Row="2">
                                             <Grid.ColumnDefinitions>
@@ -333,11 +334,11 @@
                                             <TextBlock
                                                 Grid.Column="0"
                                                 Style="{StaticResource CardInfoTitle}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Label_CritCount}}" />
+                                                Text="Duration:" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Style="{StaticResource CardInfoValue}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Value_CritCount}}" />
+                                                Text="{Binding FormattedDuration}" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -378,11 +379,11 @@
                                             <TextBlock
                                                 Grid.Column="0"
                                                 Style="{StaticResource CardInfoTitle}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Label_NormalDamage}}" />
+                                                Text="Normal Damage:" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Style="{StaticResource CardInfoValue}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Value_NormalDamage}}" />
+                                                Text="{Binding TotalNormalDamage}" />
                                         </Grid>
                                         <Grid Grid.Row="1" Style="{StaticResource FieldLineMB}">
                                             <Grid.ColumnDefinitions>
@@ -392,11 +393,11 @@
                                             <TextBlock
                                                 Grid.Column="0"
                                                 Style="{StaticResource CardInfoTitle}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Label_CritDamage}}" />
+                                                Text="Crit Damage:" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Style="{StaticResource CardInfoValue}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Value_CritDamage}}" />
+                                                Text="{Binding TotalCritDamage}" />
                                         </Grid>
                                         <Grid Grid.Row="2">
                                             <Grid.ColumnDefinitions>
@@ -406,11 +407,11 @@
                                             <TextBlock
                                                 Grid.Column="0"
                                                 Style="{StaticResource CardInfoTitle}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Label_LuckCount}}" />
+                                                Text="Normal Hits:" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Style="{StaticResource CardInfoValue}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Value_LuckCount}}" />
+                                                Text="{Binding TotalHits}" />
                                         </Grid>
                                     </Grid>
 
@@ -431,11 +432,11 @@
                                             <TextBlock
                                                 Grid.Column="0"
                                                 Style="{StaticResource CardInfoTitle}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Label_LuckDamage}}" />
+                                                Text="Max Damage:" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Style="{StaticResource CardInfoValue}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Value_LuckDamage}}" />
+                                                Text="{Binding PlayerData.SkillList[0].MaxDamage, FallbackValue='0'}" />
                                         </Grid>
                                         <Grid Grid.Row="1" Style="{StaticResource FieldLineMB}">
                                             <Grid.ColumnDefinitions>
@@ -445,11 +446,11 @@
                                             <TextBlock
                                                 Grid.Column="0"
                                                 Style="{StaticResource CardInfoTitle}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Label_AverageDamage}}" />
+                                                Text="Min Damage:" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Style="{StaticResource CardInfoValue}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Value_AverageDamage}}" />
+                                                Text="{Binding PlayerData.SkillList[0].MinDamage, FallbackValue='0'}" />
                                         </Grid>
                                         <Grid Grid.Row="2">
                                             <Grid.ColumnDefinitions>
@@ -459,11 +460,11 @@
                                             <TextBlock
                                                 Grid.Column="0"
                                                 Style="{StaticResource CardInfoTitle}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Label_DamageTakenCount}}" />
+                                                Text="Highest Crit:" />
                                             <TextBlock
                                                 Grid.Column="1"
                                                 Style="{StaticResource CardInfoValue}"
-                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Value_DamageTakenCount}}" />
+                                                Text="{Binding PlayerData.SkillList[0].HighestCrit, FallbackValue='0'}" />
                                         </Grid>
                                     </Grid>
                                 </Grid>
@@ -471,13 +472,41 @@
                         </Border>
                     </Grid>
 
-                    <Grid Grid.Row="1">
-                        <TextBlock
-                            Height="120"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Center"
-                            Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Placeholder_Form}}" />
-                    </Grid>
+                    <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" MaxHeight="300">
+                        <ItemsControl ItemsSource="{Binding PlayerData.SkillList}" Margin="10">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="0,8,0,8" Padding="12" Background="#CC0F1720" CornerRadius="6">
+                                        <StackPanel>
+                                            <TextBlock FontSize="16" FontWeight="Bold" Foreground="#FFD430" Text="{Binding SkillName}" />
+                                            <TextBlock Margin="0,6,0,0" Foreground="White">
+                                                <Run Text="Total Damage: " />
+                                                <Run FontWeight="Bold" Text="{Binding TotalDamage}" />
+                                            </TextBlock>
+                                            <TextBlock Margin="0,4,0,0" Foreground="White">
+                                                <Run Text="Hits: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding HitCount}" />
+                                                <Run Text="    Crits: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding CritCount}" />
+                                                <Run Text="    Avg: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding AvgDamage}" />
+                                            </TextBlock>
+                                            <TextBlock Margin="0,4,0,0" Foreground="White">
+                                                <Run Text="Min Damage: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding MinDamage}" />
+                                                <Run Text="    Max Damage: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding MaxDamage}" />
+                                            </TextBlock>
+                                            <TextBlock Margin="0,4,0,0" Foreground="White">
+                                                <Run Text="Highest Crit: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding HighestCrit}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </Grid>
             </Grid>
         </DataTemplate>
@@ -508,23 +537,23 @@
                 <TextBlock
                     Grid.Column="0"
                     Style="{StaticResource InfoNameText}"
-                    Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Info_Name}}" />
+                    Text="{Binding PlayerData.Player.Name, FallbackValue=No Player Selected}" />
                 <TextBlock
                     Grid.Column="1"
                     Style="{StaticResource InfoText}"
-                    Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Info_Uid}}" />
+                    Text="{Binding PlayerData.Player.Uid, StringFormat='UID: {0}', FallbackValue=UID: --}" />
                 <TextBlock
                     Grid.Column="2"
                     Style="{StaticResource InfoText}"
-                    Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Info_Power}}" />
+                    Text="{Binding PlayerData.Player.PowerLevel, StringFormat='Power: {0}', FallbackValue=Power: --}" />
                 <TextBlock
                     Grid.Column="3"
                     Style="{StaticResource InfoText}"
-                    Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Info_Level}}" />
+                    Text="{Binding PlayerData.Player.Class, StringFormat='Class: {0}', FallbackValue=Class: --}" />
                 <TextBlock
                     Grid.Column="4"
                     Style="{StaticResource InfoText}"
-                    Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Info_Badge}}" />
+                    Text="{Binding PlayerData.Player.Spec, StringFormat='Spec: {0}', FallbackValue=Spec: --}" />
 
 
                 <Border
@@ -581,9 +610,41 @@
                     </ScrollViewer>
                 </TabItem>
                 <TabItem x:Name="TabItem_Details" Header="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Tab_Details}}">
-                    <Grid Background="IndianRed">
-                        <TextBlock Style="{StaticResource TextBlockExampleStyle}" Text="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Placeholder_Details}}" />
-                    </Grid>
+                    <ScrollViewer Background="#ECEBE9" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl ItemsSource="{Binding PlayerData.SkillList}" Margin="20">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="0,8,0,8" Padding="12" Background="#CC0F1720" CornerRadius="6">
+                                        <StackPanel>
+                                            <TextBlock FontSize="16" FontWeight="Bold" Foreground="#FFD430" Text="{Binding SkillName}" />
+                                            <TextBlock Margin="0,6,0,0" Foreground="White">
+                                                <Run Text="Total Damage: " />
+                                                <Run FontWeight="Bold" Text="{Binding TotalDamage}" />
+                                            </TextBlock>
+                                            <TextBlock Margin="0,4,0,0" Foreground="White">
+                                                <Run Text="Hits: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding HitCount}" />
+                                                <Run Text="    Crits: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding CritCount}" />
+                                                <Run Text="    Avg: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding AvgDamage}" />
+                                            </TextBlock>
+                                            <TextBlock Margin="0,4,0,0" Foreground="White">
+                                                <Run Text="Min Damage: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding MinDamage}" />
+                                                <Run Text="    Max Damage: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding MaxDamage}" />
+                                            </TextBlock>
+                                            <TextBlock Margin="0,4,0,0" Foreground="White">
+                                                <Run Text="Highest Crit: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding HighestCrit}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </TabItem>
                 <TabItem x:Name="TabItem_Graph" Header="{lex:Loc Key={x:Static loc:ResourcesKeys.SkillBreakdown_Tab_Graph}}">
                     <Grid Background="DarkOliveGreen">

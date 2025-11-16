@@ -660,7 +660,8 @@
                 <ctrl:SortedDpsControl
                     ItemTemplate="{StaticResource ProgressBarDataTemplate}"
                     ItemsSource="{Binding CurrentStatisticData.Data}"
-                    SelectedItem="{Binding CurrentStatisticData.SelectedSlot}" />
+                    SelectedItem="{Binding CurrentStatisticData.SelectedSlot}"
+                    ItemClickCommand="{Binding OpenPlayerSkillBreakdownCommand}" />
             </Border>
 
             <Border

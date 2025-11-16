@@ -11,4 +11,5 @@ public partial class SkillItemViewModel : BaseViewModel
     [ObservableProperty] private long _totalDamage;
     [ObservableProperty] private long _minDamage;
     [ObservableProperty] private long _maxDamage;
+    [ObservableProperty] private long _highestCrit;
 }

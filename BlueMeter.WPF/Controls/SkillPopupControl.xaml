@@ -92,6 +92,13 @@
                                             Foreground="{StaticResource AccentYellow}"
                                             Text="{Binding MaxDamage}" />
                                     </TextBlock>
+                                    <TextBlock Margin="0,4,0,0">
+                                        <Run Text="Highest Crit: " />
+                                        <Run
+                                            FontWeight="Bold"
+                                            Foreground="{StaticResource AccentYellow}"
+                                            Text="{Binding HighestCrit}" />
+                                    </TextBlock>
                                 </StackPanel>
                             </Border>
                         </DataTemplate>

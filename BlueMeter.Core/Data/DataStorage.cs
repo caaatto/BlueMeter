@@ -468,6 +468,11 @@ public static class DataStorage
             {
                 skillData.MinDamage = Math.Min(skillData.MinDamage, log.Value);
                 skillData.MaxDamage = Math.Max(skillData.MaxDamage, log.Value);
+                // Track highest crit
+                if (log.IsCritical)
+                {
+                    skillData.HighestCrit = Math.Max(skillData.HighestCrit, log.Value);
+                }
             }
         });
 
@@ -485,6 +490,11 @@ public static class DataStorage
             {
                 skillData.MinDamage = Math.Min(skillData.MinDamage, log.Value);
                 skillData.MaxDamage = Math.Max(skillData.MaxDamage, log.Value);
+                // Track highest crit
+                if (log.IsCritical)
+                {
+                    skillData.HighestCrit = Math.Max(skillData.HighestCrit, log.Value);
+                }
             }
         });
 

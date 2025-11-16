@@ -207,6 +207,9 @@ public partial class MainViewModel : BaseViewModel, IDisposable
     [ObservableProperty]
     private string _headerTitle = "BlueMeter";
 
+    [ObservableProperty]
+    private bool _isMenuCollapsed = false;
+
     partial void OnThemeChanged(ApplicationTheme value)
     {
         _themeManager.Apply(value);
@@ -344,6 +347,12 @@ public partial class MainViewModel : BaseViewModel, IDisposable
         {
             _appControlService.Shutdown();
         }
+    }
+
+    [RelayCommand]
+    private void ToggleMenu()
+    {
+        IsMenuCollapsed = !IsMenuCollapsed;
     }
 
     private async Task CheckForUpdatesAsync()

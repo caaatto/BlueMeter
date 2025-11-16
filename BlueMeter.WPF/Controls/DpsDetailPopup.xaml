@@ -57,6 +57,11 @@
                                 <Run Foreground="Orange" Text="    Max Damage: " />
                                 <Run Foreground="White" Text="{Binding MaxDamage}" />
                             </TextBlock>
+                            <!--  Highest Crit  -->
+                            <TextBlock Style="{StaticResource FooterTextContent}">
+                                <Run Foreground="Orange" Text="Highest Crit: " />
+                                <Run Foreground="White" Text="{Binding HighestCrit}" />
+                            </TextBlock>
                         </StackPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

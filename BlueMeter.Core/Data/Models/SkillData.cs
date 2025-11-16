@@ -36,5 +36,9 @@ namespace BlueMeter.Core.Data.Models
         /// 最大伤害值
         /// </summary>
         public long MaxDamage { get; internal set; } = 0;
+        /// <summary>
+        /// 最高暴击伤害值
+        /// </summary>
+        public long HighestCrit { get; internal set; } = 0;
     }
 }

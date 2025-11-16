@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace BlueMeter.WPF.Controls;
 
@@ -24,6 +25,13 @@ public partial class ControlBox : UserControl
             typeof(ControlBox),
             new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+    public static readonly DependencyProperty MinimizeToTrayCommandProperty =
+        DependencyProperty.Register(
+            nameof(MinimizeToTrayCommand),
+            typeof(ICommand),
+            typeof(ControlBox),
+            new PropertyMetadata(null));
+
     public ControlBox()
     {
         InitializeComponent();
@@ -43,6 +51,12 @@ public partial class ControlBox : UserControl
         set => SetValue(UseMaximizeButtonProperty, value);
     }
 
+    public ICommand? MinimizeToTrayCommand
+    {
+        get => (ICommand?)GetValue(MinimizeToTrayCommandProperty);
+        set => SetValue(MinimizeToTrayCommandProperty, value);
+    }
+
     private void DisableWidthHeight()
     {
         WidthProperty.OverrideMetadata(typeof(ControlBox),
@@ -60,6 +74,14 @@ public partial class ControlBox : UserControl
 
     private void MinimizeButton_Click(object sender, RoutedEventArgs e)
     {
+        // If MinimizeToTrayCommand is provided, use it to minimize to tray
+        if (MinimizeToTrayCommand != null && MinimizeToTrayCommand.CanExecute(null))
+        {
+            MinimizeToTrayCommand.Execute(null);
+            return;
+        }
+
+        // Otherwise, fall back to normal minimize
         var window = Window.GetWindow(this);
         if (window == null)
         {

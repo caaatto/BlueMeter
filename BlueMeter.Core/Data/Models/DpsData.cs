@@ -115,7 +115,8 @@ namespace BlueMeter.Core.Data.Models
                 CritTimes = source.CritTimes,
                 LuckyTimes = source.LuckyTimes,
                 MinDamage = source.MinDamage,
-                MaxDamage = source.MaxDamage
+                MaxDamage = source.MaxDamage,
+                HighestCrit = source.HighestCrit
             };
         }
     }

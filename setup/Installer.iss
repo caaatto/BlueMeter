@@ -71,50 +71,37 @@ Type: files; Name: "{app}\*.log"
 Type: dirifempty; Name: "{app}"
 
 [Code]
-var
-  DeleteUserDataPage: TInputOptionWizardPage;
-
-procedure InitializeUninstallProgressForm();
-begin
-  DeleteUserDataPage := CreateInputOptionPage(wpWelcome,
-    'Remove User Data', 'Do you want to remove all BlueMeter user data?',
-    'BlueMeter stores your settings, combat logs, and checklists in your user folder. ' +
-    'Do you want to remove this data as well?' + #13#10 + #13#10 +
-    'Location: ' + ExpandConstant('{localappdata}\BlueMeter'),
-    False, False);
-  DeleteUserDataPage.Add('Remove all user data (settings, combat logs, checklists)');
-  DeleteUserDataPage.Add('Keep user data (you can manually delete it later)');
-  DeleteUserDataPage.SelectedValueIndex := 1; // Default to keeping data
-end;
-
 procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
 var
   AppDataPath: String;
+  DeleteUserData: Integer;
 begin
-  if CurUninstallStep = usPostUninstall then
+  if CurUninstallStep = usUninstall then
   begin
-    // If user chose to delete user data
-    if DeleteUserDataPage.SelectedValueIndex = 0 then
+    AppDataPath := ExpandConstant('{localappdata}\BlueMeter');
+
+    // Check if user data exists
+    if DirExists(AppDataPath) then
     begin
-      AppDataPath := ExpandConstant('{localappdata}\BlueMeter');
-      if DirExists(AppDataPath) then
+      // Ask user if they want to delete user data
+      DeleteUserData := MsgBox('Do you want to remove all BlueMeter user data?' + #13#10 + #13#10 +
+                                'BlueMeter stores your settings, combat logs, and checklists in:' + #13#10 +
+                                AppDataPath + #13#10 + #13#10 +
+                                'This includes:' + #13#10 +
+                                '- Your settings and configuration' + #13#10 +
+                                '- All combat logs and statistics' + #13#10 +
+                                '- Checklist data' + #13#10 + #13#10 +
+                                'Click Yes to remove all data, or No to keep it.',
+                                mbConfirmation, MB_YESNO or MB_DEFBUTTON2);
+
+      if DeleteUserData = IDYES then
       begin
-        if MsgBox('Are you sure you want to permanently delete all BlueMeter data?' + #13#10 + #13#10 +
-                  'This will remove:' + #13#10 +
-                  '- Your settings and configuration' + #13#10 +
-                  '- All combat logs and statistics' + #13#10 +
-                  '- Checklist data' + #13#10 + #13#10 +
-                  'This action cannot be undone!',
-                  mbConfirmation, MB_YESNO) = IDYES then
-        begin
-          DelTree(AppDataPath, True, True, True);
-        end;
+        DelTree(AppDataPath, True, True, True);
       end;
     end;
   end;
 end;
 
-[Code]
 function InitializeSetup: Boolean;
 begin
   // add the dependencies you need

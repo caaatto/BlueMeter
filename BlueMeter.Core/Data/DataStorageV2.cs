@@ -578,6 +578,11 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
             {
                 skillData.MinDamage = Math.Min(skillData.MinDamage, log.Value);
                 skillData.MaxDamage = Math.Max(skillData.MaxDamage, log.Value);
+                // Track highest crit
+                if (log.IsCritical)
+                {
+                    skillData.HighestCrit = Math.Max(skillData.HighestCrit, log.Value);
+                }
             }
         });
 
@@ -595,6 +600,11 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
             {
                 skillData.MinDamage = Math.Min(skillData.MinDamage, log.Value);
                 skillData.MaxDamage = Math.Max(skillData.MaxDamage, log.Value);
+                // Track highest crit
+                if (log.IsCritical)
+                {
+                    skillData.HighestCrit = Math.Max(skillData.HighestCrit, log.Value);
+                }
             }
         });
 

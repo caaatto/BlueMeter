@@ -342,7 +342,8 @@ public partial class DpsStatisticsSubViewModel : BaseViewModel, IDisposable
                 CritCount = skill.CritTimes,
                 AvgDamage = avgDamage,
                 MinDamage = skill.MinDamage == long.MaxValue ? 0 : skill.MinDamage,
-                MaxDamage = skill.MaxDamage
+                MaxDamage = skill.MaxDamage,
+                HighestCrit = skill.HighestCrit
             };
         });
 

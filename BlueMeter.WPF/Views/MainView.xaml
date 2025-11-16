@@ -45,6 +45,9 @@
         <converters:ThemeToAppNameConverter x:Key="ThemeToAppNameConverter" />
         <converters:BackgroundOnlyModeOpacityConverter x:Key="BackgroundOnlyModeOpacityConverter" />
         <converters:IsEnabledToOpacityConverter x:Key="IsEnabledToOpacityConverter" />
+        <converters:MenuCollapseConverter x:Key="MenuCollapseConverter" />
+        <converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <converters:BoolToInvertedVisibilityConverter x:Key="BoolToInvertedVisibilityConverter" />
 
         <Style x:Key="IconFont" TargetType="TextBlock">
             <Setter Property="FontFamily" Value="pack://application:,,,/Assets/Fonts/#IconFont" />
@@ -370,7 +373,10 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <ctrl:Header Title="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeToAppNameConverter}}" Grid.Row="0" />
+                <ctrl:Header
+                    Title="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeToAppNameConverter}}"
+                    MinimizeToTrayCommand="{Binding MinimizeToTrayCommand}"
+                    Grid.Row="0" />
 
                 <!-- Update Available Banner -->
                 <Border Grid.Row="1"
@@ -392,7 +398,7 @@
             <Border Grid.Row="2" Style="{StaticResource MainContentBorder}">
                 <Grid>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="350" />
+                        <ColumnDefinition Width="{Binding IsMenuCollapsed, Converter={StaticResource MenuCollapseConverter}}" />
                         <ColumnDefinition Width="10" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
@@ -419,10 +425,37 @@
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto" />
                                 <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
 
-                            <Border Grid.Row="0" Style="{StaticResource SearchBorder}">
+                            <!-- Menu Toggle Button -->
+                            <Border Grid.Row="0" Background="Transparent" Padding="8">
+                                <Button Command="{Binding ToggleMenuCommand}" Background="Transparent" BorderThickness="0" Cursor="Hand" HorizontalAlignment="Center">
+                                    <Button.Template>
+                                        <ControlTemplate>
+                                            <TextBlock
+                                                FontSize="20"
+                                                Foreground="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}"
+                                                HorizontalAlignment="Center"
+                                                VerticalAlignment="Center">
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock" BasedOn="{StaticResource IconFont}">
+                                                        <Setter Property="Text" Value="&#xe62d;" />
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding DataContext.IsMenuCollapsed, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                                                <Setter Property="Text" Value="&#xe62e;" />
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                            </Border>
+
+                            <Border Grid.Row="1" Style="{StaticResource SearchBorder}" Visibility="{Binding IsMenuCollapsed, Converter={StaticResource BoolToInvertedVisibilityConverter}}">
                                 <Grid>
 
                                     <TextBlock Style="{StaticResource SeachIcon}" Text="&#xe602;" />
@@ -435,11 +468,11 @@
                                 </Grid>
                             </Border>
 
-                            <Border Grid.Row="1" Style="{StaticResource PluginListTitleBorder}">
+                            <Border Grid.Row="2" Style="{StaticResource PluginListTitleBorder}" Visibility="{Binding IsMenuCollapsed, Converter={StaticResource BoolToInvertedVisibilityConverter}}">
                                 <TextBlock Style="{StaticResource PluginListTitle}" Text="{lex:Loc Key={x:Static loc:ResourcesKeys.MainView_PluginList_Title}}" />
                             </Border>
 
-                            <Grid Grid.Row="2">
+                            <Grid Grid.Row="3" Visibility="{Binding IsMenuCollapsed, Converter={StaticResource BoolToInvertedVisibilityConverter}}">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="*" />
                                     <RowDefinition Height="Auto" />

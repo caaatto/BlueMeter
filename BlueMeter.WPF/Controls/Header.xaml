@@ -52,7 +52,40 @@
     </UserControl.Resources>
     <Border Style="{StaticResource HeaderBorder}">
         <Grid>
-            <TextBlock Style="{StaticResource HeaderTitle}" Text="{Binding Title, RelativeSource={RelativeSource AncestorType=local:Header}}" />
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <!-- Title in the center -->
+            <TextBlock
+                Grid.Column="0"
+                Style="{StaticResource HeaderTitle}"
+                Text="{Binding Title, RelativeSource={RelativeSource AncestorType=local:Header}}" />
+
+            <!-- Minimize to Tray Button on the right -->
+            <Button
+                Grid.Column="1"
+                Command="{Binding MinimizeToTrayCommand, RelativeSource={RelativeSource AncestorType=local:Header}}"
+                Background="Transparent"
+                BorderThickness="0"
+                Cursor="Hand"
+                Padding="10,0,10,0"
+                Margin="0,0,10,0"
+                VerticalAlignment="Center"
+                ToolTip="Minimize to Tray">
+                <Button.Template>
+                    <ControlTemplate>
+                        <TextBlock
+                            FontSize="16"
+                            Foreground="#FFFFFF"
+                            Text="−"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontWeight="Bold" />
+                    </ControlTemplate>
+                </Button.Template>
+            </Button>
         </Grid>
     </Border>
 </UserControl>

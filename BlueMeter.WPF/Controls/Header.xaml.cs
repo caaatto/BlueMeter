@@ -16,6 +16,13 @@ public partial class Header : UserControl
             typeof(Header),
             new FrameworkPropertyMetadata("Header", FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
+    public static readonly DependencyProperty MinimizeToTrayCommandProperty =
+        DependencyProperty.Register(
+            nameof(MinimizeToTrayCommand),
+            typeof(ICommand),
+            typeof(Header),
+            new PropertyMetadata(null));
+
     public Header()
     {
         InitializeComponent();
@@ -25,6 +32,12 @@ public partial class Header : UserControl
     {
         get => (string)GetValue(TitleProperty);
         set => SetValue(TitleProperty, value);
+    }
+
+    public ICommand? MinimizeToTrayCommand
+    {
+        get => (ICommand?)GetValue(MinimizeToTrayCommandProperty);
+        set => SetValue(MinimizeToTrayCommandProperty, value);
     }
 
     private void Header_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

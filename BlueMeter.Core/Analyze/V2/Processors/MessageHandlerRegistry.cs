@@ -33,6 +33,8 @@ internal sealed class MessageHandlerRegistry(IDataStorage storage, ILogger? logg
             return _processors.TryGetValue(method, out processor);
         }
 
+        // DEBUG: Log unknown method IDs to help identify teleport events
+        logger?.LogWarning("UNKNOWN METHOD ID: 0x{MethodId:X8} ({MethodIdDec})", methodId, methodId);
         Debug.WriteLine($"No processor found for method ID: {methodId}");
         processor = null;
         return false;

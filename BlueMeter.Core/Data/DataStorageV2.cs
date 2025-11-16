@@ -31,6 +31,11 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
     private Timer? _sectionTimeoutTimer;
     private bool _timeoutSectionClearedOnce; // avoid repeated clear/events until next log arrives
 
+    // ===== Boss tracking for battle section management =====
+    private long _activeBossUuid = 0;
+    private DateTime? _bossDeathTime = null;
+    private const int BossDeathDelaySeconds = 8;
+
     /// <summary>
     /// 玩家信息字典 (Key: UID)
     /// </summary>
@@ -97,7 +102,7 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
     /// <summary>
     /// 战斗日志分段超时时间 (默认: 5000ms)
     /// </summary>
-    public TimeSpan SectionTimeout { get; set; } = TimeSpan.FromMilliseconds(5000);
+    public TimeSpan SectionTimeout { get; set; } = TimeSpan.FromSeconds(60); // 60s timeout for zone changes
 
     /// <summary>
     /// 是否正在监听服务器
@@ -117,6 +122,68 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
         }
     }
 
+    /// <summary>
+    /// Current active boss/enemy being fought (0 = no active boss)
+    /// </summary>
+    public long ActiveBossUuid
+    {
+        get => _activeBossUuid;
+        set => _activeBossUuid = value;
+    }
+
+    /// <summary>
+    /// Time when the active boss died (null = boss not dead yet)
+    /// </summary>
+    public DateTime? BossDeathTime
+    {
+        get => _bossDeathTime;
+        set => _bossDeathTime = value;
+    }
+
+    /// <summary>
+    /// Registers a new boss fight when first damage is dealt to an enemy
+    /// </summary>
+    public void RegisterBossEngagement(long enemyUuid)
+    {
+        if (_activeBossUuid == 0 || _activeBossUuid != enemyUuid)
+        {
+            _activeBossUuid = enemyUuid;
+            _bossDeathTime = null;
+            logger.LogInformation("Boss fight started: Enemy {EnemyUid}", enemyUuid);
+        }
+    }
+
+    /// <summary>
+    /// Registers boss death and starts the post-death timer
+    /// </summary>
+    public void RegisterBossDeath(long enemyUuid)
+    {
+        if (_activeBossUuid == enemyUuid)
+        {
+            _bossDeathTime = DateTime.UtcNow;
+            logger.LogInformation("Boss defeated: Enemy {EnemyUid}. Section will end in {Delay}s if no new combat.", enemyUuid, BossDeathDelaySeconds);
+        }
+    }
+
+    /// <summary>
+    /// Checks if we should end the battle section (boss dead + delay passed)
+    /// </summary>
+    public bool ShouldEndBattleSection()
+    {
+        if (_bossDeathTime.HasValue && _activeBossUuid != 0)
+        {
+            var timeSinceDeath = DateTime.UtcNow - _bossDeathTime.Value;
+            if (timeSinceDeath.TotalSeconds >= BossDeathDelaySeconds)
+            {
+                logger.LogInformation("Boss death delay passed ({Seconds}s). Ending battle section.", timeSinceDeath.TotalSeconds);
+                // Reset boss tracking
+                _activeBossUuid = 0;
+                _bossDeathTime = null;
+                return true;
+            }
+        }
+        return false;
+    }
 
     /// <summary>
     /// 从文件加载缓存玩家信息
@@ -306,6 +373,24 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
 
         if (alreadyCleared) return;
         if (last == DateTime.MinValue) return; // no logs yet
+
+        // Check if boss died and delay has passed
+        if (ShouldEndBattleSection())
+        {
+            try
+            {
+                PrivateClearDpsData(); // raises DpsDataUpdated & DataUpdated
+                RaiseNewSectionCreated();
+            }
+            finally
+            {
+                lock (_sectionTimeoutLock)
+                {
+                    _timeoutSectionClearedOnce = true;
+                }
+            }
+            return;
+        }
 
         var now = DateTime.UtcNow;
         if (now - last <= SectionTimeout) return;
@@ -614,6 +699,10 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
     private void PrivateClearDpsData()
     {
         SectionedDpsData.Clear();
+
+        // Reset boss tracking when section clears
+        _activeBossUuid = 0;
+        _bossDeathTime = null;
 
         RaiseDpsDataUpdated();
         RaiseDataUpdated();

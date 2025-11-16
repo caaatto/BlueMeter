@@ -102,6 +102,14 @@ public sealed class DpsStatisticsDesignTimeViewModel : DpsStatisticsViewModel
         public long CurrentPlayerUUID { get; set; }
         public bool IsServerConnected => false;
 
+        // Boss tracking (design-time no-ops)
+        public long ActiveBossUuid { get; set; }
+        public DateTime? BossDeathTime { get; set; }
+
+        public void RegisterBossEngagement(long enemyUuid) { }
+        public void RegisterBossDeath(long enemyUuid) { }
+        public bool ShouldEndBattleSection() => false;
+
 #pragma warning disable CS0067
         public event ServerConnectionStateChangedEventHandler? ServerConnectionStateChanged;
         public event PlayerInfoUpdatedEventHandler? PlayerInfoUpdated;

@@ -63,6 +63,27 @@ public class InstantizedDataStorage : IDataStorage, IDisposable
 
     public long CurrentPlayerUUID { get; set; }
 
+    // Boss tracking properties (forward to DataStorage - which doesn't have these in static version)
+    // These are no-ops for the static DataStorage wrapper
+    public long ActiveBossUuid { get; set; }
+    public DateTime? BossDeathTime { get; set; }
+
+    public void RegisterBossEngagement(long enemyUuid)
+    {
+        // No-op for static DataStorage wrapper
+    }
+
+    public void RegisterBossDeath(long enemyUuid)
+    {
+        // No-op for static DataStorage wrapper
+    }
+
+    public bool ShouldEndBattleSection()
+    {
+        // No-op for static DataStorage wrapper
+        return false;
+    }
+
     // Dispose: detach all wrappers from DataStorage static events
     public void Dispose()
     {

@@ -24,6 +24,31 @@ public interface IDataStorage : IDisposable
     bool IsServerConnected { get; set; }
     long CurrentPlayerUUID { get; set; }
 
+    /// <summary>
+    /// Current active boss/enemy being fought (0 = no active boss)
+    /// </summary>
+    long ActiveBossUuid { get; set; }
+
+    /// <summary>
+    /// Time when the active boss died (null = boss not dead yet)
+    /// </summary>
+    DateTime? BossDeathTime { get; set; }
+
+    /// <summary>
+    /// Registers a new boss fight when first damage is dealt to an enemy
+    /// </summary>
+    void RegisterBossEngagement(long enemyUuid);
+
+    /// <summary>
+    /// Registers boss death and starts the post-death timer
+    /// </summary>
+    void RegisterBossDeath(long enemyUuid);
+
+    /// <summary>
+    /// Checks if we should end the battle section (boss dead + delay passed)
+    /// </summary>
+    bool ShouldEndBattleSection();
+
     event ServerConnectionStateChangedEventHandler? ServerConnectionStateChanged;
     event PlayerInfoUpdatedEventHandler? PlayerInfoUpdated;
     event NewSectionCreatedEventHandler? NewSectionCreated;

@@ -51,6 +51,14 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
     private readonly ITopmostService _topmostService;
     private DispatcherTimer? _durationTimer;
     private bool _isInitialized;
+    // UI update throttling to prevent freezing during intense combat
+    private DateTime _lastUiUpdate = DateTime.MinValue;
+    private bool _pendingUiUpdate;
+    private readonly TimeSpan _uiUpdateThrottle = TimeSpan.FromMilliseconds(100);
+    // Combat pause detection - pause timer when no damage (but don't archive!)
+    private DateTime _lastDamageTime = DateTime.MinValue;
+    private readonly TimeSpan _combatPauseThreshold = TimeSpan.FromSeconds(3);
+    private ulong _lastKnownMaxTick;
     [ObservableProperty] private ScopeTime _scopeTime = ScopeTime.Current;
     [ObservableProperty] private bool _showContextMenu;
     [ObservableProperty] private SortDirectionEnum _sortDirection = SortDirectionEnum.Descending;
@@ -198,6 +206,10 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         IsShowingLastBattle = false;
         BattleStatusLabel = string.Empty;
 
+        // Reset combat tracking
+        _lastDamageTime = DateTime.MinValue;
+        _lastKnownMaxTick = 0;
+
         // Clear current UI data for all statistic types and rebuild from the new section snapshot
         foreach (var subVm in StatisticData.Values)
         {
@@ -211,6 +223,10 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         _storage.ClearDpsData();
         // Move section start to current elapsed so section duration becomes zero
         _sectionStartElapsed = _timer.Elapsed;
+
+        // Reset combat tracking for new section
+        _lastDamageTime = DateTime.MinValue;
+        _lastKnownMaxTick = 0;
     }
 
     /// <summary>
@@ -279,14 +295,56 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
             return;
         }
 
+        // Throttle UI updates to prevent freezing during intense combat
+        var now = DateTime.UtcNow;
+        var timeSinceLastUpdate = now - _lastUiUpdate;
+
+        if (timeSinceLastUpdate < _uiUpdateThrottle)
+        {
+            // Too soon since last update - schedule a delayed update if not already pending
+            if (!_pendingUiUpdate)
+            {
+                _pendingUiUpdate = true;
+                var delay = _uiUpdateThrottle - timeSinceLastUpdate;
+                Task.Delay(delay).ContinueWith(_ =>
+                {
+                    _dispatcher.BeginInvoke(() =>
+                    {
+                        _pendingUiUpdate = false;
+                        PerformUiUpdate();
+                    });
+                });
+            }
+            return;
+        }
+
+        PerformUiUpdate();
+    }
+
+    private void PerformUiUpdate()
+    {
+        _lastUiUpdate = DateTime.UtcNow;
+
         var dpsList = ScopeTime == ScopeTime.Total
             ? _storage.ReadOnlyFullDpsDataList
             : _storage.ReadOnlySectionedDpsDataList;
 
-        // Only start the timer when there is actual damage data present
-        if (!_timer.IsRunning && HasDamageData(dpsList))
+        // Track new damage to update _lastDamageTime
+        var maxTick = dpsList.Any() ? (ulong)dpsList.Max(d => d.LastLoggedTick) : 0UL;
+        var hasNewDamage = maxTick > _lastKnownMaxTick;
+
+        if (hasNewDamage)
         {
-            _timer.Start();
+            // New damage received - update tracking
+            _lastKnownMaxTick = maxTick;
+            _lastDamageTime = DateTime.UtcNow;
+
+            // Start/resume timer if not running
+            if (!_timer.IsRunning)
+            {
+                _timer.Start();
+                _logger.LogDebug("Combat resumed - timer started");
+            }
         }
 
         // If a new section was created, wait until first datapoint to reset UI and mark section start
@@ -749,6 +807,18 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
             return;
         }
 
+        // Combat pause detection - check every second if we should stop timer
+        if (_timer.IsRunning && _lastDamageTime != DateTime.MinValue)
+        {
+            var timeSinceLastDamage = DateTime.UtcNow - _lastDamageTime;
+            if (timeSinceLastDamage >= _combatPauseThreshold)
+            {
+                // Combat paused - stop timer to freeze DPS
+                _timer.Stop();
+                _logger.LogDebug("Combat paused - timer stopped after {Seconds}s of inactivity (DPS frozen)", timeSinceLastDamage.TotalSeconds);
+            }
+        }
+
         if (_timer.IsRunning)
         {
             if (ScopeTime == ScopeTime.Current && _awaitingSectionStart)
@@ -780,7 +850,19 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
             _awaitingSectionStart = true;
             IsShowingLastBattle = true;
             BattleStatusLabel = "Last Battle";
+
+            // STOP TIMER when section ends (zone change / timeout) - this archives the fight
+            if (_timer.IsRunning)
+            {
+                _timer.Stop();
+                _logger.LogDebug("Combat ended - new section created (zone change or timeout). Fight archived as 'Last Battle'");
+            }
+
             UpdateBattleDuration();
+
+            // Reset combat tracking for new section
+            _lastDamageTime = DateTime.MinValue;
+            _lastKnownMaxTick = 0;
 
             // Do NOT clear current UI data here; wait until data for the new section arrives
         });

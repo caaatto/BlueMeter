@@ -103,6 +103,20 @@ public abstract class BaseDeltaInfoProcessor(IDataStorage storage, ILogger? logg
             var damageSigned = d.HasValue ? d.Value : d.HasLuckyValue ? d.LuckyValue : 0L;
             if (damageSigned == 0) continue;
 
+            var isDead = d.HasIsDead && d.IsDead;
+
+            // Boss tracking: Register engagement when player attacks enemy
+            if (isAttackerPlayer && !isTargetPlayer && d.Type != EDamageType.Heal)
+            {
+                _storage.RegisterBossEngagement(targetUuid);
+            }
+
+            // Boss tracking: Register death when enemy dies
+            if (!isTargetPlayer && isDead)
+            {
+                _storage.RegisterBossDeath(targetUuid);
+            }
+
             var (id, ticks) = IDGenerator.Next();
             _storage.AddBattleLog(new BattleLog
             {
@@ -120,7 +134,7 @@ public abstract class BaseDeltaInfoProcessor(IDataStorage storage, ILogger? logg
                 IsCritical = (d.TypeFlag & 1) == 1,
                 IsHeal = d.Type == EDamageType.Heal,
                 IsMiss = d.HasIsMiss && d.IsMiss,
-                IsDead = d.HasIsDead && d.IsDead
+                IsDead = isDead
             });
             count++;
             if ((d.TypeFlag & 1) == 1) crits++;

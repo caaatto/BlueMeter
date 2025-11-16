@@ -158,6 +158,36 @@ public partial class AppConfig : ObservableObject
     [ObservableProperty]
     private Dictionary<string, bool> _pluginAutoStartStates = [];
 
+    /// <summary>
+    /// Record all encounters regardless of duration
+    /// </summary>
+    [ObservableProperty]
+    private bool _recordAllEncounters = true;
+
+    /// <summary>
+    /// Ignore encounters shorter than 1 minute
+    /// </summary>
+    [ObservableProperty]
+    private bool _ignoreEncountersUnder1Min = false;
+
+    /// <summary>
+    /// Ignore encounters shorter than 2 minutes
+    /// </summary>
+    [ObservableProperty]
+    private bool _ignoreEncountersUnder2Min = false;
+
+    /// <summary>
+    /// Minimum encounter duration in seconds for recording (custom value)
+    /// </summary>
+    [ObservableProperty]
+    private int _minEncounterDuration = 0;
+
+    /// <summary>
+    /// Training mode type: None, Personal, Faction, or Extreme
+    /// </summary>
+    [ObservableProperty]
+    private TrainingMode _trainingMode = TrainingMode.None;
+
     public AppConfig Clone()
     {
         // TODO: Add unittest

@@ -59,15 +59,31 @@ public class EncounterService
     /// <summary>
     /// End the current encounter
     /// </summary>
-    public async Task EndCurrentEncounterAsync(long durationMs)
+    /// <param name="durationMs">Duration of encounter in milliseconds</param>
+    /// <param name="minDurationMs">Minimum duration to save (0 = save all). Encounters shorter than this will not be saved.</param>
+    public async Task EndCurrentEncounterAsync(long durationMs, long minDurationMs = 0)
     {
         if (!_isEncounterActive || string.IsNullOrEmpty(_currentEncounterId))
             return;
 
-        using var context = _contextFactory();
-        var repository = new EncounterRepository(context);
+        // Check if encounter meets minimum duration requirement
+        if (minDurationMs > 0 && durationMs < minDurationMs)
+        {
+            DebugLogger.Log($"[EndCurrentEncounterAsync] Encounter {_currentEncounterId} duration {durationMs}ms is less than minimum {minDurationMs}ms. Not saving.");
 
-        await repository.EndEncounterAsync(_currentEncounterId, DateTime.UtcNow, durationMs);
+            // Delete the encounter instead of ending it
+            using var context = _contextFactory();
+            var repository = new EncounterRepository(context);
+            await repository.DeleteEncounterAsync(_currentEncounterId);
+
+            _isEncounterActive = false;
+            return;
+        }
+
+        using var context2 = _contextFactory();
+        var repository2 = new EncounterRepository(context2);
+
+        await repository2.EndEncounterAsync(_currentEncounterId, DateTime.UtcNow, durationMs);
 
         _isEncounterActive = false;
     }

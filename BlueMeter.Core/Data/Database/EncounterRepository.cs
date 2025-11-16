@@ -290,6 +290,36 @@ public class EncounterRepository
     }
 
     /// <summary>
+    /// Delete a specific encounter from database
+    /// </summary>
+    /// <returns>True if encounter was deleted, false if not found</returns>
+    public async Task<bool> DeleteEncounterAsync(string encounterId)
+    {
+        DebugLogger.Log($"[DeleteEncounterAsync] Deleting encounter {encounterId}...");
+
+        var encounter = await _context.Encounters
+            .Include(e => e.PlayerStats)
+            .FirstOrDefaultAsync(e => e.EncounterId == encounterId);
+
+        if (encounter == null)
+        {
+            DebugLogger.Log($"[DeleteEncounterAsync] Encounter {encounterId} not found");
+            return false;
+        }
+
+        // Delete player stats first (due to foreign key constraint)
+        _context.PlayerEncounterStats.RemoveRange(encounter.PlayerStats);
+
+        // Delete encounter
+        _context.Encounters.Remove(encounter);
+
+        await _context.SaveChangesAsync();
+        DebugLogger.Log($"[DeleteEncounterAsync] Deleted encounter {encounterId} with {encounter.PlayerStats.Count} player stats");
+
+        return true;
+    }
+
+    /// <summary>
     /// Delete all encounters and their statistics
     /// </summary>
     public async Task<int> DeleteAllEncountersAsync()

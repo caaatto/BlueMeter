@@ -88,7 +88,7 @@ public partial class DpsStatisticsView : Window
     }
 
     /// <summary>
-    /// 打桩模式选择
+    /// 打桩模式选择 (Training Mode Selection)
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
@@ -96,6 +96,9 @@ public partial class DpsStatisticsView : Window
     {
         var me = (MenuItem)sender;
         var owner = ItemsControl.ItemsControlFromItemContainer(me);
+
+        if (DataContext is not DpsStatisticsViewModel viewModel)
+            return;
 
         if (me.IsChecked)
         {
@@ -105,10 +108,29 @@ public partial class DpsStatisticsView : Window
                 if (owner.ItemContainerGenerator.ContainerFromItem(obj) is MenuItem mi && !ReferenceEquals(mi, me))
                     mi.IsChecked = false;
             }
-            // me 已经是 true，不用再设
+
+            // Set training mode based on selected menu item
+            var header = me.Header?.ToString() ?? "";
+            if (header.Contains("Personal") || header.Contains("个人"))
+            {
+                viewModel.AppConfig.TrainingMode = Models.TrainingMode.Personal;
+            }
+            else if (header.Contains("Faction") || header.Contains("阵营"))
+            {
+                viewModel.AppConfig.TrainingMode = Models.TrainingMode.Faction;
+            }
+            else if (header.Contains("Extreme") || header.Contains("极限"))
+            {
+                viewModel.AppConfig.TrainingMode = Models.TrainingMode.Extreme;
+            }
+        }
+        else
+        {
+            // Unchecked - disable training mode
+            viewModel.AppConfig.TrainingMode = Models.TrainingMode.None;
         }
 
-        // 这次点击后变成 false：允许“全不选”，什么也不做
+        // 这次点击后变成 false：允许"全不选"，什么也不做
         e.Handled = true;
     }
 

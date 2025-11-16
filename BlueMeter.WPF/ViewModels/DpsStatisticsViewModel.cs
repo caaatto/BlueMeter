@@ -599,6 +599,31 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         _windowManagement.SkillBreakdownView.Activate();
     }
 
+    [RelayCommand]
+    private void OpenSkillDiary()
+    {
+        // Open skill breakdown for current player
+        var currentPlayer = CurrentStatisticData.CurrentPlayerSlot;
+
+        if (currentPlayer == null)
+        {
+            _logger.LogWarning("Cannot open Skill Diary: No current player data available");
+            return;
+        }
+
+        _logger.LogInformation("Opening Skill Diary for current player: {PlayerName} (UID: {PlayerUid})",
+            currentPlayer.Player.Name, currentPlayer.Player.Uid);
+
+        // Get the ViewModel and update it with the current player data
+        if (_windowManagement.SkillBreakdownView.DataContext is SkillBreakdownViewModel viewModel)
+        {
+            viewModel.SetPlayerData(currentPlayer);
+        }
+
+        _windowManagement.SkillBreakdownView.Show();
+        _windowManagement.SkillBreakdownView.Activate();
+    }
+
     private async Task LoadHistoricalEncounterAsync(Core.Data.Database.EncounterData encounterData)
     {
         try

@@ -629,7 +629,7 @@
                                             IsCheckable="True" />
                                     </MenuItem>
 
-                                    <MenuItem Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_SkillDiary}}" />
+                                    <MenuItem Command="{Binding OpenSkillDiaryCommand}" Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_SkillDiary}}" />
 
                                     <Separator />
                                     <MenuItem Command="{Binding ShutdownCommand}" Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_Exit}}" />

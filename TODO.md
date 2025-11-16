@@ -30,6 +30,11 @@
 - [ ] Incorrect detection of the player's class
 - [ ] (WPF) Refresh promptly after retrieving cached user information
 - [ ] (WPF) Manual TopMost toggle sometimes fails to clear
+- [ ] Class, name, and specialization detection takes very long
+- [ ] Hover popup flickers when clicking without moving mouse
+- [x] Skill breakdown window stays frozen at opening state - needs to update live
+- [x] Min/Max/Crit values showing 0 in hover popup during combat
+- [ ] Translation incorrect - check if skill_mapping is being used
 
 ### Features - DPS Meter Core
 

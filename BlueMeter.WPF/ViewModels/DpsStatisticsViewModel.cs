@@ -450,7 +450,10 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
                 TotalDamage = skill.TotalValue,
                 HitCount = skill.UseTimes,
                 CritCount = skill.CritTimes,
-                AvgDamage = avgDamage
+                AvgDamage = avgDamage,
+                MinDamage = skill.MinDamage == long.MaxValue ? 0 : skill.MinDamage,
+                MaxDamage = skill.MaxDamage,
+                HighestCrit = skill.HighestCrit
             };
         });
 
@@ -576,6 +579,24 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         };
 
         historyWindow.Show();
+    }
+
+    [RelayCommand]
+    private void OpenPlayerSkillBreakdown(StatisticDataViewModel? player)
+    {
+        if (player == null) return;
+
+        _logger.LogInformation("Opening skill breakdown for player: {PlayerName} (UID: {PlayerUid})",
+            player.Player.Name, player.Player.Uid);
+
+        // Get the ViewModel and update it with the player data
+        if (_windowManagement.SkillBreakdownView.DataContext is SkillBreakdownViewModel viewModel)
+        {
+            viewModel.SetPlayerData(player);
+        }
+
+        _windowManagement.SkillBreakdownView.Show();
+        _windowManagement.SkillBreakdownView.Activate();
     }
 
     private async Task LoadHistoricalEncounterAsync(Core.Data.Database.EncounterData encounterData)

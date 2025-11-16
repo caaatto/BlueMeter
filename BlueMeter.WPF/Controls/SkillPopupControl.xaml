@@ -80,6 +80,28 @@
                                             Foreground="{StaticResource AccentYellow}"
                                             Text="{Binding AvgDamage}" />
                                     </TextBlock>
+<<<<<<< Updated upstream
+=======
+                                    <TextBlock Margin="0,4,0,0">
+                                        <Run Text="Min Damage: " />
+                                        <Run
+                                            FontWeight="Bold"
+                                            Foreground="{StaticResource AccentYellow}"
+                                            Text="{Binding MinDamage}" />
+                                        <Run Text="    Max Damage: " />
+                                        <Run
+                                            FontWeight="Bold"
+                                            Foreground="{StaticResource AccentYellow}"
+                                            Text="{Binding MaxDamage}" />
+                                    </TextBlock>
+                                    <TextBlock Margin="0,4,0,0">
+                                        <Run Text="Highest Crit: " />
+                                        <Run
+                                            FontWeight="Bold"
+                                            Foreground="{StaticResource AccentYellow}"
+                                            Text="{Binding HighestCrit}" />
+                                    </TextBlock>
+>>>>>>> Stashed changes
                                 </StackPanel>
                             </Border>
                         </DataTemplate>

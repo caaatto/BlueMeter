@@ -14,6 +14,7 @@
     xmlns:models="clr-namespace:BlueMeter.Core.Models;assembly=BlueMeter.Core"
     xmlns:system="clr-namespace:System;assembly=System.Runtime"
     xmlns:viewModels="clr-namespace:BlueMeter.WPF.ViewModels"
+    xmlns:wpfModels="clr-namespace:BlueMeter.WPF.Models"
     Title="{lex:Loc Key={x:Static loc:ResourcesKeys.Window_DpsStatistics_Title}}"
     Width="380"
     Height="360"
@@ -526,13 +527,16 @@
                                     <Separator />
 
                                     <MenuItem
-                                        Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_StatisticBoss}}"
-                                        IsChecked="False"
-                                        Style="{StaticResource DpsCheckableMenuItem}" />
-                                    <MenuItem
+                                        Command="{Binding ToggleScopeTimeCommand}"
                                         Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_ShowTotal}}"
-                                        IsChecked="False"
-                                        Style="{StaticResource DpsCheckableMenuItem}" />
+                                        Style="{StaticResource DpsCheckableMenuItem}">
+                                        <MenuItem.IsChecked>
+                                            <MultiBinding Converter="{StaticResource EqualsConverter}" Mode="OneWay">
+                                                <Binding Path="ScopeTime" />
+                                                <Binding Source="{x:Static wpfModels:ScopeTime.Total}" />
+                                            </MultiBinding>
+                                        </MenuItem.IsChecked>
+                                    </MenuItem>
 
                                     <!--  记录设置  -->
                                     <MenuItem Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_RecordSettings}}" ItemContainerStyle="{StaticResource CheckableMenuItem}">

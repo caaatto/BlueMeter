@@ -261,6 +261,20 @@ public partial class DpsStatisticsSubViewModel : BaseViewModel, IDisposable
             }
         }
 
+        // Remove players that are no longer in processedData (filtered out)
+        // Only do this if we have valid data to avoid clearing everything when combat ends
+        if (processedData.Count > 0)
+        {
+            var slotsToRemove = Data
+                .Where(slot => !processedData.ContainsKey(slot.Player.Uid))
+                .ToList();
+
+            foreach (var slot in slotsToRemove)
+            {
+                Data.Remove(slot);
+            }
+        }
+
         // Batch calculate percentages
         if (Data.Count > 0)
         {

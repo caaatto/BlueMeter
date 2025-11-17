@@ -292,14 +292,6 @@
                         <Style TargetType="Button">
                             <Setter Property="OverridesDefaultStyle" Value="True" />
                             <Setter Property="Cursor" Value="Arrow" />
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding DataContext.IsSelectingPlayer, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
-                                    <Setter Property="Background" Value="#400080FF" />
-                                    <Setter Property="BorderBrush" Value="#FF0080FF" />
-                                    <Setter Property="BorderThickness" Value="2" />
-                                    <Setter Property="Cursor" Value="Hand" />
-                                </DataTrigger>
-                            </Style.Triggers>
                         </Style>
                     </Button.Style>
 
@@ -309,6 +301,7 @@
                             <Border
                                 Padding="{TemplateBinding Padding}"
                                 Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
                                 BorderThickness="{TemplateBinding BorderThickness}">
                                 <ContentPresenter
                                     HorizontalAlignment="Stretch"
@@ -628,23 +621,11 @@
                                     <!--  历史记录  -->
                                     <MenuItem Command="{Binding OpenEncounterHistoryCommand}" Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_History}}" ItemContainerStyle="{StaticResource CheckableMenuItem}" />
                                     <!--  打桩模式  -->
-                                    <MenuItem Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_Training}}">
-                                        <MenuItem
-                                            Click="PilingMenuItem_Click"
-                                            Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_Training_Personal}}"
-                                            IsCheckable="True"
-                                            Style="{StaticResource CheckableMenuItem}" />
-                                        <MenuItem
-                                            Click="PilingMenuItem_Click"
-                                            Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_Training_Faction}}"
-                                            IsCheckable="True"
-                                            Style="{StaticResource CheckableMenuItem}" />
-                                        <MenuItem
-                                            Click="PilingMenuItem_Click"
-                                            Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_Training_Extreme}}"
-                                            IsCheckable="True"
-                                            Style="{StaticResource CheckableMenuItem}" />
-                                    </MenuItem>
+                                    <MenuItem
+                                        Click="PilingMenuItem_Click"
+                                        Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_Training_Personal}}"
+                                        IsCheckable="True"
+                                        Style="{StaticResource CheckableMenuItem}" />
 
                                     <MenuItem Command="{Binding OpenSkillDiaryCommand}" Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_SkillDiary}}" />
 

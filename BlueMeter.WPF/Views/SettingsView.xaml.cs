@@ -338,6 +338,59 @@ public partial class SettingsView : Window
     private void Nav_Combat_Click(object sender, RoutedEventArgs e) => ScrollToSection(SectionCombat);
     private void Nav_Theme_Click(object sender, RoutedEventArgs e) => ScrollToSection(SectionTheme);
 
+    /// <summary>
+    /// Opens settings window, scrolls to UID field, and highlights it in red
+    /// to indicate that the user needs to enter their UID for Solo Training mode
+    /// </summary>
+    public void ShowAndHighlightUidField()
+    {
+        // Show the window and bring it to front
+        Show();
+        Activate();
+
+        // Wait for window to be fully loaded before scrolling
+        Dispatcher.InvokeAsync(() =>
+        {
+            // Scroll to Combat section where UID field is located
+            ScrollToSection(SectionCombat);
+
+            // Focus the UID TextBox
+            UidTextBox?.Focus();
+
+            // Create red flash animation
+            if (UidInputBorder != null)
+            {
+                var originalBrush = UidInputBorder.BorderBrush;
+                var originalThickness = UidInputBorder.BorderThickness;
+
+                // Create red color animation
+                var colorAnimation = new System.Windows.Media.Animation.ColorAnimation
+                {
+                    To = Colors.Red,
+                    Duration = TimeSpan.FromMilliseconds(300),
+                    AutoReverse = true,
+                    RepeatBehavior = new System.Windows.Media.Animation.RepeatBehavior(3) // Flash 3 times
+                };
+
+                // Create thickness animation to make border more visible
+                var thicknessAnimation = new System.Windows.Media.Animation.ThicknessAnimation
+                {
+                    To = new Thickness(2),
+                    Duration = TimeSpan.FromMilliseconds(300),
+                    AutoReverse = true,
+                    RepeatBehavior = new System.Windows.Media.Animation.RepeatBehavior(3)
+                };
+
+                // Apply animations
+                var brush = new SolidColorBrush(originalBrush is SolidColorBrush sb ? sb.Color : Colors.Gray);
+                UidInputBorder.BorderBrush = brush;
+
+                brush.BeginAnimation(SolidColorBrush.ColorProperty, colorAnimation);
+                UidInputBorder.BeginAnimation(Border.BorderThicknessProperty, thicknessAnimation);
+            }
+        }, System.Windows.Threading.DispatcherPriority.Loaded);
+    }
+
     // MEMORY LEAK FIX: Dispose ViewModel when window closes to clean up event subscriptions.
     // SettingsViewModel subscribes to LocalizationManager and NetworkChange static events.
     // Without this, the ViewModel would never be garbage collected, causing memory leaks.

@@ -172,10 +172,7 @@
     <value>Treino Solo</value>
   </data>
   <data name="Menu_Training_Faction" xml:space="preserve">
-    <value>Treino de Facção</value>
-  </data>
-  <data name="Menu_Training_Extreme" xml:space="preserve">
-    <value>Treino Extremo</value>
+    <value>Treino de Grupo</value>
   </data>
   <data name="Menu_SkillDiary" xml:space="preserve">
     <value>Diário de Habilidades</value>

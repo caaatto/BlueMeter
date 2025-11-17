@@ -11,17 +11,12 @@ public enum TrainingMode
     None = 0,
 
     /// <summary>
-    /// Personal training dummy mode
+    /// Personal training dummy mode - shows only your damage
     /// </summary>
     Personal = 1,
 
     /// <summary>
-    /// Faction training dummy mode
+    /// Group training dummy mode - shows only your party/group
     /// </summary>
-    Faction = 2,
-
-    /// <summary>
-    /// Extreme training dummy mode
-    /// </summary>
-    Extreme = 3
+    Group = 2
 }

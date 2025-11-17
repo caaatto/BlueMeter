@@ -172,10 +172,7 @@
     <value>个人打桩</value>
   </data>
   <data name="Menu_Training_Faction" xml:space="preserve">
-    <value>协会打桩</value>
-  </data>
-  <data name="Menu_Training_Extreme" xml:space="preserve">
-    <value>极限打桩</value>
+    <value>组队打桩</value>
   </data>
   <data name="Menu_SkillDiary" xml:space="preserve">
     <value>技能日记</value>

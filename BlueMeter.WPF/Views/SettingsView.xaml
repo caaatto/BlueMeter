@@ -625,6 +625,27 @@
                                         </Grid>
                                     </Border>
 
+                                    <Border x:Name="UidInputBorder" Style="{StaticResource SectionFieldBorder}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="39*" />
+                                                <ColumnDefinition Width="*" MinWidth="10" />
+                                                <ColumnDefinition Width="60*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock
+                                                Grid.Column="0"
+                                                Style="{StaticResource FieldName}"
+                                                Text="Solo Training Player UID" />
+                                            <Grid Grid.Column="2">
+                                                <TextBox
+                                                    x:Name="UidTextBox"
+                                                    Style="{StaticResource AntTextBoxStyle}"
+                                                    Text="{Binding AppConfig.ManualPlayerUid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+
                                     <Border Style="{StaticResource SectionFieldBorder}">
                                         <Grid>
                                             <Grid.ColumnDefinitions>

@@ -70,9 +70,10 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
     [ObservableProperty] private string _historyModeLabel = string.Empty;
     [ObservableProperty] private bool _isShowingLastBattle;
     [ObservableProperty] private string _battleStatusLabel = string.Empty;
-    [ObservableProperty] private bool _isSelectingPlayer;
     private Dictionary<long, PlayerInfo>? _historicalPlayerInfos;
     private Dictionary<long, DpsData>? _historicalDpsData;
+    // Snapshot of Last Battle's raw data to enable filtering during Last Battle view
+    private IReadOnlyList<DpsData>? _lastBattleDataSnapshot;
 
     /// <inheritdoc/>
     public DpsStatisticsViewModel(IApplicationControlService appControlService,
@@ -111,6 +112,18 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         _appControlService = appControlService;
         _storage = storage;
         _logger = logger;
+
+        // Log loaded configuration for debugging
+        _logger.LogInformation("[STARTUP] Configuration loaded. TrainingMode={TrainingMode}, ManualPlayerUid={ManualPlayerUid}",
+            _appConfig.TrainingMode, _appConfig.ManualPlayerUid);
+
+        // IMPORTANT: Always reset TrainingMode to None on startup (but keep ManualPlayerUid)
+        // User must manually activate Solo Training each session
+        if (_appConfig.TrainingMode != Models.TrainingMode.None)
+        {
+            _logger.LogInformation("[STARTUP] Resetting TrainingMode from {OldMode} to None", _appConfig.TrainingMode);
+            _appConfig.TrainingMode = Models.TrainingMode.None;
+        }
         _windowManagement = windowManagement;
         _topmostService = topmostService;
         _dispatcher = dispatcher;
@@ -206,6 +219,7 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         _lastSectionElapsed = TimeSpan.Zero;
         IsShowingLastBattle = false;
         BattleStatusLabel = string.Empty;
+        _lastBattleDataSnapshot = null;
 
         // Reset combat tracking
         _lastDamageTime = DateTime.MinValue;
@@ -229,10 +243,9 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         _lastDamageTime = DateTime.MinValue;
         _lastKnownMaxTick = 0;
 
-        // Reset Solo Training player selection
-        AppConfig.ManualPlayerUid = 0;
-        IsSelectingPlayer = false;
-        _logger.LogInformation("[RESET] Solo Training player selection cleared");
+        // Note: ManualPlayerUid is NOT reset here - it should persist in settings
+        _logger.LogInformation("[RESET] Section reset complete. TrainingMode={Mode}, ManualUID={UID}",
+            AppConfig.TrainingMode, AppConfig.ManualPlayerUid);
     }
 
     /// <summary>
@@ -287,20 +300,6 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         _logger.LogDebug("Window Resized");
     }
 
-    [RelayCommand]
-    private void SelectPlayer(long uid)
-    {
-        _logger.LogInformation("[PLAYER SELECTION] Player selected with UID={UID}", uid);
-        AppConfig.ManualPlayerUid = uid;
-        IsSelectingPlayer = false;
-
-        // Refresh data to apply the filter immediately
-        if (RefreshCommand.CanExecute(null))
-        {
-            RefreshCommand.Execute(null);
-        }
-    }
-
     private void DataStorage_DpsDataUpdated()
     {
         if (!_dispatcher.CheckAccess())
@@ -345,9 +344,27 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
     {
         _lastUiUpdate = DateTime.UtcNow;
 
-        var dpsList = ScopeTime == ScopeTime.Total
-            ? _storage.ReadOnlyFullDpsDataList
-            : _storage.ReadOnlySectionedDpsDataList;
+        // When showing Last Battle and user toggles filter, use the snapshot
+        IReadOnlyList<DpsData> dpsList;
+        if (IsShowingLastBattle && _lastBattleDataSnapshot != null && ScopeTime == ScopeTime.Current)
+        {
+            dpsList = _lastBattleDataSnapshot;
+            _logger.LogInformation("[LAST BATTLE] Using snapshot with {Count} players for filtering", dpsList.Count);
+        }
+        else
+        {
+            dpsList = ScopeTime == ScopeTime.Total
+                ? _storage.ReadOnlyFullDpsDataList
+                : _storage.ReadOnlySectionedDpsDataList;
+
+            // Capture snapshot of active combat data (before it gets cleared by NewSectionCreated)
+            // Only capture when we have valid section data during active combat
+            if (ScopeTime == ScopeTime.Current && !IsShowingLastBattle && dpsList.Count > 0)
+            {
+                _lastBattleDataSnapshot = dpsList.ToList();
+                _logger.LogDebug("[SNAPSHOT] Captured active combat data with {Count} players", _lastBattleDataSnapshot.Count);
+            }
+        }
 
         // Track new damage to update _lastDamageTime
         var maxTick = dpsList.Any() ? (ulong)dpsList.Max(d => d.LastLoggedTick) : 0UL;
@@ -380,6 +397,9 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
             _awaitingSectionStart = false;
             IsShowingLastBattle = false;
             BattleStatusLabel = string.Empty;
+            // Clear Last Battle snapshot when new combat starts
+            _lastBattleDataSnapshot = null;
+            _logger.LogInformation("[LAST BATTLE] Cleared snapshot - new combat started");
         }
 
         UpdateData(dpsList);
@@ -695,15 +715,6 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
     {
         if (player == null) return;
 
-        // Check if we're in player selection mode for Solo Training
-        if (IsSelectingPlayer)
-        {
-            _logger.LogInformation("[PLAYER SELECTION] Player clicked: {PlayerName} (UID: {PlayerUid})",
-                player.Player.Name, player.Player.Uid);
-            SelectPlayer(player.Player.Uid);
-            return;
-        }
-
         _logger.LogInformation("Opening skill breakdown for player: {PlayerName} (UID: {PlayerUid})",
             player.Player.Name, player.Player.Uid);
 
@@ -911,6 +922,9 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
             IsShowingLastBattle = true;
             BattleStatusLabel = "Last Battle";
 
+            _logger.LogInformation("[LAST BATTLE] Combat ended. Snapshot has {Count} players",
+                _lastBattleDataSnapshot?.Count ?? 0);
+
             // STOP TIMER when section ends (zone change / timeout) - this archives the fight
             if (_timer.IsRunning)
             {
@@ -924,7 +938,13 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
             _lastDamageTime = DateTime.MinValue;
             _lastKnownMaxTick = 0;
 
-            // Do NOT clear current UI data here; wait until data for the new section arrives
+            // Trigger UI update to display the Last Battle snapshot data
+            // This ensures the snapshot is processed and shown when entering Last Battle mode
+            if (_lastBattleDataSnapshot != null && _lastBattleDataSnapshot.Count > 0)
+            {
+                _logger.LogInformation("[LAST BATTLE] Triggering UI update to display snapshot");
+                PerformUiUpdate();
+            }
         });
     }
 

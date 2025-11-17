@@ -3,6 +3,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
 using BlueMeter.WPF.ViewModels;
+using BlueMeter.WPF.Services;
 
 namespace BlueMeter.WPF.Views;
 
@@ -19,10 +20,12 @@ public partial class DpsStatisticsView : Window
             new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.BindsTwoWayByDefault));
 
     private double _beforePilingHeight;
+    private readonly IWindowManagementService _windowManagement;
 
-    public DpsStatisticsView(DpsStatisticsViewModel vm)
+    public DpsStatisticsView(DpsStatisticsViewModel vm, IWindowManagementService windowManagement)
     {
         DataContext = vm;
+        _windowManagement = windowManagement;
         InitializeComponent();
     }
 
@@ -88,78 +91,45 @@ public partial class DpsStatisticsView : Window
     }
 
     /// <summary>
-    /// 打桩模式选择 (Training Mode Selection)
+    /// Solo Training Mode Toggle
     /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="e"></param>
     private void PilingMenuItem_Click(object sender, RoutedEventArgs e)
     {
         var me = (MenuItem)sender;
-        var owner = ItemsControl.ItemsControlFromItemContainer(me);
 
         if (DataContext is not DpsStatisticsViewModel viewModel)
             return;
 
-        System.Diagnostics.Debug.WriteLine($"[MENU CLICK] PilingMenuItem clicked. IsChecked={me.IsChecked}, Header={me.Header}");
+        Console.WriteLine($"[SOLO TRAINING] Clicked. IsChecked={me.IsChecked}");
 
         if (me.IsChecked)
         {
-            // 这次点击后变成 true：把其它都关掉
-            foreach (var obj in owner.Items)
+            // Enabling Solo Training - check if UID is configured
+            if (viewModel.AppConfig.ManualPlayerUid == 0)
             {
-                if (owner.ItemContainerGenerator.ContainerFromItem(obj) is MenuItem mi && !ReferenceEquals(mi, me))
-                    mi.IsChecked = false;
+                Console.WriteLine("[SOLO TRAINING] UID not configured - opening Settings");
+                _windowManagement.SettingsView.ShowAndHighlightUidField();
+                me.IsChecked = false;
+                return;
             }
 
-            // Set training mode based on selected menu item
-            var header = me.Header?.ToString() ?? "";
-            System.Diagnostics.Debug.WriteLine($"[MENU CLICK] Header string: {header}");
-
-            if (header.Contains("Personal") || header.Contains("Solo") || header.Contains("个人"))
-            {
-                viewModel.AppConfig.TrainingMode = Models.TrainingMode.Personal;
-                System.Diagnostics.Debug.WriteLine($"[MENU CLICK] TrainingMode set to Personal. Value: {viewModel.AppConfig.TrainingMode}");
-
-                // Check if player UID is configured
-                if (viewModel.AppConfig.ManualPlayerUid == 0)
-                {
-                    // Enable player selection mode - user needs to click their character
-                    viewModel.IsSelectingPlayer = true;
-                    System.Diagnostics.Debug.WriteLine("[MENU CLICK] Player selection mode enabled");
-                }
-            }
-            else if (header.Contains("Faction") || header.Contains("阵营"))
-            {
-                viewModel.AppConfig.TrainingMode = Models.TrainingMode.Faction;
-                System.Diagnostics.Debug.WriteLine($"[MENU CLICK] TrainingMode set to Faction. Value: {viewModel.AppConfig.TrainingMode}");
-            }
-            else if (header.Contains("Extreme") || header.Contains("极限"))
-            {
-                viewModel.AppConfig.TrainingMode = Models.TrainingMode.Extreme;
-                System.Diagnostics.Debug.WriteLine($"[MENU CLICK] TrainingMode set to Extreme. Value: {viewModel.AppConfig.TrainingMode}");
-            }
+            // Enable Solo Training mode
+            viewModel.AppConfig.TrainingMode = Models.TrainingMode.Personal;
+            Console.WriteLine($"[SOLO TRAINING] Enabled. UID: {viewModel.AppConfig.ManualPlayerUid}");
         }
         else
         {
-            // Unchecked - disable training mode and clear player selection
+            // Disable Solo Training mode
             viewModel.AppConfig.TrainingMode = Models.TrainingMode.None;
-            viewModel.AppConfig.ManualPlayerUid = 0;
-            viewModel.IsSelectingPlayer = false;
-            System.Diagnostics.Debug.WriteLine($"[MENU CLICK] TrainingMode set to None. Value: {viewModel.AppConfig.TrainingMode}");
+            Console.WriteLine("[SOLO TRAINING] Disabled");
         }
 
-        System.Diagnostics.Debug.WriteLine($"[MENU CLICK] Final TrainingMode: {viewModel.AppConfig.TrainingMode}");
-
-        // Clear all current data to ensure filter is applied from scratch
-        viewModel.ResetSection();
-
-        // Refresh data immediately to apply the new filter
+        // Refresh data to apply the filter
         if (viewModel.RefreshCommand.CanExecute(null))
         {
             viewModel.RefreshCommand.Execute(null);
         }
 
-        // 这次点击后变成 false：允许"全不选"，什么也不做
         e.Handled = true;
     }
 

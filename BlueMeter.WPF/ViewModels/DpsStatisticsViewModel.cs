@@ -228,6 +228,11 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         // Reset combat tracking for new section
         _lastDamageTime = DateTime.MinValue;
         _lastKnownMaxTick = 0;
+
+        // Reset Solo Training player selection
+        AppConfig.ManualPlayerUid = 0;
+        IsSelectingPlayer = false;
+        _logger.LogInformation("[RESET] Solo Training player selection cleared");
     }
 
     /// <summary>

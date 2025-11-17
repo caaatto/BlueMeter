@@ -294,8 +294,8 @@
                             <Setter Property="Cursor" Value="Arrow" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding DataContext.IsSelectingPlayer, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
-                                    <Setter Property="Background" Value="#4000FF00" />
-                                    <Setter Property="BorderBrush" Value="#FF00FF00" />
+                                    <Setter Property="Background" Value="#400080FF" />
+                                    <Setter Property="BorderBrush" Value="#FF0080FF" />
                                     <Setter Property="BorderThickness" Value="2" />
                                     <Setter Property="Cursor" Value="Hand" />
                                 </DataTrigger>

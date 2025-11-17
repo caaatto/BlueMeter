@@ -141,9 +141,8 @@ public partial class DpsStatisticsView : Window
         }
         else
         {
-            // Unchecked - disable training mode and reset player selection
+            // Unchecked - disable training mode but keep player selection (reset only on refresh/reset)
             viewModel.AppConfig.TrainingMode = Models.TrainingMode.None;
-            viewModel.AppConfig.ManualPlayerUid = 0;
             viewModel.IsSelectingPlayer = false;
             System.Diagnostics.Debug.WriteLine($"[MENU CLICK] TrainingMode set to None. Value: {viewModel.AppConfig.TrainingMode}");
         }

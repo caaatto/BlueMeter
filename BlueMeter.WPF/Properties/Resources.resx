@@ -172,10 +172,7 @@
     <value>Solo Training</value>
   </data>
   <data name="Menu_Training_Faction" xml:space="preserve">
-    <value>Faction Training</value>
-  </data>
-  <data name="Menu_Training_Extreme" xml:space="preserve">
-    <value>Extreme Training</value>
+    <value>Group Training</value>
   </data>
   <data name="Menu_SkillDiary" xml:space="preserve">
     <value>Skill Diary</value>

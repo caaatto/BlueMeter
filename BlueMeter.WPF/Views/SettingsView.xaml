@@ -179,6 +179,7 @@
             BasedOn="{StaticResource AntComboBoxStyle}"
             TargetType="ComboBox">
             <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="Black" />
         </Style>
 
         <Style
@@ -483,7 +484,7 @@
                                                     ItemsSource="{Binding AvailableNetworkAdapters, UpdateSourceTrigger=PropertyChanged}"
                                                     SelectedItem="{Binding AppConfig.PreferredNetworkAdapter, Mode=TwoWay}"
                                                     SelectedValuePath="Description"
-                                                    Style="{StaticResource AntComboBoxStyle}" />
+                                                    Style="{StaticResource FieldComboBox}" />
                                                 <Button
                                                     Grid.Column="2"
                                                     Command="{Binding NetworkAdapterAutoSelectCommand}"
@@ -662,7 +663,7 @@
                                                 ItemTemplate="{StaticResource LocalizedEnumTextBlockDataTemplate}"
                                                 ItemsSource="{Binding AvailableNumberDisplayModes}"
                                                 SelectedItem="{Binding SelectedNumberDisplayMode, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                                                Style="{StaticResource AntComboBoxStyle}" />
+                                                Style="{StaticResource FieldComboBox}" />
                                         </Grid>
                                     </Border>
 

@@ -188,6 +188,12 @@ public partial class AppConfig : ObservableObject
     [ObservableProperty]
     private TrainingMode _trainingMode = TrainingMode.None;
 
+    /// <summary>
+    /// Manual Player UID for Solo Training mode filtering (0 = auto-detect)
+    /// </summary>
+    [ObservableProperty]
+    private long _manualPlayerUid = 0;
+
     public AppConfig Clone()
     {
         // TODO: Add unittest

@@ -100,6 +100,8 @@ public partial class DpsStatisticsView : Window
         if (DataContext is not DpsStatisticsViewModel viewModel)
             return;
 
+        System.Diagnostics.Debug.WriteLine($"[MENU CLICK] PilingMenuItem clicked. IsChecked={me.IsChecked}, Header={me.Header}");
+
         if (me.IsChecked)
         {
             // 这次点击后变成 true：把其它都关掉
@@ -111,23 +113,50 @@ public partial class DpsStatisticsView : Window
 
             // Set training mode based on selected menu item
             var header = me.Header?.ToString() ?? "";
-            if (header.Contains("Personal") || header.Contains("个人"))
+            System.Diagnostics.Debug.WriteLine($"[MENU CLICK] Header string: {header}");
+
+            if (header.Contains("Personal") || header.Contains("Solo") || header.Contains("个人"))
             {
                 viewModel.AppConfig.TrainingMode = Models.TrainingMode.Personal;
+                System.Diagnostics.Debug.WriteLine($"[MENU CLICK] TrainingMode set to Personal. Value: {viewModel.AppConfig.TrainingMode}");
+
+                // Check if player UID is configured
+                if (viewModel.AppConfig.ManualPlayerUid == 0)
+                {
+                    // Enable player selection mode - user needs to click their character
+                    viewModel.IsSelectingPlayer = true;
+                    System.Diagnostics.Debug.WriteLine("[MENU CLICK] Player selection mode enabled");
+                }
             }
             else if (header.Contains("Faction") || header.Contains("阵营"))
             {
                 viewModel.AppConfig.TrainingMode = Models.TrainingMode.Faction;
+                System.Diagnostics.Debug.WriteLine($"[MENU CLICK] TrainingMode set to Faction. Value: {viewModel.AppConfig.TrainingMode}");
             }
             else if (header.Contains("Extreme") || header.Contains("极限"))
             {
                 viewModel.AppConfig.TrainingMode = Models.TrainingMode.Extreme;
+                System.Diagnostics.Debug.WriteLine($"[MENU CLICK] TrainingMode set to Extreme. Value: {viewModel.AppConfig.TrainingMode}");
             }
         }
         else
         {
-            // Unchecked - disable training mode
+            // Unchecked - disable training mode and reset player selection
             viewModel.AppConfig.TrainingMode = Models.TrainingMode.None;
+            viewModel.AppConfig.ManualPlayerUid = 0;
+            viewModel.IsSelectingPlayer = false;
+            System.Diagnostics.Debug.WriteLine($"[MENU CLICK] TrainingMode set to None. Value: {viewModel.AppConfig.TrainingMode}");
+        }
+
+        System.Diagnostics.Debug.WriteLine($"[MENU CLICK] Final TrainingMode: {viewModel.AppConfig.TrainingMode}");
+
+        // Clear all current data to ensure filter is applied from scratch
+        viewModel.ResetSection();
+
+        // Refresh data immediately to apply the new filter
+        if (viewModel.RefreshCommand.CanExecute(null))
+        {
+            viewModel.RefreshCommand.Execute(null);
         }
 
         // 这次点击后变成 false：允许"全不选"，什么也不做

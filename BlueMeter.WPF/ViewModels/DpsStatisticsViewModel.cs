@@ -70,6 +70,7 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
     [ObservableProperty] private string _historyModeLabel = string.Empty;
     [ObservableProperty] private bool _isShowingLastBattle;
     [ObservableProperty] private string _battleStatusLabel = string.Empty;
+    [ObservableProperty] private bool _isSelectingPlayer;
     private Dictionary<long, PlayerInfo>? _historicalPlayerInfos;
     private Dictionary<long, DpsData>? _historicalDpsData;
 
@@ -281,6 +282,20 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         _logger.LogDebug("Window Resized");
     }
 
+    [RelayCommand]
+    private void SelectPlayer(long uid)
+    {
+        _logger.LogInformation("[PLAYER SELECTION] Player selected with UID={UID}", uid);
+        AppConfig.ManualPlayerUid = uid;
+        IsSelectingPlayer = false;
+
+        // Refresh data to apply the filter immediately
+        if (RefreshCommand.CanExecute(null))
+        {
+            RefreshCommand.Execute(null);
+        }
+    }
+
     private void DataStorage_DpsDataUpdated()
     {
         if (!_dispatcher.CheckAccess())
@@ -403,9 +418,40 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
             [StatisticType.NpcTakenDamage] = new()
         };
 
+        // Get current player UID for Personal training mode filtering
+        // Use ManualPlayerUid if set, otherwise fall back to auto-detected UID
+        var currentPlayerUid = AppConfig.ManualPlayerUid > 0
+            ? AppConfig.ManualPlayerUid
+            : _storage.CurrentPlayerInfo.UID;
+        var isPersonalMode = AppConfig.TrainingMode == Models.TrainingMode.Personal;
+
+        // ALWAYS log TrainingMode and filtering status for debugging
+        _logger.LogInformation("[FILTER] PreProcessDataForAllTypes called. TrainingMode={TrainingMode}, IsPersonalMode={IsPersonalMode}, CurrentPlayerUID={CurrentPlayerUID}, ManualUID={ManualUID}, DataCount={DataCount}",
+            AppConfig.TrainingMode, isPersonalMode, currentPlayerUid, AppConfig.ManualPlayerUid, data.Count);
+
+        // Log Personal mode status for debugging
+        if (isPersonalMode)
+        {
+            _logger.LogInformation("[PERSONAL MODE] Active! CurrentPlayerUID={CurrentPlayerUID}, DataCount={DataCount}",
+                currentPlayerUid, data.Count);
+
+            if (currentPlayerUid == 0)
+            {
+                _logger.LogWarning("[PERSONAL MODE] CurrentPlayerUID is 0! Player not detected yet. Disabling filter.");
+            }
+        }
+
         // Single pass through the data
         foreach (var dpsData in data)
         {
+            // Filter: In Personal training mode, only show current player's data
+            // Skip if: Personal mode is active AND CurrentPlayerUID is valid (not 0) AND it's not the current player AND it's not an NPC
+            if (isPersonalMode && currentPlayerUid > 0 && dpsData.UID != currentPlayerUid && !dpsData.IsNpcData)
+            {
+                _logger.LogInformation("[PERSONAL MODE] Filtering out player UID={FilteredUID} (CurrentPlayer={CurrentUID}, IsNpc={IsNpc})",
+                    dpsData.UID, currentPlayerUid, dpsData.IsNpcData);
+                continue;
+            }
             // Calculate common values once
             var duration = (dpsData.LastLoggedTick - (dpsData.StartLoggedTick ?? 0)).ConvertToUnsigned();
             var skillList = BuildSkillListSnapshot(dpsData);
@@ -643,6 +689,15 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
     private void OpenPlayerSkillBreakdown(StatisticDataViewModel? player)
     {
         if (player == null) return;
+
+        // Check if we're in player selection mode for Solo Training
+        if (IsSelectingPlayer)
+        {
+            _logger.LogInformation("[PLAYER SELECTION] Player clicked: {PlayerName} (UID: {PlayerUid})",
+                player.Player.Name, player.Player.Uid);
+            SelectPlayer(player.Player.Uid);
+            return;
+        }
 
         _logger.LogInformation("Opening skill breakdown for player: {PlayerName} (UID: {PlayerUid})",
             player.Player.Name, player.Player.Uid);

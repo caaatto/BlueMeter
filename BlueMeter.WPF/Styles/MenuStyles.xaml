@@ -6,7 +6,7 @@
 
     <!--  ===== 颜色（用自带 Alpha，避免多层透明叠加导致黑边） =====  -->
     <SolidColorBrush x:Key="MenuBg" Color="#F2FFFFFF" />
-    <SolidColorBrush x:Key="MenuFg" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="MenuFg" Color="#000000" />
     <SolidColorBrush x:Key="MenuHover" Color="#12000000" />
     <SolidColorBrush x:Key="MenuPressed" Color="#1E000000" />
     <SolidColorBrush x:Key="MenuSep" Color="#14000000" />

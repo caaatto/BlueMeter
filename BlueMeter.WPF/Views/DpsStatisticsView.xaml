@@ -66,6 +66,7 @@
         <converters:PanelColorModeConverter x:Key="PanelColorModeConverter" />
         <converters:PanelContentColorModeConverter x:Key="PanelContentColorModeConverter" />
         <converters:PercentToOpacityConverter x:Key="PercentToOpacityConverter" />
+        <converters:TrainingModeCheckConverter x:Key="TrainingModeCheckConverter" />
 
         <!-- DPS Settings MenuItem with black text for readability on light background -->
         <Style x:Key="DpsSettingsMenuItem" TargetType="MenuItem" BasedOn="{StaticResource ModernMenuItem}">
@@ -290,6 +291,15 @@
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="OverridesDefaultStyle" Value="True" />
+                            <Setter Property="Cursor" Value="Arrow" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding DataContext.IsSelectingPlayer, RelativeSource={RelativeSource AncestorType=Window}}" Value="True">
+                                    <Setter Property="Background" Value="#4000FF00" />
+                                    <Setter Property="BorderBrush" Value="#FF00FF00" />
+                                    <Setter Property="BorderThickness" Value="2" />
+                                    <Setter Property="Cursor" Value="Hand" />
+                                </DataTrigger>
+                            </Style.Triggers>
                         </Style>
                     </Button.Style>
 
@@ -531,7 +541,6 @@
                                         IsChecked="False"
                                         Style="{StaticResource DpsCheckableMenuItem}" />
 
-                                    <MenuItem Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_PersonalMode}}" />
                                     <!--  记录设置  -->
                                     <MenuItem Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_RecordSettings}}" ItemContainerStyle="{StaticResource CheckableMenuItem}">
                                         <!--  pass a parameter (literal) to the command  -->
@@ -619,19 +628,22 @@
                                     <!--  历史记录  -->
                                     <MenuItem Command="{Binding OpenEncounterHistoryCommand}" Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_History}}" ItemContainerStyle="{StaticResource CheckableMenuItem}" />
                                     <!--  打桩模式  -->
-                                    <MenuItem Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_Training}}" ItemContainerStyle="{StaticResource CheckableMenuItem}">
+                                    <MenuItem Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_Training}}">
                                         <MenuItem
                                             Click="PilingMenuItem_Click"
                                             Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_Training_Personal}}"
-                                            IsCheckable="True" />
+                                            IsCheckable="True"
+                                            Style="{StaticResource CheckableMenuItem}" />
                                         <MenuItem
                                             Click="PilingMenuItem_Click"
                                             Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_Training_Faction}}"
-                                            IsCheckable="True" />
+                                            IsCheckable="True"
+                                            Style="{StaticResource CheckableMenuItem}" />
                                         <MenuItem
                                             Click="PilingMenuItem_Click"
                                             Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_Training_Extreme}}"
-                                            IsCheckable="True" />
+                                            IsCheckable="True"
+                                            Style="{StaticResource CheckableMenuItem}" />
                                     </MenuItem>
 
                                     <MenuItem Command="{Binding OpenSkillDiaryCommand}" Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_SkillDiary}}" />

@@ -139,10 +139,10 @@
     <value>记录每一次</value>
   </data>
   <data name="Menu_Record_Skip1Min" xml:space="preserve">
-    <value>不记录1分钟以下</value>
+    <value>不记录2秒以下</value>
   </data>
   <data name="Menu_Record_Skip2Min" xml:space="preserve">
-    <value>不记录2分钟以下</value>
+    <value>不记录5秒以下</value>
   </data>
   <data name="Menu_SkillDisplay" xml:space="preserve">
     <value>技能显示</value>

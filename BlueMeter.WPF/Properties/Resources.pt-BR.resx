@@ -139,10 +139,10 @@
     <value>Gravar Toda Luta</value>
   </data>
   <data name="Menu_Record_Skip1Min" xml:space="preserve">
-    <value>Ignorar lutas &lt; 1 min</value>
+    <value>Ignorar lutas &lt; 2 seg</value>
   </data>
   <data name="Menu_Record_Skip2Min" xml:space="preserve">
-    <value>Ignorar lutas &lt; 2 min</value>
+    <value>Ignorar lutas &lt; 5 seg</value>
   </data>
   <data name="Menu_SkillDisplay" xml:space="preserve">
     <value>Exibição de Habilidades</value>

@@ -552,7 +552,7 @@
                                             Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_Record_Skip1Min}}"
                                             IsChecked="{Binding Options.MinimalDurationInSeconds}">
                                             <MenuItem.CommandParameter>
-                                                <system:Int32>60</system:Int32>
+                                                <system:Int32>2</system:Int32>
                                             </MenuItem.CommandParameter>
                                         </MenuItem>
                                         <!--  Click="RecordSettingsMenuItem_Click"  -->
@@ -561,7 +561,7 @@
                                             Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_Record_Skip2Min}}"
                                             IsChecked="{Binding Options.MinimalDurationInSeconds}">
                                             <MenuItem.CommandParameter>
-                                                <system:Int32>120</system:Int32>
+                                                <system:Int32>5</system:Int32>
                                             </MenuItem.CommandParameter>
                                         </MenuItem>
                                     </MenuItem>

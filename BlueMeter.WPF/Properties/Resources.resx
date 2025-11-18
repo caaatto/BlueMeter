@@ -139,10 +139,10 @@
     <value>Record Every Fight</value>
   </data>
   <data name="Menu_Record_Skip1Min" xml:space="preserve">
-    <value>Ignore fights &lt; 1 min</value>
+    <value>Ignore fights &lt; 2 sec</value>
   </data>
   <data name="Menu_Record_Skip2Min" xml:space="preserve">
-    <value>Ignore fights &lt; 2 min</value>
+    <value>Ignore fights &lt; 5 sec</value>
   </data>
   <data name="Menu_SkillDisplay" xml:space="preserve">
     <value>Skill Display</value>

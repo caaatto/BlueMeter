@@ -100,9 +100,9 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
     public IReadOnlyList<DpsData> ReadOnlySectionedDpsDataList => SectionedDpsData.Values.ToList().AsReadOnly();
 
     /// <summary>
-    /// 战斗日志分段超时时间 (默认: 5000ms)
+    /// 战斗日志分段超时时间 (默认: 15s for dungeon fights and zone changes)
     /// </summary>
-    public TimeSpan SectionTimeout { get; set; } = TimeSpan.FromSeconds(60); // 60s timeout for zone changes
+    public TimeSpan SectionTimeout { get; set; } = TimeSpan.FromSeconds(15); // 15s timeout for dungeons
 
     /// <summary>
     /// 是否正在监听服务器

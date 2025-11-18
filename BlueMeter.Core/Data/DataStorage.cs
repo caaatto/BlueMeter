@@ -70,9 +70,9 @@ public static class DataStorage
     public static IReadOnlyList<DpsData> ReadOnlySectionedDpsDataList => SectionedDpsDatas.Values.ToList().AsReadOnly();
 
     /// <summary>
-    /// 战斗日志分段超时时间 (默认: 60s for zone changes)
+    /// 战斗日志分段超时时间 (默认: 15s for dungeon fights and zone changes)
     /// </summary>
-    public static TimeSpan SectionTimeout { get; set; } = TimeSpan.FromSeconds(60); // 60s timeout for zone changes
+    public static TimeSpan SectionTimeout { get; set; } = TimeSpan.FromSeconds(15); // 15s timeout for dungeons
 
     /// <summary>
     /// 强制新分段标记

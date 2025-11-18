@@ -924,7 +924,10 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         _dispatcher.BeginInvoke(() =>
         {
             // Freeze current section duration and await first datapoint of the new section
-            _lastSectionElapsed = _timer.IsRunning ? (_timer.Elapsed - _sectionStartElapsed) : TimeSpan.Zero;
+            // Preserve BattleDuration if timer is not running (avoids DPS showing N/A)
+            _lastSectionElapsed = _timer.IsRunning
+                ? (_timer.Elapsed - _sectionStartElapsed)
+                : (BattleDuration > TimeSpan.Zero ? BattleDuration : _lastSectionElapsed);
             _awaitingSectionStart = true;
             IsShowingLastBattle = true;
             BattleStatusLabel = "Last Battle";

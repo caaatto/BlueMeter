@@ -30,6 +30,7 @@
     TextOptions.TextFormattingMode="Display"
     TextOptions.TextRenderingMode="ClearType"
     Topmost="{Binding AppConfig.TopmostEnabled, Mode=OneWay}"
+    WindowStartupLocation="Manual"
     mc:Ignorable="d">
 
     <Window.Opacity>

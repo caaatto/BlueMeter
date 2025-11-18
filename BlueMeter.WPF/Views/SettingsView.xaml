@@ -757,6 +757,25 @@
                                         </Grid>
                                     </Border>
 
+                                    <!--  Save DPS Window Position Toggle  -->
+                                    <Border Style="{StaticResource SectionFieldBorderBase}">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="39*" />
+                                                <ColumnDefinition Width="*" MinWidth="10" />
+                                                <ColumnDefinition Width="60*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock
+                                                Grid.Column="0"
+                                                Style="{StaticResource FieldName}"
+                                                Text="{lex:Loc Key={x:Static loc:ResourcesKeys.Settings_Theme_SaveDpsWindowPosition}}" />
+                                            <Border Grid.Column="2" HorizontalAlignment="Right">
+                                                <ctrl:SwitchControl IsChecked="{Binding AppConfig.SaveDpsWindowPosition}" />
+                                            </Border>
+                                        </Grid>
+                                    </Border>
+
                                     <!-- Panel Color Mode -->
                                     <Border Style="{StaticResource SectionFieldBorderBase}">
                                         <Grid>

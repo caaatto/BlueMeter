@@ -149,6 +149,36 @@ public partial class AppConfig : ObservableObject
     [ObservableProperty]
     private bool _topmostEnabled;
 
+    /// <summary>
+    /// Save DPS window position and size on application exit
+    /// </summary>
+    [ObservableProperty]
+    private bool _saveDpsWindowPosition = true;
+
+    /// <summary>
+    /// DPS window X position
+    /// </summary>
+    [ObservableProperty]
+    private double? _dpsWindowLeft;
+
+    /// <summary>
+    /// DPS window Y position
+    /// </summary>
+    [ObservableProperty]
+    private double? _dpsWindowTop;
+
+    /// <summary>
+    /// DPS window width
+    /// </summary>
+    [ObservableProperty]
+    private double? _dpsWindowWidth;
+
+    /// <summary>
+    /// DPS window height
+    /// </summary>
+    [ObservableProperty]
+    private double? _dpsWindowHeight;
+
     [ObservableProperty]
     private bool _debugEnabled = false;
 

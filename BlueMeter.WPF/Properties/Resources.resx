@@ -889,6 +889,9 @@
   <data name="Settings_Theme_ShowBackgroundInDpsMeter" xml:space="preserve">
     <value>Show Background in DPS Meter</value>
   </data>
+  <data name="Settings_Theme_SaveDpsWindowPosition" xml:space="preserve">
+    <value>Save DPS Window Position</value>
+  </data>
   <data name="Settings_CancelConfirm_Title" xml:space="preserve">
     <value>Discard Changes</value>
   </data>

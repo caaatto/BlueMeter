@@ -33,7 +33,11 @@ public class WindowManagementService(IServiceProvider provider, ILogger<WindowMa
         if (Application.Current?.MainWindow is MainView main && view.Owner == null && view != main)
         {
             view.Owner = main;
-            view.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            // Only set CenterOwner if the window doesn't have Manual positioning
+            if (view.WindowStartupLocation != WindowStartupLocation.Manual)
+            {
+                view.WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            }
         }
         // view.ShowInTaskbar = false; // only one taskbar icon (main)
     }

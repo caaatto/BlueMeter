@@ -859,6 +859,9 @@
   <data name="Settings_Theme_SelectImage" xml:space="preserve">
     <value>选择图片...</value>
   </data>
+  <data name="Settings_Theme_SaveDpsWindowPosition" xml:space="preserve">
+    <value>保存DPS窗口位置</value>
+  </data>
   <data name="Settings_CancelConfirm_Title" xml:space="preserve">
     <value>确认取消</value>
   </data>

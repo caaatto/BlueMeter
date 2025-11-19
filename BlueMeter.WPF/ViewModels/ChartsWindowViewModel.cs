@@ -20,6 +20,9 @@ public partial class ChartsWindowViewModel : ObservableObject
     [ObservableProperty]
     private bool _autoRefresh = true;
 
+    [ObservableProperty]
+    private long? _focusedPlayerId = null;
+
     public ChartsWindowViewModel(
         ILogger<ChartsWindowViewModel> logger,
         IChartDataService chartDataService)
@@ -66,5 +69,14 @@ public partial class ChartsWindowViewModel : ObservableObject
     public void OnWindowClosing()
     {
         _logger.LogInformation("ChartsWindow closing");
+    }
+
+    /// <summary>
+    /// Set the focused player ID for the charts
+    /// </summary>
+    public void SetFocusedPlayer(long? playerId)
+    {
+        FocusedPlayerId = playerId;
+        _logger.LogInformation("Focused player set to: {PlayerId}", playerId);
     }
 }

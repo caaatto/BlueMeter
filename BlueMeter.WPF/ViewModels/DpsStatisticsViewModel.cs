@@ -733,17 +733,14 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
     {
         if (player == null) return;
 
-        _logger.LogInformation("Opening skill breakdown for player: {PlayerName} (UID: {PlayerUid})",
+        _logger.LogInformation("Opening Advanced Combat Log for player: {PlayerName} (UID: {PlayerUid})",
             player.Player.Name, player.Player.Uid);
 
-        // Get the ViewModel and update it with the player data
-        if (_windowManagement.SkillBreakdownView.DataContext is SkillBreakdownViewModel viewModel)
-        {
-            viewModel.SetPlayerData(player);
-        }
-
-        _windowManagement.SkillBreakdownView.Show();
-        _windowManagement.SkillBreakdownView.Activate();
+        // Open ChartsWindow with focused player instead of separate SkillBreakdownView
+        var chartsWindow = _windowManagement.ChartsWindow;
+        chartsWindow.SetFocusedPlayer(player.Player.Uid);
+        chartsWindow.Show();
+        chartsWindow.Activate();
     }
 
     [RelayCommand]

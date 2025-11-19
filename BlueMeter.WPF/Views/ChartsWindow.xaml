@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:BlueMeter.WPF.ViewModels"
+    xmlns:views="clr-namespace:BlueMeter.WPF.Views"
     Title="Advanced Combat Log - Charts"
     Width="1200"
     Height="800"
@@ -160,14 +161,7 @@
 
             <!--  DPS Trend Tab  -->
             <TabItem Header="📈 DPS Trend" Style="{StaticResource DarkTabItem}">
-                <Grid Background="#1E1E1E">
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontSize="16"
-                        Foreground="#888888"
-                        Text="DPS Trend Chart - Coming Soon in Phase 4" />
-                </Grid>
+                <ContentControl x:Name="DpsTrendChartContainer" />
             </TabItem>
 
             <!--  Skill Breakdown Tab  -->
@@ -178,7 +172,7 @@
                         VerticalAlignment="Center"
                         FontSize="16"
                         Foreground="#888888"
-                        Text="Skill Breakdown Chart - Coming Soon in Phase 5" />
+                        Text="Skill Breakdown Chart - Coming Soon in Phase 6" />
                 </Grid>
             </TabItem>
 

@@ -68,6 +68,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="OxyPlot.Wpf" />
     <PackageReference Include="Serilog.Extensions.Logging.File" />
     <PackageReference Include="WPFLocalizeExtension" />
     <PackageReference Include="CommunityToolkit.Mvvm" />

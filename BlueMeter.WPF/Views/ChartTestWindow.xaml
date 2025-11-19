@@ -1,0 +1,38 @@
+<Window
+    x:Class="BlueMeter.WPF.Views.ChartTestWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:oxy="http://oxyplot.org/wpf"
+    xmlns:vm="clr-namespace:BlueMeter.WPF.ViewModels"
+    Title="OxyPlot Test Window - DPS Trend"
+    Width="800"
+    Height="600"
+    d:DataContext="{d:DesignInstance Type=vm:ChartTestViewModel}"
+    mc:Ignorable="d">
+
+    <Grid Background="#1E1E1E">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--  Header  -->
+        <Border
+            Grid.Row="0"
+            Padding="20,10"
+            Background="#252526">
+            <TextBlock
+                FontSize="18"
+                FontWeight="Bold"
+                Foreground="White"
+                Text="OxyPlot Test - DPS Trend Chart" />
+        </Border>
+
+        <!--  Chart Area  -->
+        <Grid Grid.Row="1" Margin="20">
+            <oxy:PlotView Model="{Binding PlotModel}" />
+        </Grid>
+    </Grid>
+</Window>

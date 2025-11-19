@@ -638,39 +638,41 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
             }
         }
 
-        if (log.IsTargetPlayer)
+        // Track healing done by players (regardless of target type)
+        // This matches Resonance's approach: track all healing from player healers
+        if (log.IsHeal && log.IsAttackerPlayer)
         {
-            if (log.IsHeal)
-            {
-                var (fullData, sectionedData) = SetLogInfos(log.AttackerUuid, log);
-                TrySetSubProfessionBySkillId(log.AttackerUuid, log.SkillID);
-                fullData.TotalHeal += log.Value;
-                sectionedData.TotalHeal += log.Value;
-            }
-            else
-            {
-                var (fullData, sectionedData) = SetLogInfos(log.TargetUuid, log);
-                fullData.TotalTakenDamage += log.Value;
-                sectionedData.TotalTakenDamage += log.Value;
-            }
+            var (fullData, sectionedData) = SetLogInfos(log.AttackerUuid, log);
+            TrySetSubProfessionBySkillId(log.AttackerUuid, log.SkillID);
+            fullData.TotalHeal += log.Value;
+            sectionedData.TotalHeal += log.Value;
         }
-        else
-        {
-            if (!log.IsHeal && log.IsAttackerPlayer)
-            {
-                var (fullData, sectionedData) = SetLogInfos(log.AttackerUuid, log);
-                TrySetSubProfessionBySkillId(log.AttackerUuid, log.SkillID);
-                fullData.TotalAttackDamage += log.Value;
-                sectionedData.TotalAttackDamage += log.Value;
-            }
 
-            {
-                var (fullData, sectionedData) = SetLogInfos(log.TargetUuid, log);
-                fullData.TotalTakenDamage += log.Value;
-                sectionedData.TotalTakenDamage += log.Value;
-                fullData.IsNpcData = true;
-                sectionedData.IsNpcData = true;
-            }
+        // Track damage dealt by players (regardless of target type)
+        if (!log.IsHeal && log.IsAttackerPlayer)
+        {
+            var (fullData, sectionedData) = SetLogInfos(log.AttackerUuid, log);
+            TrySetSubProfessionBySkillId(log.AttackerUuid, log.SkillID);
+            fullData.TotalAttackDamage += log.Value;
+            sectionedData.TotalAttackDamage += log.Value;
+        }
+
+        // Track damage taken by players
+        if (!log.IsHeal && log.IsTargetPlayer)
+        {
+            var (fullData, sectionedData) = SetLogInfos(log.TargetUuid, log);
+            fullData.TotalTakenDamage += log.Value;
+            sectionedData.TotalTakenDamage += log.Value;
+        }
+
+        // Track damage/effects on NPCs/monsters (non-player targets)
+        if (!log.IsTargetPlayer)
+        {
+            var (fullData, sectionedData) = SetLogInfos(log.TargetUuid, log);
+            fullData.TotalTakenDamage += log.Value;
+            sectionedData.TotalTakenDamage += log.Value;
+            fullData.IsNpcData = true;
+            sectionedData.IsNpcData = true;
         }
 
         LastBattleLog = log;

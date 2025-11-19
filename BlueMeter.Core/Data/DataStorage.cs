@@ -330,62 +330,58 @@ public static class DataStorage
             }
         }
 
-        // 如果目标是玩家
-        if (log.IsTargetPlayer)
+        // 如果是治疗数据包且攻击者是玩家 (跟踪所有玩家治疗, 无论目标类型)
+        if (log.IsHeal && log.IsAttackerPlayer)
         {
-            // 如果是治疗数据包
-            if (log.IsHeal)
-            {
-                // 设置通用基础信息
-                var (fullData, sectionedData) = SetLogInfos(log.AttackerUuid, log);
+            // 设置通用基础信息
+            var (fullData, sectionedData) = SetLogInfos(log.AttackerUuid, log);
 
-                // 尝试通过技能ID设置对应副职
-                TrySetSubProfessionBySkillId(log.AttackerUuid, log.SkillID);
+            // 尝试通过技能ID设置对应副职
+            TrySetSubProfessionBySkillId(log.AttackerUuid, log.SkillID);
 
-                // 叠加治疗量
-                fullData.TotalHeal += log.Value;
-                sectionedData.TotalHeal += log.Value;
-            }
-            else
-            {
-                // 设置通用基础信息
-                var (fullData, sectionedData) = SetLogInfos(log.TargetUuid, log);
-
-                // 叠加受击伤害
-                fullData.TotalTakenDamage += log.Value;
-                sectionedData.TotalTakenDamage += log.Value;
-            }
+            // 叠加治疗量
+            fullData.TotalHeal += log.Value;
+            sectionedData.TotalHeal += log.Value;
         }
-        // 如果目标不是玩家
-        else
+
+        // 不是治疗数据包且攻击者是玩家 (跟踪所有玩家伤害输出)
+        if (!log.IsHeal && log.IsAttackerPlayer)
         {
-            // 不是 治疗数据包 且 攻击者是玩家
-            if (!log.IsHeal && log.IsAttackerPlayer)
-            {
-                // 设置通用基础信息
-                var (fullData, sectionedData) = SetLogInfos(log.AttackerUuid, log);
+            // 设置通用基础信息
+            var (fullData, sectionedData) = SetLogInfos(log.AttackerUuid, log);
 
-                // 尝试通过技能ID设置对应副职
-                TrySetSubProfessionBySkillId(log.AttackerUuid, log.SkillID);
+            // 尝试通过技能ID设置对应副职
+            TrySetSubProfessionBySkillId(log.AttackerUuid, log.SkillID);
 
-                // 叠加输出伤害
-                fullData.TotalAttackDamage += log.Value;
-                sectionedData.TotalAttackDamage += log.Value;
-            }
+            // 叠加输出伤害
+            fullData.TotalAttackDamage += log.Value;
+            sectionedData.TotalAttackDamage += log.Value;
+        }
 
-            // 提升局部, 统一局部变量名
-            {
-                // 设置通用基础信息
-                var (fullData, sectionedData) = SetLogInfos(log.TargetUuid, log);
+        // 如果目标是玩家且不是治疗 (跟踪玩家受到的伤害)
+        if (!log.IsHeal && log.IsTargetPlayer)
+        {
+            // 设置通用基础信息
+            var (fullData, sectionedData) = SetLogInfos(log.TargetUuid, log);
 
-                // 叠加受击伤害
-                fullData.TotalTakenDamage += log.Value;
-                sectionedData.TotalTakenDamage += log.Value;
+            // 叠加受击伤害
+            fullData.TotalTakenDamage += log.Value;
+            sectionedData.TotalTakenDamage += log.Value;
+        }
 
-                // 将Dps数据记录为NPC数据
-                fullData.IsNpcData = true;
-                sectionedData.IsNpcData = true;
-            }
+        // 如果目标不是玩家 (跟踪NPC/怪物受到的伤害)
+        if (!log.IsTargetPlayer)
+        {
+            // 设置通用基础信息
+            var (fullData, sectionedData) = SetLogInfos(log.TargetUuid, log);
+
+            // 叠加受击伤害
+            fullData.TotalTakenDamage += log.Value;
+            sectionedData.TotalTakenDamage += log.Value;
+
+            // 将Dps数据记录为NPC数据
+            fullData.IsNpcData = true;
+            sectionedData.IsNpcData = true;
         }
 
         // 最后一个日志赋值

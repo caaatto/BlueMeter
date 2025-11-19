@@ -1,0 +1,2831 @@
+⇳
+Name
+⇳
+Unlock Level
+⇳
+Tags
+
+Marker 1
+1	
+
+Marker 2
+1	
+
+Marker 3
+1	
+
+Marker 4
+1	
+
+Marker 5
+1	
+
+Marker 6
+1	
+
+Raincall Surge
+1	
+Basic Attack
+,
+Magic
+,
+Ice
+,
+Direct DMG
+,
+Single target
+,
+Ranged
+
+Maelstrom
+20	
+Expertise Skill
+,
+Magic
+,
+Ice
+,
+DoT
+,
+AoE
+,
+Slow
+,
+Ranged
+
+Crystal Veil
+1	
+Expertise Skill
+,
+Magic
+,
+Ice
+,
+DoT
+,
+AoE
+,
+Slow
+,
+Ranged
+
+Phantom Dash
+1	
+
+Phantom Dash
+1	
+
+Tidal Vortex - Passive Skill
+1	
+
+Meteor Storm
+1	
+Expertise Skill
+,
+Magic
+,
+Ice
+,
+Direct DMG
+,
+AoE
+,
+Ranged
+
+Frozen Gale
+25	
+Expertise Skill
+,
+Magic
+,
+Ice
+,
+Direct DMG
+,
+AoE
+,
+Chanting
+,
+Frozen
+,
+Ranged
+
+Frostbeam
+1	
+Special attack
+,
+Magic
+,
+Ice
+,
+Direct DMG
+,
+AoE
+,
+Ranged
+
+Frost Lance
+1	
+Special attack
+,
+Magic
+,
+Ice
+,
+Direct DMG
+,
+Single target
+,
+Chanting
+,
+Ranged
+
+Permafrost
+28	
+Expertise Skill
+,
+Haste
+,
+Energy Restore
+
+Blizzard
+1	
+Expertise Skill
+,
+Magic
+,
+Ice
+,
+DoT
+,
+AoE
+,
+Slow
+,
+Chanting
+,
+Ranged
+
+Frost Shelter
+40	
+Expertise Skill
+,
+Magic
+,
+Ice
+,
+Direct DMG
+,
+AoE
+,
+Protect
+,
+Frozen
+
+Tidepool
+30	
+Expertise Skill
+,
+Magic
+,
+Ice
+,
+DoT
+,
+AoE
+,
+Channelling
+,
+Ranged
+
+Glacier Hymn
+1	
+Ultimate
+,
+Magic
+,
+Ice
+,
+Direct DMG
+,
+AoE
+,
+Energy Restore
+,
+Frozen
+,
+Ranged
+
+Windborne Grace
+1	
+Basic Attack
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Normal Attack
+1	
+Basic Attack
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Normal Attack
+1	
+Basic Attack
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Normal Attack
+1	
+Basic Attack
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Gale Thrust
+1	
+Expertise Skill
+,
+Direct DMG
+,
+Wind
+,
+Energy Restore
+
+Typhoon
+1	
+Special attack
+,
+Direct DMG
+,
+Shield
+,
+Wind
+
+Typhoon Cleave
+1	
+Ultimate
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+AoE
+,
+Melee
+
+Typhoon Cleave
+1	
+Ultimate
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+AoE
+,
+Energy Restore
+,
+Melee
+
+Swift Blade
+1	
+
+Gale Thrust
+1	
+Special attack
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Skyfall
+1	
+Special attack
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Galeform
+1	
+Expertise Skill
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+Single target
+,
+Energy Restore
+,
+Increased damage
+,
+Melee
+
+Spiral Thrust
+1	
+Expertise Skill
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Breach Pursuit
+1	
+Expertise Skill
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+AoE
+,
+Melee
+
+Aegis Gale
+40	
+Expertise Skill
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+Single target
+,
+Block
+,
+Melee
+
+Instant Edge
+25	
+Expertise Skill
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Falcon Toss
+20	
+Expertise Skill
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+Single target
+,
+Stagger
+,
+Melee
+
+Typhoon Cleave
+1	
+Ultimate
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+AoE
+,
+Energy Restore
+,
+Melee
+
+Breach Pursuit
+1	
+
+Valor Cyclone
+28	
+Expertise Skill
+,
+Physical
+,
+Wind
+,
+DoT
+,
+AoE
+,
+Melee
+
+Sharp Impact
+30	
+Expertise Skill
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+AoE
+,
+Melee
+
+Falcon Strike
+1	
+Expertise Skill
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+Single target
+,
+Stagger
+,
+Melee
+
+Vortex Strike
+1	
+Expertise Skill
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+AoE
+,
+Melee
+
+Drake Cannon
+1	
+Basic Attack
+,
+Physical
+,
+Wind
+,
+Direct DMG
+,
+AoE
+,
+Melee
+
+Finale! Valor Cyclone
+1	
+
+Fearless: Windguard's Blessing
+1	
+Shield
+
+Vines' Embrace
+1	
+Basic Attack
+,
+Magic
+,
+Forest
+,
+Direct DMG
+,
+Single target
+,
+Ranged
+
+Dance
+1	
+Direct DMG
+,
+Sprint
+,
+Expertise Skill
+,
+Forest
+
+Bloom
+1	
+Special attack
+,
+Direct DMG
+,
+Cooperative Battle
+,
+Forest
+
+Life Bloom
+1	
+Special attack
+,
+Magic
+,
+Forest
+,
+Direct healing
+,
+Single target
+,
+Chanting
+
+Divine Circle Bloom
+1	
+Ultimate
+,
+Magic
+,
+Forest
+,
+Direct DMG
+,
+HOT
+,
+AoE
+,
+Protect
+,
+Ranged
+
+Spirit of Nature
+1	
+
+Wild Bloom
+1	
+Special attack
+,
+Magic
+,
+Forest
+,
+Direct DMG
+,
+Direct healing
+,
+Single target
+,
+Ranged
+
+Feral Seed
+1	
+Expertise Skill
+,
+Magic
+,
+Forest
+,
+Direct DMG
+,
+Single target
+,
+Energy Restore
+,
+Ranged
+
+Infusion
+1	
+Expertise Skill
+,
+Magic
+,
+Forest
+,
+Direct DMG
+,
+Single target
+,
+Channelling
+,
+Ranged
+
+Grove Wish
+25	
+Expertise Skill
+,
+Magic
+,
+Forest
+,
+Direct healing
+,
+AoE
+,
+Channelling
+
+Nourish
+1	
+Expertise Skill
+,
+Magic
+,
+Forest
+,
+HOT
+,
+AoE
+
+Regen Pulse
+20	
+Expertise Skill
+,
+Magic
+,
+Forest
+,
+Direct healing
+,
+AoE
+,
+Chanting
+
+Growth Arcane
+40	
+Expertise Skill
+,
+Acceleration
+
+Stag Charge
+1	
+
+Healing
+1	
+
+Bloomheal
+1	
+Ultimate
+,
+Magic
+,
+Forest
+,
+Direct DMG
+,
+Direct healing
+,
+AoE
+,
+Ranged
+
+Vital Surge
+1	
+Ultimate
+,
+Acceleration
+
+Blossom Charge
+30	
+Expertise Skill
+,
+Magic
+,
+Forest
+,
+Direct DMG
+,
+Direct healing
+,
+AoE
+,
+Stun
+,
+Melee
+
+Nature Ward
+28	
+Expertise Skill
+,
+Shield
+
+Wild Bloom
+1	
+Special attack
+,
+Magic
+,
+Forest
+,
+Direct DMG
+,
+Direct healing
+,
+Single target
+,
+Ranged
+
+Creeping Frenzy
+1	
+Direct DMG
+,
+Forest
+
+Judgment Cut
+1	
+Basic Attack
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Overdrive
+1	
+Expertise Skill
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Blade Technique
+1	
+Direct DMG
+,
+Thunder Element
+,
+Special attack
+,
+Sprint
+,
+Charging
+
+Oblivion Combo
+1	
+Ultimate
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+AoE
+,
+Melee
+,
+Energy Restore
+
+Iaido Slash
+1	
+Special attack
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Moonstrike
+1	
+Special attack
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Overdrive
+1	
+Expertise Skill
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+Energy Restore
+
+Flash strike
+1	
+Expertise Skill
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Raijin Dash
+1	
+Expertise Skill
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+AoE
+,
+Melee
+
+Scythe Wheel
+20	
+Expertise Skill
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+AoE
+,
+Summon
+,
+Melee
+
+True Sight
+40	
+Expertise Skill
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+Single target
+,
+Melee
+,
+Energy Restore
+,
+Block
+
+Judgment Cut I
+1	
+Direct DMG
+,
+Special attack
+,
+Thunder Element
+
+Judgment Cut II
+1	
+Direct DMG
+,
+Thunder Element
+,
+Special attack
+,
+Sprint
+,
+Charging
+
+Thundercut
+25	
+Expertise Skill
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Thundercut
+1	
+Expertise Skill
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+Stagger
+
+Thundercut
+1	
+Expertise Skill
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+Stagger
+
+Oblivion Combo
+1	
+Ultimate
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+AoE
+,
+Melee
+
+Volt Surge
+28	
+Expertise Skill
+,
+Energy Restore
+,
+Increased damage
+
+Stormflash
+30	
+Expertise Skill
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+Single target
+,
+Mastery
+,
+Melee
+,
+Lucky Effect DMG
+
+Storm Scythe
+1	
+Special attack
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Thunder Iaido Slash
+1	
+Special attack
+,
+Magic
+,
+Thunder Element
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Dragonhammer
+1	
+Expertise Skill
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Raijin Dash Slash
+1	
+Expertise Skill
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+AoE
+,
+Melee
+
+Divine Sickle
+1	
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Chaos Breaker
+1	
+Special attack
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Thundercut - Final Slash
+1	
+Expertise Skill
+,
+Physical
+,
+Thunder Element
+,
+Direct DMG
+,
+Single target
+
+Thunderreign Art
+1	
+DoT
+,
+Thunder Element
+,
+Imprint
+
+Purification Light
+1	
+DoT
+,
+Thunder Element
+,
+Imprint
+
+Halberd's Edge
+1	
+Basic Attack
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+Single target
+,
+Energy Restore
+,
+Melee
+
+Dragon Slash
+1	
+Expertise Skill
+,
+Direct DMG
+,
+Rock
+
+Backstep Sweep
+1	
+Special attack
+,
+Direct DMG
+,
+Rock
+,
+Sprint
+
+Tectonic Ring
+1	
+Ultimate
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+AoE
+,
+Protect
+,
+Energy Restore
+,
+Melee
+⇳
+Name
+⇳
+Unlock Level
+⇳
+Tags
+
+Titan Charge
+1	
+Expertise Skill
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+AoE
+,
+Sprint
+,
+Stagger
+
+Shield Bash
+1	
+Special attack
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+Single target
+,
+Shield
+,
+Melee
+
+Sandward
+40	
+Expertise Skill
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+AoE
+,
+Protect
+,
+Melee
+
+Star Shatter
+1	
+Expertise Skill
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+Single target
+,
+Sprint
+,
+Energy Restore
+,
+Stun
+,
+Melee
+
+Rage Burst
+28	
+Expertise Skill
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+AoE
+,
+Shield
+,
+Melee
+
+Sandgrip
+20	
+Expertise Skill
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+AoE
+,
+Crowd Control
+,
+Slow
+,
+Melee
+
+Sandshroud
+1	
+Expertise Skill
+,
+Physical
+,
+Rock
+,
+DoT
+,
+AoE
+,
+Energy Restore
+,
+Melee
+
+Unyielding Defense
+1	
+
+Countercrush
+1	
+Special attack
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+Single target
+,
+Protect
+,
+Melee
+
+Countercrush
+1	
+Special attack
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+Protect
+
+Shield Bash
+1	
+
+Halberd's Edge
+1	
+Basic Attack
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+Energy Restore
+
+Countercrush
+1	
+Special attack
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+Protect
+
+Countercrush
+1	
+
+Stoneform
+1	
+Expertise Skill
+,
+Protect
+
+Granite Fury
+25	
+Expertise Skill
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Brave Bastion
+30	
+Expertise Skill
+,
+Protect
+
+Granite Fury
+1	
+Expertise Skill
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Rage Burst
+1	
+Expertise Skill
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+AoE
+,
+Shield
+,
+Melee
+
+Starfall
+1	
+Expertise Skill
+
+Rupture
+1	
+
+Stone Fist
+1	
+
+Rage Burst
+28	
+Expertise Skill
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+AoE
+,
+Shield
+
+Power of Rock
+1	
+Enhancement
+,
+Shield
+
+Float
+1	
+
+Bullseye
+1	
+Basic Attack
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+Single target
+,
+Energy Restore
+,
+Ranged
+
+Luminary Bolt
+1	
+Ultimate
+,
+Physical
+,
+Light
+,
+AoE
+,
+Armor Reduce
+,
+Ranged
+,
+DoT
+
+Storm Arrow
+1	
+Special attack
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+Single target
+,
+Energy Restore
+,
+Ranged
+
+Storm Arrow
+1	
+
+Double Arrow
+1	
+Special attack
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+Single target
+,
+Energy Restore
+,
+Ranged
+
+Lethal Shot
+1	
+Special attack
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+Single target
+,
+Ranged
+
+Torrent Volley
+1	
+Expertise Skill
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+Single target
+,
+Channelling
+,
+Ranged
+
+Focus
+28	
+Expertise Skill
+,
+Haste
+
+Arrow Rain
+1	
+Expertise Skill
+,
+Physical
+,
+Light
+,
+AoE
+,
+Energy Restore
+,
+Ranged
+,
+DoT
+
+Powerdraw
+20	
+Expertise Skill
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+AoE
+,
+Ranged
+
+Radiance Barrage
+25	
+Expertise Skill
+,
+Physical
+,
+Light
+,
+AoE
+,
+Ranged
+,
+DoT
+
+Deter Shot
+40	
+Expertise Skill
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+Single target
+,
+Sprint
+,
+Protect
+,
+Ranged
+
+Wildcall
+1	
+Expertise Skill
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+AoE
+,
+Companion
+,
+Ranged
+
+Blast Shot
+30	
+Expertise Skill
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+Single target
+,
+Ranged
+
+Sky Piercing Star Strike
+1	
+Expertise Skill
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+Single target
+,
+Ranged
+
+Celestial Eagle
+1	
+
+Beast Stampede
+1	
+
+Resonant Strings
+1	
+Basic Attack
+,
+Magic
+,
+Fire
+,
+Direct DMG
+,
+Single target
+,
+Ranged
+
+Amplified Beat
+1	
+Special attack
+,
+Magic
+,
+Fire
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Healing Beat
+1	
+Special attack
+,
+Magic
+,
+Fire
+,
+Direct healing
+,
+Single target
+
+Harmonic Anthem
+1	
+Expertise Skill
+,
+Magic
+,
+Fire
+,
+Direct DMG
+,
+AoE
+,
+Melee
+
+Rhapsody of Flame
+1	
+Expertise Skill
+,
+Magic
+,
+Fire
+,
+Direct DMG
+,
+Direct healing
+,
+AoE
+,
+Melee
+
+Heroic Melody
+1	
+Expertise Skill
+,
+Magic
+,
+Fire
+,
+Direct DMG
+,
+HOT
+,
+AoE
+
+Healing Melody
+1	
+Expertise Skill
+,
+Magic
+,
+Fire
+,
+HOT
+,
+AoE
+
+Fivefold Crescendo
+1	
+Expertise Skill
+,
+Magic
+,
+Fire
+,
+Direct healing
+,
+AoE
+
+Passion Burst
+1	
+Expertise Skill
+,
+Magic
+,
+Fire
+,
+Direct DMG
+,
+AoE
+
+Rock the Stage
+1	
+Ultimate
+,
+Magic
+,
+Fire
+,
+Direct healing
+,
+Shield
+,
+AoE
+
+Encore
+1	
+Expertise Skill
+,
+Blessing
+
+Center Stage
+1	
+Expertise Skill
+,
+Blessing
+,
+Increased damage
+
+Fierce Strike
+1	
+
+Finale! Healing Movement
+1	
+
+String Strike
+1	
+Basic Attack
+,
+Magic
+,
+Fire
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Passion Fury
+1	
+Expertise Skill
+,
+Magic
+,
+Fire
+,
+Direct DMG
+,
+AoE
+
+Infinite Rhapsody
+1	
+Ultimate
+,
+Magic
+,
+Fire
+,
+Direct DMG
+,
+HOT
+,
+AoE
+
+Concert Circuit
+1	
+Ultimate
+,
+Magic
+,
+Fire
+,
+Direct DMG
+,
+HOT
+,
+AoE
+,
+Ranged
+
+Legendary Boarrier - Howl
+1	
+Resonance skill
+,
+Physical
+,
+Direct DMG
+,
+Sprint
+,
+Stagger
+,
+Wound
+
+Legendary Eagle - Howl
+1	
+Resonance skill
+,
+Physical
+,
+Direct DMG
+,
+Sprint
+,
+Stagger
+,
+Wound
+
+Blade of Justice
+1	
+Basic Attack
+,
+Light
+,
+Physical
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Valor Bash
+1	
+Special attack
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+Single target
+,
+Protect
+,
+Melee
+
+Vanguard Strike
+1	
+Special attack
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Radiant Infusion
+1	
+Ultimate
+,
+Light
+,
+Physical
+,
+Direct DMG
+,
+AoE
+,
+Protect
+,
+Melee
+
+Shield Toss
+1	
+Expertise Skill
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+AoE
+,
+Melee
+
+Divine Circle
+40	
+Expertise Skill
+,
+Physical
+,
+Light
+,
+DoT
+,
+HOT
+,
+AoE
+,
+Melee
+
+Judgment
+1	
+Expertise Skill
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+Direct healing
+,
+Single target
+,
+Melee
+
+Scorching Judgment
+1	
+
+Reckoning
+1	
+Expertise Skill
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+AoE
+,
+Melee
+
+Inferno Reckon
+1	
+
+Holy Barrier
+1	
+Expertise Skill
+,
+Light
+,
+Physical
+,
+Direct DMG
+
+Aegis Ward
+28	
+Expertise Skill
+,
+Protect
+,
+Direct healing
+
+Condemn
+1	
+
+Enhanced Condemn
+1	
+
+Zeal Crusade
+30	
+Expertise Skill
+,
+Physical
+,
+Light
+,
+DoT
+,
+AoE
+,
+Melee
+
+Radiance
+25	
+Expertise Skill
+,
+Protect
+
+Sacred Blade
+20	
+Expertise Skill
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+Single target
+,
+Melee
+
+Shield Toss
+1	
+Expertise Skill
+,
+Light
+,
+Physical
+,
+Direct DMG
+
+Stunt! Fox Assault
+1	
+Resonance skill
+,
+Physical
+,
+Direct DMG
+,
+Haste
+
+Stunt! Piercing Arrow
+1	
+Resonance skill
+,
+Physical
+,
+Direct DMG
+
+Arcane! Shadow of the Fox
+1	
+Resonance skill
+,
+Physical
+,
+Direct DMG
+,
+Companion
+
+Arcane! Assault Turret
+1	
+Resonance skill
+,
+Physical
+,
+Direct DMG
+
+Stunt! Gale of Silence
+1	
+Resonance skill
+,
+Physical
+,
+Direct DMG
+,
+AoE
+,
+Silence
+
+Arcane! Shrine Field
+1	
+Resonance skill
+,
+Protect
+,
+AoE
+
+Stunt! Flamewheel Dance
+1	
+Resonance skill
+,
+Physical
+,
+Direct DMG
+,
+Wound
+,
+AoE
+
+Stunt! Intimidating Roar
+1	
+Resonance skill
+,
+Physical
+,
+Direct DMG
+,
+Attack Reduction
+
+Stunt! Spiral Severance
+1	
+Resonance skill
+,
+Physical
+,
+Direct DMG
+,
+Single target
+,
+Increased damage
+
+Stunt! Spiral Severance
+1	
+Resonance skill
+,
+Physical
+,
+Direct DMG
+,
+Single target
+,
+Increased damage
+
+Exit transformation
+1	
+Toy and Mount Skills
+
+Dimensional Shift
+1	
+Scenario Skill
+
+Reshape
+1	
+
+Accelerate Summon
+1	
+Scenario Skill
+
+Accelerate Summon
+1	
+Scenario Skill
+
+Revealing Spell
+1	
+
+Reset
+1	
+Scenario Skill
+
+Pass on
+1	
+Scenario Skill
+
+Lightning Convergence
+1	
+
+Resonant lightning core
+1	
+⇳
+Name
+⇳
+Unlock Level
+⇳
+Tags
+
+Engram Healing
+1	
+
+Robot acceleration
+1	
+Scenario Skill
+
+Set Off Fireworks
+1	
+
+Frostbeam
+1	
+Toy and Mount Skills
+,
+Transformation skill
+
+Flame Jet
+1	
+Toy and Mount Skills
+,
+Transformation skill
+
+Rally
+1	
+Scenario Skill
+
+Sprint
+1	
+Scenario Skill
+
+Divine Blessing
+1	
+Scenario Skill
+
+Resonance Rune Power
+1	
+
+Mighty Blow
+1	
+Scenario Skill
+
+Plant Radiant Seed
+1	
+
+Powerful Phantom Dash
+1	
+
+Powerful Phantom Dash
+1	
+
+Pig Charge
+1	
+Toy and Mount Skills
+
+Boars Run
+1	
+
+Express Jump
+1	
+Toy and Mount Skills
+
+Rocket Rabbit
+1	
+Toy and Mount Skills
+
+Hunter's Pounce
+1	
+Toy and Mount Skills
+
+Hunter's Pounce
+1	
+Toy and Mount Skills
+
+Digger Strike
+1	
+Toy and Mount Skills
+
+Shadow Strike
+1	
+Toy and Mount Skills
+
+Anti-Gravity
+1	
+Toy and Mount Skills
+
+Magnetic Switch
+1	
+Toy and Mount Skills
+
+Aerial Dash
+1	
+Toy and Mount Skills
+
+Bubble Float
+1	
+Toy and Mount Skills
+
+Hyper Drift
+1	
+Toy and Mount Skills
+
+Hyper Sprint
+1	
+Toy and Mount Skills
+
+Sky Leap
+1	
+Toy and Mount Skills
+
+Rainbow Leap
+1	
+Toy and Mount Skills
+
+Rapid Dash
+1	
+Toy and Mount Skills
+
+Super Dash
+1	
+Toy and Mount Skills
+
+Rainbow Leap
+1	
+Toy and Mount Skills
+
+Rainbow Leap
+1	
+Toy and Mount Skills
+
+Serious Throw
+1	
+Toy and Mount Skills
+
+Colossus Strike
+1	
+Toy and Mount Skills
+
+Golem Strikes
+1	
+Toy and Mount Skills
+
+Colossus Strike
+1	
+Toy and Mount Skills
+
+Abyssal fishing
+1	
+
+3D "Torpedo"
+1	
+Toy and Mount Skills
+
+Koi's Leap
+1	
+Toy and Mount Skills
+
+Magical Delivery
+1	
+Toy and Mount Skills
+
+Turtle Sprint
+1	
+Toy and Mount Skills
+
+Tracking Navigation
+1	
+
+Blazing Dash
+1	
+Toy and Mount Skills
+
+Limit Break
+1	
+Toy and Mount Skills
+
+Engine Flare
+1	
+Toy and Mount Skills
+
+Exit Toy
+1	
+Toy and Mount Skills
+
+Ghost hand card
+1	
+Toy and Mount Skills
+,
+Transformation skill
+
+Shadow hand card
+1	
+Toy and Mount Skills
+,
+Transformation skill
+
+Floating bubble
+1	
+Toy and Mount Skills
+,
+Transformation skill
+
+Ice Burst
+1	
+
+Summon lightning
+1	
+
+Smoke Bomb
+1	
+
+Summon Spring
+1	
+
+Timed Explosion
+1	
+
+Recover Stamina
+1	
+
+Blurring Skill
+1	
+
+Stamina Potion
+1	
+Scenario Skill
+
+Summon Extra Cloud
+1	
+Toy and Mount Skills
+,
+Transformation skill
+
+Low Gravity Potion
+1	
+Scenario Skill
+
+Summon Pool
+1	
+Toy and Mount Skills
+,
+Transformation skill
+
+Elemental Shield
+1	
+
+Place Fire Seed
+1	
+
+Forest Shelter
+1	
+
+Gale Blast
+30	
+Expertise Skill
+,
+Magic
+,
+Forest
+,
+Direct DMG
+,
+Direct healing
+,
+AoE
+,
+Stun
+
+Play Dead
+1	
+
+Stunt! Boarrier Rush
+1	
+
+Boar Knight
+1	
+
+Boar Impact!
+1	
+
+Stunt! Boarrier Rush
+1	
+Resonance skill
+,
+Physical
+,
+Direct DMG
+,
+Single target
+,
+Sprint
+,
+Wound
+
+Pig Assault
+1	
+Resonance skill
+,
+Physical
+,
+Direct DMG
+,
+Single target
+,
+Sprint
+,
+Wound
+
+Fireseed Toss
+1	
+
+Hold up everything!
+1	
+
+Dance
+1	
+
+Dance
+1	
+
+Dance
+1	
+
+Dance
+1	
+
+Dance
+1	
+
+Sit down
+1	
+
+Push
+1	
+
+Push
+1	
+
+Ground Smash
+1	
+
+Void Corruption Stomp
+1	
+
+Place Fire Seed
+1	
+
+Stunt! Chaotic Barrage
+1	
+
+Sweeping Mech - Linear Super Laser
+1	
+
+Sweeping Mech - Overload
+1	
+
+Orbiting Fireball
+1	
+
+Thunder Sphere Tethering
+1	
+
+Doom Meteor
+1	
+
+Bouncing Soul Bullet
+1	
+
+Exploit Weakness
+1	
+
+I Am Legend
+1	
+
+Gravitational Black Hole
+1	
+
+Spinning Blade
+1	
+
+Drone Gunner
+1	
+
+Trichroma Halo
+1	
+
+Invincible Slash
+1	
+
+Stunt! Super Critical
+1	
+
+Arcane! Frostquake
+1	
+⇳
+Name
+⇳
+Unlock Level
+⇳
+Tags
+
+Stunt! Predator Slash
+1	
+
+Arcane! Cocoon Tech
+1	
+
+Void Bzzar Basic Attack
+1	
+
+Void Bzzar - Big Explosion
+1	
+
+Void Bzzar - Continuous Projectiles
+1	
+
+Arcane! Silent Tide
+1	
+
+Stunt! Falling Star
+1	
+Resonance skill
+,
+Magic
+,
+Direct DMG
+,
+Luck
+
+Stunt! Whirlwind Strike
+1	
+
+Stunt! Thunder Suppress
+1	
+
+Stunt! Water of Silence
+1	
+
+Arcane! Furious Hammer
+1	
+
+Stunt! Blink Ambush
+1	
+
+Arcane! Thunderfall Grasp
+1	
+
+Spinning Strike
+1	
+
+Arcane! Swift Vortex
+1	
+
+Goblin King Triple Strike - Class Trial
+1	
+
+Goblin King Forward Swing - Class Trial
+1	
+
+Star Shatter
+1	
+Expertise Skill
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+Sprint
+,
+Energy Restore
+
+Sandshroud
+1	
+Expertise Skill
+,
+Physical
+,
+Rock
+,
+Direct DMG
+,
+Energy Restore
+
+Arcane! Blessing of Life
+1	
+
+Arcane! Time Decree
+1	
+
+Thunder Traverse
+1	
+Special attack
+,
+Direct DMG
+,
+Thunder Element
+,
+Bullet
+
+Arcane! Flash Execution
+1	
+
+Arcane! Heart of Flame
+1	
+Resonance skill
+,
+Protect
+
+Fafala's Basic Attack
+1	
+Basic Attack
+,
+Light
+,
+Physical
+,
+Direct DMG
+,
+Single target
+
+Fafala's Reckoning
+1	
+Expertise Skill
+,
+Physical
+,
+Light
+,
+Direct DMG
+,
+AoE
+
+Fafala's Holy Light Infusion
+1	
+Ultimate
+,
+Light
+,
+Physical
+,
+Direct DMG
+,
+AoE
+,
+Protect
+
+Fafala's Divine Circle
+40	
+Expertise Skill
+,
+Physical
+,
+Light
+,
+DoT
+,
+HOT
+,
+AoE
+
+Resonance - Swift Vortex Virtual Body
+1	
+
+Resonance - Swift Vortex Virtual Body
+1	

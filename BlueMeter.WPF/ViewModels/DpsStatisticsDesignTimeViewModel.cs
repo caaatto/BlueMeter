@@ -24,6 +24,7 @@ public sealed class DpsStatisticsDesignTimeViewModel : DpsStatisticsViewModel
         new DesignConfigManager(),
         new DesignWindowManagementService(),
         new DesignTopmostService(),
+        new DesignTrayService(),
         new DebugFunctions(
             Dispatcher.CurrentDispatcher,
             NullLogger<DebugFunctions>.Instance,
@@ -60,6 +61,34 @@ public sealed class DpsStatisticsDesignTimeViewModel : DpsStatisticsViewModel
         {
             // Return current state or false at design time
             return window.Topmost = !window.Topmost;
+        }
+    }
+
+    private sealed class DesignTrayService : ITrayService
+    {
+        public void Initialize(string? toolTip = null)
+        {
+            // no-op at design time
+        }
+
+        public void MinimizeToTray()
+        {
+            // no-op at design time
+        }
+
+        public void Restore()
+        {
+            // no-op at design time
+        }
+
+        public void Exit()
+        {
+            // no-op at design time
+        }
+
+        public void Dispose()
+        {
+            // no-op at design time
         }
     }
 

@@ -525,6 +525,10 @@
                                         Command="{Binding OpenSettingsCommand}"
                                         Header="{lex:Loc Key={x:Static loc:ResourcesKeys.Menu_Settings}}"
                                         IsCheckable="false" />
+                                    <MenuItem
+                                        Command="{Binding OpenMainViewCommand}"
+                                        Header="Open Main Window"
+                                        IsCheckable="false" />
                                     <Separator />
 
                                     <MenuItem

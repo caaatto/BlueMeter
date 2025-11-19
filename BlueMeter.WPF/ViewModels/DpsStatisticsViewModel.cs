@@ -56,6 +56,7 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
     private readonly IDataStorage _storage;
     private readonly IWindowManagementService _windowManagement;
     private readonly ITopmostService _topmostService;
+    private readonly ITrayService _trayService;
     private DispatcherTimer? _durationTimer;
     private bool _isInitialized;
     // UI update throttling to prevent freezing during intense combat
@@ -89,6 +90,7 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         IConfigManager configManager,
         IWindowManagementService windowManagement,
         ITopmostService topmostService,
+        ITrayService trayService,
         DebugFunctions debugFunctions,
         Dispatcher dispatcher)
     {
@@ -133,6 +135,7 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         }
         _windowManagement = windowManagement;
         _topmostService = topmostService;
+        _trayService = trayService;
         _dispatcher = dispatcher;
 
         // Subscribe to DebugFunctions events to handle sample data requests
@@ -681,6 +684,14 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
     private void OpenSettings()
     {
         _windowManagement.SettingsView.Show();
+    }
+
+    [RelayCommand]
+    private void OpenMainView()
+    {
+        // Use TrayService.Restore() which properly handles MainView restoration
+        // including WindowState and visibility management
+        _trayService.Restore();
     }
 
     [RelayCommand]

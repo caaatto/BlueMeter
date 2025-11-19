@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Threading;
@@ -10,6 +11,9 @@ using OxyPlot;
 using OxyPlot.Series;
 using BlueMeter.Assets;
 using BlueMeter.Core;
+using BlueMeter.Core.Data.Database;
+using BlueMeter.Core.Data.Models;
+using Newtonsoft.Json;
 
 namespace BlueMeter.WPF.ViewModels;
 
@@ -37,6 +41,11 @@ public partial class SkillBreakdownChartViewModel : ObservableObject
 
     [ObservableProperty]
     private string _statusText = "No player selected";
+
+    [ObservableProperty]
+    private bool _isHistoricalDataMode = false;
+
+    private EncounterData? _loadedEncounter;
 
     // Pie chart colors
     private readonly List<OxyColor> _skillColors = new()
@@ -98,10 +107,13 @@ public partial class SkillBreakdownChartViewModel : ObservableObject
     {
         try
         {
-            UpdateAvailablePlayers();
-            if (SelectedPlayer != null)
+            if (!IsHistoricalDataMode)
             {
-                UpdateChart();
+                UpdateAvailablePlayers();
+                if (SelectedPlayer != null)
+                {
+                    UpdateChart();
+                }
             }
         }
         catch (Exception ex)
@@ -115,9 +127,9 @@ public partial class SkillBreakdownChartViewModel : ObservableObject
     /// </summary>
     private void UpdateAvailablePlayers()
     {
-        // Get all players from current combat data
+        // Get all players from current combat data (use Full instead of Sectioned to include "Last" data)
         var currentPlayerIds = _dataStorage.ReadOnlyPlayerInfoDatas.Keys.ToList();
-        var dpsPlayerIds = _dataStorage.ReadOnlySectionedDpsDatas.Keys.ToList();
+        var dpsPlayerIds = _dataStorage.ReadOnlyFullDpsDatas.Keys.ToList();
 
         // Get players that have both info and DPS data
         var activePlayerIds = currentPlayerIds.Intersect(dpsPlayerIds).ToList();
@@ -170,36 +182,19 @@ public partial class SkillBreakdownChartViewModel : ObservableObject
             return;
         }
 
-        // Get DPS data for selected player
-        if (!_dataStorage.ReadOnlySectionedDpsDatas.TryGetValue(SelectedPlayer.PlayerId, out var dpsData))
+        // Get skill list based on mode
+        List<(string SkillName, double TotalDamage)> skills;
+
+        if (IsHistoricalDataMode && _loadedEncounter != null)
         {
-            PlotModel.Series.Clear();
-            PlotModel.Title = $"Skill Damage Breakdown - {SelectedPlayer.PlayerName}";
-            PlotModel.InvalidatePlot(true);
-            StatusText = "No data available for selected player";
-            return;
+            skills = GetSkillsFromHistoricalData(SelectedPlayer.PlayerId);
+        }
+        else
+        {
+            skills = GetSkillsFromLiveData(SelectedPlayer.PlayerId);
         }
 
-        // Get skill list from DPS data
-        var skills = dpsData.ReadOnlySkillDatas.Values
-            .Select(skill =>
-            {
-                // Get skill name from EmbeddedSkillConfig
-                var skillIdText = skill.SkillId.ToString();
-                var skillName = EmbeddedSkillConfig.TryGet(skillIdText, out var definition)
-                    ? definition.Name
-                    : skillIdText;
-
-                return new
-                {
-                    SkillName = skillName,
-                    TotalDamage = (double)skill.TotalValue
-                };
-            })
-            .OrderByDescending(s => s.TotalDamage)
-            .ToList();
-
-        if (skills.Count == 0)
+        if (skills == null || skills.Count == 0)
         {
             PlotModel.Series.Clear();
             PlotModel.Title = $"Skill Damage Breakdown - {SelectedPlayer.PlayerName}";
@@ -218,11 +213,7 @@ public partial class SkillBreakdownChartViewModel : ObservableObject
             var otherDamage = skills.Skip(TopSkillsLimit).Sum(s => s.TotalDamage);
             if (otherDamage > 0)
             {
-                topSkills.Add(new
-                {
-                    SkillName = $"Other ({skills.Count - TopSkillsLimit} skills)",
-                    TotalDamage = otherDamage
-                });
+                topSkills.Add(("Other (" + (skills.Count - TopSkillsLimit) + " skills)", otherDamage));
                 totalDamage += otherDamage;
             }
         }
@@ -245,8 +236,6 @@ public partial class SkillBreakdownChartViewModel : ObservableObject
         for (int i = 0; i < topSkills.Count; i++)
         {
             var skill = topSkills[i];
-            var percentage = totalDamage > 0 ? (skill.TotalDamage / totalDamage) : 0;
-
             pieSeries.Slices.Add(new PieSlice(skill.SkillName, skill.TotalDamage)
             {
                 Fill = _skillColors[i % _skillColors.Count],
@@ -257,14 +246,172 @@ public partial class SkillBreakdownChartViewModel : ObservableObject
         // Update plot model
         PlotModel.Series.Clear();
         PlotModel.Series.Add(pieSeries);
-        PlotModel.Title = $"Skill Damage Breakdown - {SelectedPlayer.PlayerName}";
+
+        var dataMode = IsHistoricalDataMode ? " (Historical)" : "";
+        PlotModel.Title = $"Skill Damage Breakdown - {SelectedPlayer.PlayerName}{dataMode}";
         PlotModel.InvalidatePlot(true);
 
         // Update status
-        StatusText = $"Showing top {topSkills.Count} skills • Total Damage: {totalDamage:N0}";
+        StatusText = $"Showing top {topSkills.Count} skills • Total Damage: {totalDamage:N0}{(IsHistoricalDataMode ? " (Historical Data)" : "")}";
 
         _logger.LogDebug("Updated skill breakdown chart for player {PlayerId}: {SkillCount} skills",
             SelectedPlayer.PlayerId, topSkills.Count);
+    }
+
+    /// <summary>
+    /// Get skills from live data
+    /// </summary>
+    private List<(string SkillName, double TotalDamage)> GetSkillsFromLiveData(long playerId)
+    {
+        // Get DPS data for selected player (use Full to include "Last" data)
+        if (!_dataStorage.ReadOnlyFullDpsDatas.TryGetValue(playerId, out var dpsData))
+        {
+            return new List<(string, double)>();
+        }
+
+        // Get skill list from DPS data
+        return dpsData.ReadOnlySkillDatas.Values
+            .Select(skill =>
+            {
+                // Get skill name from EmbeddedSkillConfig
+                var skillIdText = skill.SkillId.ToString();
+                var skillName = EmbeddedSkillConfig.TryGet(skillIdText, out var definition)
+                    ? definition.Name
+                    : skillIdText;
+
+                // Translate skill name using DeepL if available
+                var translatedSkillName = DpsStatisticsSubViewModel.GetTranslator()?.Translate(skillName) ?? skillName;
+
+                return (SkillName: translatedSkillName, TotalDamage: (double)skill.TotalValue);
+            })
+            .OrderByDescending(s => s.TotalDamage)
+            .ToList();
+    }
+
+    /// <summary>
+    /// Get skills from historical encounter data
+    /// </summary>
+    private List<(string SkillName, double TotalDamage)> GetSkillsFromHistoricalData(long playerId)
+    {
+        if (_loadedEncounter == null || !_loadedEncounter.PlayerStats.TryGetValue(playerId, out var playerData))
+        {
+            return new List<(string, double)>();
+        }
+
+        // Parse skill data from JSON
+        if (string.IsNullOrEmpty(playerData.SkillDataJson))
+        {
+            return new List<(string, double)>();
+        }
+
+        try
+        {
+            var skillDataDict = JsonConvert.DeserializeObject<Dictionary<long, SkillData>>(playerData.SkillDataJson);
+            if (skillDataDict == null)
+            {
+                return new List<(string, double)>();
+            }
+
+            return skillDataDict.Values
+                .Select(skill =>
+                {
+                    // Get skill name from EmbeddedSkillConfig
+                    var skillIdText = skill.SkillId.ToString();
+                    var skillName = EmbeddedSkillConfig.TryGet(skillIdText, out var definition)
+                        ? definition.Name
+                        : skillIdText;
+
+                    // Translate skill name using DeepL if available
+                    var translatedSkillName = DpsStatisticsSubViewModel.GetTranslator()?.Translate(skillName) ?? skillName;
+
+                    return (SkillName: translatedSkillName, TotalDamage: (double)skill.TotalValue);
+                })
+                .OrderByDescending(s => s.TotalDamage)
+                .ToList();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error parsing skill data JSON for player {PlayerId}", playerId);
+            return new List<(string, double)>();
+        }
+    }
+
+    /// <summary>
+    /// Load historical encounter data
+    /// </summary>
+    public void LoadHistoricalEncounter(EncounterData encounterData)
+    {
+        _logger.LogInformation("Loading historical encounter data for Skill Breakdown Chart");
+
+        _loadedEncounter = encounterData;
+        IsHistoricalDataMode = true;
+
+        // Stop auto-updates
+        _updateTimer.Stop();
+
+        // Update player list from historical data
+        UpdateAvailablePlayersFromHistoricalData();
+
+        // Update chart
+        UpdateChart();
+
+        _logger.LogInformation("Historical encounter loaded with {PlayerCount} players", encounterData.PlayerStats.Count);
+    }
+
+    /// <summary>
+    /// Restore live data mode
+    /// </summary>
+    public void RestoreLiveData()
+    {
+        _logger.LogInformation("Restoring live data mode for Skill Breakdown Chart");
+
+        _loadedEncounter = null;
+        IsHistoricalDataMode = false;
+
+        // Restart auto-updates
+        _updateTimer.Start();
+
+        // Update player list from live data
+        UpdateAvailablePlayers();
+
+        // Update chart
+        UpdateChart();
+
+        _logger.LogInformation("Live data mode restored");
+    }
+
+    /// <summary>
+    /// Update available players from historical encounter data
+    /// </summary>
+    private void UpdateAvailablePlayersFromHistoricalData()
+    {
+        if (_loadedEncounter == null)
+        {
+            AvailablePlayers = new List<PlayerSelectionItem>();
+            return;
+        }
+
+        var newPlayers = new List<PlayerSelectionItem>();
+
+        foreach (var kvp in _loadedEncounter.PlayerStats)
+        {
+            // Skip NPCs
+            if (kvp.Value.IsNpcData) continue;
+
+            newPlayers.Add(new PlayerSelectionItem
+            {
+                PlayerId = kvp.Key,
+                PlayerName = kvp.Value.Name ?? $"Player {kvp.Key}"
+            });
+        }
+
+        // Sort by name
+        newPlayers = newPlayers.OrderBy(p => p.PlayerName).ToList();
+
+        // Update collection
+        AvailablePlayers = newPlayers;
+
+        _logger.LogDebug("Updated available players from historical data: {Count} players", newPlayers.Count);
     }
 
     /// <summary>
@@ -281,7 +428,14 @@ public partial class SkillBreakdownChartViewModel : ObservableObject
         _logger.LogInformation("Skill Breakdown Chart focused player set to: {PlayerId}", playerId.Value);
 
         // Update available players first
-        UpdateAvailablePlayers();
+        if (IsHistoricalDataMode)
+        {
+            UpdateAvailablePlayersFromHistoricalData();
+        }
+        else
+        {
+            UpdateAvailablePlayers();
+        }
 
         // Find and select the player
         var player = AvailablePlayers.FirstOrDefault(p => p.PlayerId == playerId.Value);
@@ -322,7 +476,7 @@ public partial class SkillBreakdownChartViewModel : ObservableObject
     /// </summary>
     public void OnViewLoaded()
     {
-        if (!_updateTimer.IsEnabled)
+        if (!_updateTimer.IsEnabled && !IsHistoricalDataMode)
         {
             _updateTimer.Start();
             _logger.LogDebug("SkillBreakdownChartViewModel update timer started");

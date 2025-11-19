@@ -110,7 +110,9 @@
             BorderThickness="0,0,0,1">
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
@@ -129,9 +131,34 @@
                         Text="Real-time DPS/HPS Analytics" />
                 </StackPanel>
 
+                <!--  Combat Selector  -->
+                <StackPanel
+                    Grid.Column="2"
+                    Margin="16,0"
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center">
+                    <TextBlock
+                        Margin="0,0,8,0"
+                        VerticalAlignment="Center"
+                        FontSize="13"
+                        Foreground="#CCCCCC"
+                        Text="Combat:" />
+                    <ComboBox
+                        Width="280"
+                        ItemsSource="{Binding AvailableCombats}"
+                        SelectedItem="{Binding SelectedCombat}"
+                        Style="{StaticResource DarkComboBox}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DisplayName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+
                 <!--  Controls  -->
                 <StackPanel
-                    Grid.Column="1"
+                    Grid.Column="3"
                     Orientation="Horizontal">
                     <Button
                         Command="{Binding RefreshCommand}"

@@ -36,11 +36,54 @@ public partial class ChartsWindow : Window
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
         _viewModel.OnWindowLoaded();
+
+        // Subscribe to ViewModel events
+        _viewModel.HistoricalEncounterLoaded += OnHistoricalEncounterLoaded;
+        _viewModel.LiveDataRestored += OnLiveDataRestored;
     }
 
     private void OnClosing(object? sender, System.ComponentModel.CancelEventArgs e)
     {
+        // Unsubscribe from ViewModel events
+        _viewModel.HistoricalEncounterLoaded -= OnHistoricalEncounterLoaded;
+        _viewModel.LiveDataRestored -= OnLiveDataRestored;
+
         _viewModel.OnWindowClosing();
+    }
+
+    /// <summary>
+    /// Handle historical encounter loaded
+    /// </summary>
+    private void OnHistoricalEncounterLoaded(Core.Data.Database.EncounterData encounterData)
+    {
+        // Notify SkillBreakdownChart ViewModel
+        if (_skillBreakdownChartView.DataContext is SkillBreakdownChartViewModel skillViewModel)
+        {
+            skillViewModel.LoadHistoricalEncounter(encounterData);
+        }
+
+        // Note: DpsTrendChart doesn't support historical data yet
+        // if (_dpsTrendChartView.DataContext is DpsTrendChartViewModel dpsViewModel)
+        // {
+        //     dpsViewModel.LoadHistoricalEncounter(encounterData);
+        // }
+    }
+
+    /// <summary>
+    /// Handle live data restored
+    /// </summary>
+    private void OnLiveDataRestored()
+    {
+        // Notify SkillBreakdownChart ViewModel
+        if (_skillBreakdownChartView.DataContext is SkillBreakdownChartViewModel skillViewModel)
+        {
+            skillViewModel.RestoreLiveData();
+        }
+
+        // if (_dpsTrendChartView.DataContext is DpsTrendChartViewModel dpsViewModel)
+        // {
+        //     dpsViewModel.RestoreLiveData();
+        // }
     }
 
     /// <summary>

@@ -93,7 +93,11 @@ public class EncounterService
     /// <summary>
     /// Save player statistics for the current encounter
     /// </summary>
-    public async Task SavePlayerStatsAsync(Dictionary<long, PlayerInfo> playerInfos, Dictionary<long, DpsData> dpsDataDict)
+    public async Task SavePlayerStatsAsync(
+        Dictionary<long, PlayerInfo> playerInfos,
+        Dictionary<long, DpsData> dpsDataDict,
+        Dictionary<long, List<ChartDataPoint>>? dpsHistory = null,
+        Dictionary<long, List<ChartDataPoint>>? hpsHistory = null)
     {
         if (!_isEncounterActive || string.IsNullOrEmpty(_currentEncounterId))
             return;
@@ -108,7 +112,16 @@ public class EncounterService
 
             if (playerInfos.TryGetValue(uid, out var playerInfo))
             {
-                await repository.SavePlayerStatsAsync(_currentEncounterId, playerInfo, dpsData);
+                // Get chart history for this player
+                var playerDpsHistory = dpsHistory?.GetValueOrDefault(uid);
+                var playerHpsHistory = hpsHistory?.GetValueOrDefault(uid);
+
+                await repository.SavePlayerStatsAsync(
+                    _currentEncounterId,
+                    playerInfo,
+                    dpsData,
+                    playerDpsHistory,
+                    playerHpsHistory);
             }
         }
     }
@@ -217,6 +230,33 @@ public class EncounterService
                 MinDamage = stats.MinDamage,
                 MaxDamage = stats.MaxDamage
             };
+
+            // Deserialize chart history data
+            if (!string.IsNullOrEmpty(stats.DpsHistoryJson))
+            {
+                try
+                {
+                    playerData.DpsHistory = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ChartDataPoint>>(stats.DpsHistoryJson);
+                    DebugLogger.Log($"[LoadEncounterAsync]   Loaded {playerData.DpsHistory?.Count ?? 0} DPS history points");
+                }
+                catch (Exception ex)
+                {
+                    DebugLogger.Log($"[LoadEncounterAsync]   Failed to deserialize DPS history: {ex.Message}");
+                }
+            }
+
+            if (!string.IsNullOrEmpty(stats.HpsHistoryJson))
+            {
+                try
+                {
+                    playerData.HpsHistory = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ChartDataPoint>>(stats.HpsHistoryJson);
+                    DebugLogger.Log($"[LoadEncounterAsync]   Loaded {playerData.HpsHistory?.Count ?? 0} HPS history points");
+                }
+                catch (Exception ex)
+                {
+                    DebugLogger.Log($"[LoadEncounterAsync]   Failed to deserialize HPS history: {ex.Message}");
+                }
+            }
 
             DebugLogger.Log($"[LoadEncounterAsync]   Final PlayerData: Name='{playerData.Name}', Class={playerData.Class}");
 
@@ -416,4 +456,25 @@ public class PlayerEncounterData
     public long HighestCrit { get; set; }
     public long MinDamage { get; set; }
     public long MaxDamage { get; set; }
+
+    // Chart history data
+    public List<ChartDataPoint>? DpsHistory { get; set; }
+    public List<ChartDataPoint>? HpsHistory { get; set; }
+}
+
+/// <summary>
+/// Represents a single data point for chart visualization
+/// </summary>
+public class ChartDataPoint
+{
+    public DateTime Timestamp { get; set; }
+    public double Value { get; set; }
+
+    public ChartDataPoint() { }
+
+    public ChartDataPoint(DateTime timestamp, double value)
+    {
+        Timestamp = timestamp;
+        Value = value;
+    }
 }

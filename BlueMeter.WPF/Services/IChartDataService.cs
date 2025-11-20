@@ -40,6 +40,30 @@ public interface IChartDataService : IDisposable
     IReadOnlyCollection<long> GetTrackedPlayerIds();
 
     /// <summary>
+    /// Get a snapshot of all DPS history (for persistence)
+    /// Returns a deep copy that won't be affected by subsequent updates
+    /// </summary>
+    /// <returns>Dictionary of player ID to DPS history list</returns>
+    Dictionary<long, List<ChartDataPoint>> GetDpsHistorySnapshot();
+
+    /// <summary>
+    /// Get a snapshot of all HPS history (for persistence)
+    /// Returns a deep copy that won't be affected by subsequent updates
+    /// </summary>
+    /// <returns>Dictionary of player ID to HPS history list</returns>
+    Dictionary<long, List<ChartDataPoint>> GetHpsHistorySnapshot();
+
+    /// <summary>
+    /// Load historical chart data (e.g., from database)
+    /// Replaces current chart data with provided historical data
+    /// </summary>
+    /// <param name="dpsHistory">DPS history per player</param>
+    /// <param name="hpsHistory">HPS history per player</param>
+    void LoadHistoricalChartData(
+        Dictionary<long, List<ChartDataPoint>> dpsHistory,
+        Dictionary<long, List<ChartDataPoint>> hpsHistory);
+
+    /// <summary>
     /// Indicates if the service is currently sampling data
     /// </summary>
     bool IsRunning { get; }

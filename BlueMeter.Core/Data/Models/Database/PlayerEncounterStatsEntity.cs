@@ -63,6 +63,20 @@ public class PlayerEncounterStatsEntity
     public string? SkillDataJson { get; set; }
 
     /// <summary>
+    /// DPS history time-series data (JSON: List&lt;ChartDataPoint&gt;)
+    /// Used for chart visualization of DPS over time
+    /// </summary>
+    [Column(TypeName = "TEXT")]
+    public string? DpsHistoryJson { get; set; }
+
+    /// <summary>
+    /// HPS history time-series data (JSON: List&lt;ChartDataPoint&gt;)
+    /// Used for chart visualization of HPS over time
+    /// </summary>
+    [Column(TypeName = "TEXT")]
+    public string? HpsHistoryJson { get; set; }
+
+    /// <summary>
     /// Player's combat power at the time of this encounter
     /// </summary>
     public int CombatPowerSnapshot { get; set; }

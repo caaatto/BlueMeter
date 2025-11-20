@@ -32,7 +32,9 @@ public sealed class DpsStatisticsDesignTimeViewModel : DpsStatisticsViewModel
             new DesignOptionsMonitor(),
             null!,
             LocalizationManager.Instance),
-        Dispatcher.CurrentDispatcher)
+        Dispatcher.CurrentDispatcher,
+        new DesignChartDataService(),
+        NullLoggerFactory.Instance)
     {
         // Populate with a few sample entries so designer shows something.
         try
@@ -49,6 +51,23 @@ public sealed class DpsStatisticsDesignTimeViewModel : DpsStatisticsViewModel
     }
 
     #region Stub Implementations
+
+    private sealed class DesignChartDataService : IChartDataService
+    {
+        public bool IsRunning => false;
+
+        public void Start() { }
+        public void Stop() { }
+        public ObservableCollection<Models.ChartDataPoint>? GetDpsHistory(long playerId) => null;
+        public ObservableCollection<Models.ChartDataPoint>? GetHpsHistory(long playerId) => null;
+        public IReadOnlyCollection<long> GetTrackedPlayerIds() => Array.Empty<long>();
+        public Dictionary<long, List<Models.ChartDataPoint>> GetDpsHistorySnapshot() => new();
+        public Dictionary<long, List<Models.ChartDataPoint>> GetHpsHistorySnapshot() => new();
+        public void LoadHistoricalChartData(
+            Dictionary<long, List<Models.ChartDataPoint>> dpsHistory,
+            Dictionary<long, List<Models.ChartDataPoint>> hpsHistory) { }
+        public void Dispose() { }
+    }
 
     private sealed class DesignTopmostService : ITopmostService
     {

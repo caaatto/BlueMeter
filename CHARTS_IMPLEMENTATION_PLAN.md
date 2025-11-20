@@ -1,9 +1,344 @@
 # Charts Implementation Plan for BlueMeter
 
+## 🚨 CRITICAL ISSUE: Chart Data Persistence (2025-11-20)
+
+### Problem
+**Status**: 🟡 **IN TESTING** - Implementation complete, awaiting real-world test
+
+**User Report**: "dps trend funktioniert solange der kampf läuft. sobald dieser zu ende ist wars das und alles ist verloren, denn die speicherfunktion von 'History' funktioniert nicht"
+
+**Priority**: ⭐⭐⭐ **HIGHEST** - "Das speichern der Kämpfe hat oberste Prio"
+
+### Root Cause Analysis
+
+#### 1. Data Loss Flow
+```
+Fight Ends
+    ↓
+DataStorageV2.CheckSectionTimeout() [line 408-449]
+    ↓
+ShouldEndBattleSection() returns true (boss dead + 8s delay)
+    ↓
+EndCurrentEncounterAsync() - saves encounter to DB
+    ↓
+PrivateClearDpsData() - clears SectionedDpsData
+    ↓
+RaiseNewSectionCreated() event fires
+    ↓
+ChartDataService.OnNewSectionCreated() [line 124-139]
+    ↓
+_dpsHistory.Clear()  ❌ ALL CHART DATA LOST!
+_hpsHistory.Clear()  ❌ ALL CHART DATA LOST!
+```
+
+#### 2. What Gets Saved vs What Gets Lost
+
+**✅ Currently Saved to Database:**
+- `PlayerInfo` (name, class, stats)
+- `DpsData` (total damage, total healing, skill breakdown)
+- Aggregate statistics (DPS, HPS, crit rate, etc.)
+
+**❌ Currently LOST (Not Saved):**
+- `ChartDataPoint` time-series data (DPS over time)
+- `ChartDataPoint` time-series data (HPS over time)
+- Complete chart history needed for visualization
+
+#### 3. Missing Components
+
+**Database Schema:**
+- ❌ No `DpsHistoryJson` field in `PlayerStats` table
+- ❌ No `HpsHistoryJson` field in `PlayerStats` table
+
+**Persistence Logic:**
+- ❌ `DataStorageExtensions.SaveCurrentEncounterAsync()` doesn't save chart data
+- ❌ `EncounterRepository.SavePlayerStatsAsync()` doesn't store chart history
+- ❌ `ChartDataService` clears data BEFORE it can be saved
+
+**Loading Logic:**
+- ❌ `EncounterService.LoadEncounterAsync()` doesn't load chart data
+- ❌ `ChartDataService` has no method to load historical data
+- ❌ No UI integration to display historical charts
+
+### Solution Plan
+
+#### Phase P1: Database Schema Extension ⏳
+**Files to Modify:**
+- `BlueMeter.Core/Data/Models/Database/EncounterEntity.cs`
+- `BlueMeter.Core/Data/Database/EncounterRepository.cs`
+
+**Changes:**
+```csharp
+// Add to PlayerStatsEntity
+public string? DpsHistoryJson { get; set; }
+public string? HpsHistoryJson { get; set; }
+```
+
+**Database Migration:** Add two TEXT/NVARCHAR columns to `PlayerStats` table
+
+---
+
+#### Phase P2: Save Chart Data Before Clearing ⏳
+**Files to Modify:**
+- `BlueMeter.WPF/Services/ChartDataService.cs`
+- `BlueMeter.Core/Data/DataStorageExtensions.cs`
+- `BlueMeter.Core/Data/Database/EncounterRepository.cs`
+
+**Strategy 1: Save Before Clear (RECOMMENDED)**
+```csharp
+// ChartDataService.cs
+private void OnNewSectionCreated()
+{
+    try
+    {
+        // Create snapshot of data BEFORE clearing
+        var dpsSnapshot = _dpsHistory.ToDictionary(
+            kvp => kvp.Key,
+            kvp => kvp.Value.ToList() // Deep copy
+        );
+        var hpsSnapshot = _hpsHistory.ToDictionary(
+            kvp => kvp.Key,
+            kvp => kvp.Value.ToList() // Deep copy
+        );
+
+        // Pass to persistence layer (fire & forget)
+        _ = Task.Run(async () =>
+            await DataStorageExtensions.SaveChartHistoryAsync(
+                dpsSnapshot, hpsSnapshot));
+    }
+    finally
+    {
+        // Now safe to clear
+        _dpsHistory.Clear();
+        _hpsHistory.Clear();
+    }
+}
+```
+
+**Strategy 2: Expose Chart Data Getter (ALTERNATIVE)**
+```csharp
+// IChartDataService.cs
+Dictionary<long, List<ChartDataPoint>> GetDpsHistorySnapshot();
+Dictionary<long, List<ChartDataPoint>> GetHpsHistorySnapshot();
+```
+
+**DataStorageExtensions Changes:**
+```csharp
+public static async Task SaveCurrentEncounterAsync(
+    IChartDataService? chartDataService = null)
+{
+    // Get chart history from service
+    var dpsHistory = chartDataService?.GetDpsHistorySnapshot()
+        ?? new Dictionary<long, List<ChartDataPoint>>();
+    var hpsHistory = chartDataService?.GetHpsHistorySnapshot()
+        ?? new Dictionary<long, List<ChartDataPoint>>();
+
+    // Pass to repository
+    await _encounterService.SavePlayerStatsAsync(
+        playerInfos, dpsData, dpsHistory, hpsHistory);
+}
+```
+
+---
+
+#### Phase P3: Database Persistence ⏳
+**Files to Modify:**
+- `BlueMeter.Core/Data/Database/EncounterService.cs`
+- `BlueMeter.Core/Data/Database/EncounterRepository.cs`
+
+**Changes:**
+```csharp
+// EncounterService.cs
+public async Task SavePlayerStatsAsync(
+    Dictionary<long, PlayerInfo> playerInfos,
+    Dictionary<long, DpsData> dpsDataDict,
+    Dictionary<long, List<ChartDataPoint>> dpsHistory,
+    Dictionary<long, List<ChartDataPoint>> hpsHistory)
+{
+    foreach (var kvp in dpsDataDict)
+    {
+        var uid = kvp.Key;
+        var dpsData = kvp.Value;
+
+        // Get chart history for this player
+        var playerDpsHistory = dpsHistory.GetValueOrDefault(uid, new List<ChartDataPoint>());
+        var playerHpsHistory = hpsHistory.GetValueOrDefault(uid, new List<ChartDataPoint>());
+
+        if (playerInfos.TryGetValue(uid, out var playerInfo))
+        {
+            await repository.SavePlayerStatsAsync(
+                _currentEncounterId,
+                playerInfo,
+                dpsData,
+                playerDpsHistory,
+                playerHpsHistory);
+        }
+    }
+}
+
+// EncounterRepository.cs
+public async Task SavePlayerStatsAsync(
+    string encounterId,
+    PlayerInfo playerInfo,
+    DpsData dpsData,
+    List<ChartDataPoint> dpsHistory,
+    List<ChartDataPoint> hpsHistory)
+{
+    // Serialize to JSON
+    string dpsHistoryJson = JsonConvert.SerializeObject(dpsHistory);
+    string hpsHistoryJson = JsonConvert.SerializeObject(hpsHistory);
+
+    // Save to database
+    playerStatsEntity.DpsHistoryJson = dpsHistoryJson;
+    playerStatsEntity.HpsHistoryJson = hpsHistoryJson;
+}
+```
+
+---
+
+#### Phase P4: Load Chart Data from History ⏳
+**Files to Modify:**
+- `BlueMeter.Core/Data/Database/EncounterService.cs`
+- `BlueMeter.WPF/ViewModels/EncounterHistoryViewModel.cs`
+- `BlueMeter.WPF/Services/ChartDataService.cs`
+
+**Loading Logic:**
+```csharp
+// EncounterService.cs
+public async Task<EncounterData?> LoadEncounterAsync(string encounterId)
+{
+    // ... existing code ...
+
+    // NEW: Load chart history
+    if (!string.IsNullOrEmpty(stats.DpsHistoryJson))
+    {
+        playerData.DpsHistory = JsonConvert.DeserializeObject<List<ChartDataPoint>>(
+            stats.DpsHistoryJson);
+    }
+    if (!string.IsNullOrEmpty(stats.HpsHistoryJson))
+    {
+        playerData.HpsHistory = JsonConvert.DeserializeObject<List<ChartDataPoint>>(
+            stats.HpsHistoryJson);
+    }
+}
+
+// ChartDataService.cs
+public void LoadHistoricalChartData(Dictionary<long, List<ChartDataPoint>> dpsHistory,
+                                     Dictionary<long, List<ChartDataPoint>> hpsHistory)
+{
+    _dpsHistory.Clear();
+    _hpsHistory.Clear();
+
+    foreach (var kvp in dpsHistory)
+    {
+        _dpsHistory[kvp.Key] = new ObservableCollection<ChartDataPoint>(kvp.Value);
+    }
+    foreach (var kvp in hpsHistory)
+    {
+        _hpsHistory[kvp.Key] = new ObservableCollection<ChartDataPoint>(kvp.Value);
+    }
+
+    _logger.LogInformation("Loaded historical chart data: {DpsPlayers} DPS, {HpsPlayers} HPS",
+        dpsHistory.Count, hpsHistory.Count);
+}
+```
+
+---
+
+#### Phase P5: UI Integration ⏳
+**Files to Modify:**
+- `BlueMeter.WPF/ViewModels/EncounterHistoryViewModel.cs`
+- `BlueMeter.WPF/ViewModels/ChartsWindowViewModel.cs`
+
+**Flow:**
+```
+User clicks "Load Encounter" in History
+    ↓
+EncounterHistoryViewModel.LoadSelectedEncounterAsync()
+    ↓
+DataStorageExtensions.LoadEncounterAsync(encounterId)
+    ↓
+Extract chart data from EncounterData
+    ↓
+ChartDataService.LoadHistoricalChartData(dpsHistory, hpsHistory)
+    ↓
+Open ChartsWindow → DPS Trend Chart displays historical data
+```
+
+---
+
+### Implementation Checklist
+
+#### Database Layer
+- [x] Add `DpsHistoryJson` to `PlayerStatsEntity` ✅
+- [x] Add `HpsHistoryJson` to `PlayerStatsEntity` ✅
+- [x] Add columns to `PlayerStats` database table ✅
+- [ ] Test database migration
+
+#### Service Layer
+- [x] Add `GetDpsHistorySnapshot()` to `IChartDataService` ✅
+- [x] Add `GetHpsHistorySnapshot()` to `IChartDataService` ✅
+- [x] Add `LoadHistoricalChartData()` to `IChartDataService` ✅
+- [x] Update `DataStorageExtensions.SaveCurrentEncounterAsync()` signature ✅
+- [x] Update `EncounterService.SavePlayerStatsAsync()` signature ✅
+- [x] Update `EncounterRepository.SavePlayerStatsAsync()` to serialize JSON ✅
+
+#### Loading Layer
+- [x] Update `EncounterService.LoadEncounterAsync()` to deserialize chart data ✅
+- [x] Add chart history fields to `PlayerEncounterData` ✅
+- [x] Test JSON serialization/deserialization ✅
+
+#### Integration Layer
+- [x] Wire chart data from `ChartDataService` → Database save ✅
+- [x] Wire chart data from Database → `ChartDataService` load ✅
+- [x] Inject `ChartDataService` into `ApplicationStartup` ✅
+- [x] Pass `ChartDataService` to `DataStorageExtensions.InitializeDatabaseAsync()` ✅
+- [ ] Test save flow end-to-end
+- [ ] Test load flow end-to-end
+
+#### UI Layer
+- [x] Update `EncounterHistoryViewModel.LoadSelectedEncounterAsync()` ✅
+- [x] Add dependency injection for `IChartDataService` and `ILogger` to `EncounterHistoryViewModel` ✅
+- [x] Fix `DpsStatisticsViewModel` to inject dependencies properly ✅
+- [x] Fix `DpsStatisticsDesignTimeViewModel` to provide design-time stubs ✅
+- [ ] Display message if no chart data available (old encounters)
+- [ ] Test historical chart display
+
+#### Testing
+- [ ] Test: Fight → Data saved → Load from history → Chart displays
+- [ ] Test: Multiple players saved correctly
+- [ ] Test: Old encounters (no chart data) handle gracefully
+- [ ] Test: Long fights (500+ points) saved correctly
+- [ ] Test: Chart axes and scaling correct for historical data
+
+---
+
+### Technical Notes
+
+**JSON Size Estimation:**
+- 500 points × 2 doubles (timestamp, value) × 8 bytes ≈ 8KB per player
+- 8 players × 8KB × 2 (DPS + HPS) ≈ 128KB per encounter
+- 100 encounters × 128KB ≈ 12.8MB (acceptable)
+
+**Serialization Format:**
+```json
+[
+  { "Timestamp": "2025-11-20T12:34:56.123Z", "Value": 12345.67 },
+  { "Timestamp": "2025-11-20T12:34:56.323Z", "Value": 12456.78 }
+]
+```
+
+**Backwards Compatibility:**
+- Old encounters without chart data: Fields will be NULL
+- UI should display "No chart data available" for old encounters
+- New encounters will have full chart history
+
+---
+
 ## Overview
 This document outlines the complete implementation plan for adding real-time chart visualization to BlueMeter, inspired by StarResonanceDps's chart system.
 
 **Current Status**: ✅ **Phase 4 Complete - DPS Trend Chart Live!** (Progress: ~60%)
+**Critical Issue**: 🔴 **Chart Data Persistence Required** (See above)
 
 ---
 

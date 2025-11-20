@@ -100,7 +100,14 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
     public IReadOnlyList<DpsData> ReadOnlySectionedDpsDataList => SectionedDpsData.Values.ToList().AsReadOnly();
 
     /// <summary>
+    /// Inactivity timeout for creating new sections (phase transitions, pauses)
+    /// Short timeout (1s) so boss phases don't count towards DPS
+    /// </summary>
+    public TimeSpan InactivityTimeout { get; set; } = TimeSpan.FromSeconds(1); // 1s for phase breaks
+
+    /// <summary>
     /// 战斗日志分段超时时间 (默认: 15s for dungeon fights and zone changes)
+    /// Used for final encounter ending and saving to history
     /// </summary>
     public TimeSpan SectionTimeout { get; set; } = TimeSpan.FromSeconds(15); // 15s timeout for dungeons
 
@@ -630,12 +637,29 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
         if (LastBattleLog != null)
         {
             var prevTt = new TimeSpan(LastBattleLog.Value.TimeTicks);
-            if (tt - prevTt > SectionTimeout || ForceNewBattleSection)
+            var gap = tt - prevTt;
+
+            // SectionTimeout (15s) for creating new sections when combat fully stops
+            // This handles: normal enemy deaths, dungeon transitions, etc.
+            if (gap > SectionTimeout || ForceNewBattleSection)
             {
                 PrivateClearDpsDataNoEvents();
                 sectionFlag = true;
                 ForceNewBattleSection = false;
             }
+
+            // Track active combat time (exclude downtime >1s)
+            // This ensures DPS calculations don't include boss phase transitions, running between packs, etc.
+            if (gap <= InactivityTimeout)
+            {
+                // Short gap - this is active combat, add to all active players
+                long gapTicks = gap.Ticks;
+                foreach (var dpsData in SectionedDpsData.Values)
+                {
+                    dpsData.ActiveCombatTicks += gapTicks;
+                }
+            }
+            // else: Gap >1s is downtime, don't add to ActiveCombatTicks
         }
 
         // Track healing done by players (regardless of target type)

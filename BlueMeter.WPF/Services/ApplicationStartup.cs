@@ -19,7 +19,8 @@ public sealed class ApplicationStartup(
     IPacketAnalyzer packetAnalyzer,
     IDataStorage dataStorage,
     LocalizationManager localization,
-    IChecklistService checklistService) : IApplicationStartup
+    IChecklistService checklistService,
+    IChartDataService chartDataService) : IApplicationStartup
 {
     public async Task InitializeAsync()
     {
@@ -36,7 +37,7 @@ public sealed class ApplicationStartup(
             // Initialize database for encounter history
             try
             {
-                await DataStorageExtensions.InitializeDatabaseAsync(dataStorage);
+                await DataStorageExtensions.InitializeDatabaseAsync(dataStorage, chartDataService: chartDataService);
                 logger.LogInformation(WpfLogEvents.StartupInit, "Database initialized successfully");
 
                 // Preload player cache from database to reduce "Unknown" players

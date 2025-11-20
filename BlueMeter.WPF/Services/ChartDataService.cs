@@ -153,6 +153,53 @@ public sealed class ChartDataService : IChartDataService
         return _dpsHistory.Keys.ToList().AsReadOnly();
     }
 
+    public Dictionary<long, List<ChartDataPoint>> GetDpsHistorySnapshot()
+    {
+        var snapshot = new Dictionary<long, List<ChartDataPoint>>();
+        foreach (var kvp in _dpsHistory)
+        {
+            // Deep copy: create new ChartDataPoint instances
+            snapshot[kvp.Key] = kvp.Value.Select(dp => new ChartDataPoint(dp.Timestamp, dp.Value)).ToList();
+        }
+        _logger.LogDebug("Created DPS history snapshot: {PlayerCount} players, {TotalPoints} total points",
+            snapshot.Count, snapshot.Sum(kvp => kvp.Value.Count));
+        return snapshot;
+    }
+
+    public Dictionary<long, List<ChartDataPoint>> GetHpsHistorySnapshot()
+    {
+        var snapshot = new Dictionary<long, List<ChartDataPoint>>();
+        foreach (var kvp in _hpsHistory)
+        {
+            // Deep copy: create new ChartDataPoint instances
+            snapshot[kvp.Key] = kvp.Value.Select(dp => new ChartDataPoint(dp.Timestamp, dp.Value)).ToList();
+        }
+        _logger.LogDebug("Created HPS history snapshot: {PlayerCount} players, {TotalPoints} total points",
+            snapshot.Count, snapshot.Sum(kvp => kvp.Value.Count));
+        return snapshot;
+    }
+
+    public void LoadHistoricalChartData(
+        Dictionary<long, List<ChartDataPoint>> dpsHistory,
+        Dictionary<long, List<ChartDataPoint>> hpsHistory)
+    {
+        _dpsHistory.Clear();
+        _hpsHistory.Clear();
+
+        foreach (var kvp in dpsHistory)
+        {
+            _dpsHistory[kvp.Key] = new ObservableCollection<ChartDataPoint>(kvp.Value);
+        }
+
+        foreach (var kvp in hpsHistory)
+        {
+            _hpsHistory[kvp.Key] = new ObservableCollection<ChartDataPoint>(kvp.Value);
+        }
+
+        _logger.LogInformation("Loaded historical chart data: {DpsPlayers} DPS players, {HpsPlayers} HPS players",
+            dpsHistory.Count, hpsHistory.Count);
+    }
+
     public void Dispose()
     {
         if (_isDisposed)

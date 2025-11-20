@@ -113,7 +113,12 @@ public class EncounterRepository
     /// <summary>
     /// Save player statistics for an encounter
     /// </summary>
-    public async Task SavePlayerStatsAsync(string encounterId, PlayerInfo playerInfo, DpsData dpsData)
+    public async Task SavePlayerStatsAsync(
+        string encounterId,
+        PlayerInfo playerInfo,
+        DpsData dpsData,
+        List<ChartDataPoint>? dpsHistory = null,
+        List<ChartDataPoint>? hpsHistory = null)
     {
         var encounter = await _context.Encounters
             .FirstOrDefaultAsync(e => e.EncounterId == encounterId);
@@ -158,6 +163,27 @@ public class EncounterRepository
         }
         stats.SkillDataJson = JsonConvert.SerializeObject(skillDictionary);
 
+        // Serialize chart history data
+        if (dpsHistory != null && dpsHistory.Count > 0)
+        {
+            stats.DpsHistoryJson = JsonConvert.SerializeObject(dpsHistory);
+            DebugLogger.Log($"[SavePlayerStatsAsync] Saved DPS history for {playerInfo.Name}: {dpsHistory.Count} data points, JSON length: {stats.DpsHistoryJson.Length}");
+        }
+        else
+        {
+            DebugLogger.Log($"[SavePlayerStatsAsync] No DPS history to save for {playerInfo.Name}");
+        }
+
+        if (hpsHistory != null && hpsHistory.Count > 0)
+        {
+            stats.HpsHistoryJson = JsonConvert.SerializeObject(hpsHistory);
+            DebugLogger.Log($"[SavePlayerStatsAsync] Saved HPS history for {playerInfo.Name}: {hpsHistory.Count} data points, JSON length: {stats.HpsHistoryJson.Length}");
+        }
+        else
+        {
+            DebugLogger.Log($"[SavePlayerStatsAsync] No HPS history to save for {playerInfo.Name}");
+        }
+
         // Calculate aggregate statistics
         var totalHits = 0;
         var totalCrits = 0;
@@ -200,19 +226,30 @@ public class EncounterRepository
             stats.LuckyRate = 0;
         }
 
-        // Calculate DPS/HPS (will be updated when encounter ends with final duration)
-        var durationTicks = stats.LastLoggedTick - stats.StartLoggedTick;
-        var durationSeconds = durationTicks / 10_000_000.0; // Convert Windows ticks to seconds
+        // Calculate DPS/HPS using active combat time (excluding downtime >1s)
+        // This gives accurate DPS without counting boss phases, running between packs, etc.
+        var activeCombatSeconds = dpsData.ActiveCombatTicks / 10_000_000.0; // Convert Windows ticks to seconds
 
-        if (durationSeconds > 0)
+        if (activeCombatSeconds > 0)
         {
-            stats.DPS = stats.TotalAttackDamage / durationSeconds;
-            stats.HPS = stats.TotalHeal / durationSeconds;
+            stats.DPS = stats.TotalAttackDamage / activeCombatSeconds;
+            stats.HPS = stats.TotalHeal / activeCombatSeconds;
         }
         else
         {
-            stats.DPS = 0;
-            stats.HPS = 0;
+            // Fallback: If no active combat time tracked, use total duration
+            var durationTicks = stats.LastLoggedTick - stats.StartLoggedTick;
+            var durationSeconds = durationTicks / 10_000_000.0;
+            if (durationSeconds > 0)
+            {
+                stats.DPS = stats.TotalAttackDamage / durationSeconds;
+                stats.HPS = stats.TotalHeal / durationSeconds;
+            }
+            else
+            {
+                stats.DPS = 0;
+                stats.HPS = 0;
+            }
         }
 
         await _context.SaveChangesAsync();

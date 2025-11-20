@@ -57,6 +57,8 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
     private readonly IWindowManagementService _windowManagement;
     private readonly ITopmostService _topmostService;
     private readonly ITrayService _trayService;
+    private readonly IChartDataService _chartDataService;
+    private readonly ILoggerFactory _loggerFactory;
     private DispatcherTimer? _durationTimer;
     private bool _isInitialized;
     // UI update throttling to prevent freezing during intense combat
@@ -92,7 +94,9 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         ITopmostService topmostService,
         ITrayService trayService,
         DebugFunctions debugFunctions,
-        Dispatcher dispatcher)
+        Dispatcher dispatcher,
+        IChartDataService chartDataService,
+        ILoggerFactory loggerFactory)
     {
         StatisticData = new Dictionary<StatisticType, DpsStatisticsSubViewModel>
         {
@@ -137,6 +141,8 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         _topmostService = topmostService;
         _trayService = trayService;
         _dispatcher = dispatcher;
+        _chartDataService = chartDataService;
+        _loggerFactory = loggerFactory;
 
         // Subscribe to DebugFunctions events to handle sample data requests
         DebugFunctions.SampleDataRequested += OnSampleDataRequested;
@@ -709,7 +715,7 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
             WindowStartupLocation = WindowStartupLocation.CenterOwner
         };
 
-        var viewModel = new EncounterHistoryViewModel();
+        var viewModel = new EncounterHistoryViewModel(_chartDataService, _loggerFactory.CreateLogger<EncounterHistoryViewModel>());
         historyWindow.DataContext = viewModel;
 
         // Handle RequestClose event

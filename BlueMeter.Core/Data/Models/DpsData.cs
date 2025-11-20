@@ -22,6 +22,11 @@ namespace BlueMeter.Core.Data.Models
         /// </summary>
         public long LastLoggedTick { get; internal set; } // TODO: 改成ulong
         /// <summary>
+        /// Active combat time in ticks (excluding downtime >1s)
+        /// Used for accurate DPS calculation without pauses
+        /// </summary>
+        public long ActiveCombatTicks { get; internal set; }
+        /// <summary>
         /// 统计的总伤害
         /// </summary>
         public long TotalAttackDamage { get; internal set; }// TODO: 改成ulong

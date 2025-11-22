@@ -60,9 +60,10 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
     private DispatcherTimer? _durationTimer;
     private bool _isInitialized;
     // UI update throttling to prevent freezing during intense combat
+    // Increased from 100ms to 200ms to improve performance in high-activity scenarios (raids/WBC)
     private DateTime _lastUiUpdate = DateTime.MinValue;
     private bool _pendingUiUpdate;
-    private readonly TimeSpan _uiUpdateThrottle = TimeSpan.FromMilliseconds(100);
+    private readonly TimeSpan _uiUpdateThrottle = TimeSpan.FromMilliseconds(200);
     // Combat pause detection - pause timer when no damage (but don't archive!)
     private DateTime _lastDamageTime = DateTime.MinValue;
     private readonly TimeSpan _combatPauseThreshold = TimeSpan.FromSeconds(1); // Stop meter after 1s of no combat

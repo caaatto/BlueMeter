@@ -50,9 +50,24 @@ public static class DataStorage
     public static ReadOnlyDictionary<long, DpsData> ReadOnlyFullDpsDatas => FullDpsDatas.AsReadOnly();
 
     /// <summary>
-    /// 只读全程玩家DPS列表; 注意! 频繁读取该属性可能会导致性能问题!
+    /// 缓存的全程玩家DPS列表
     /// </summary>
-    public static IReadOnlyList<DpsData> ReadOnlyFullDpsDataList => FullDpsDatas.Values.ToList().AsReadOnly();
+    private static List<DpsData>? _cachedFullDpsDataList;
+
+    /// <summary>
+    /// 只读全程玩家DPS列表 (性能优化: 使用缓存避免频繁创建新列表)
+    /// </summary>
+    public static IReadOnlyList<DpsData> ReadOnlyFullDpsDataList
+    {
+        get
+        {
+            if (_cachedFullDpsDataList == null)
+            {
+                _cachedFullDpsDataList = FullDpsDatas.Values.ToList();
+            }
+            return _cachedFullDpsDataList.AsReadOnly();
+        }
+    }
 
     /// <summary>
     /// 阶段性玩家DPS字典 (Key: UID)
@@ -65,9 +80,24 @@ public static class DataStorage
     public static ReadOnlyDictionary<long, DpsData> ReadOnlySectionedDpsDatas => SectionedDpsDatas.AsReadOnly();
 
     /// <summary>
-    /// 阶段性只读玩家DPS列表; 注意! 频繁读取该属性可能会导致性能问题!
+    /// 缓存的阶段性玩家DPS列表
     /// </summary>
-    public static IReadOnlyList<DpsData> ReadOnlySectionedDpsDataList => SectionedDpsDatas.Values.ToList().AsReadOnly();
+    private static List<DpsData>? _cachedSectionedDpsDataList;
+
+    /// <summary>
+    /// 阶段性只读玩家DPS列表 (性能优化: 使用缓存避免频繁创建新列表)
+    /// </summary>
+    public static IReadOnlyList<DpsData> ReadOnlySectionedDpsDataList
+    {
+        get
+        {
+            if (_cachedSectionedDpsDataList == null)
+            {
+                _cachedSectionedDpsDataList = SectionedDpsDatas.Values.ToList();
+            }
+            return _cachedSectionedDpsDataList.AsReadOnly();
+        }
+    }
 
     /// <summary>
     /// 战斗日志分段超时时间 (默认: 15s for dungeon fights and zone changes)
@@ -291,12 +321,16 @@ public static class DataStorage
         if (!fullDpsDataFlag)
         {
             fullDpsData = new DpsData { UID = uid };
+            // Invalidate cache when adding new entry
+            _cachedFullDpsDataList = null;
         }
 
         var sectionedDpsDataFlag = SectionedDpsDatas.TryGetValue(uid, out var sectionedDpsData);
         if (!sectionedDpsDataFlag)
         {
             sectionedDpsData = new DpsData { UID = uid };
+            // Invalidate cache when adding new entry
+            _cachedSectionedDpsDataList = null;
         }
 
         SectionedDpsDatas[uid] = sectionedDpsData!;
@@ -549,6 +583,10 @@ public static class DataStorage
         SectionedDpsDatas.Clear();
         FullDpsDatas.Clear();
 
+        // Invalidate caches
+        _cachedFullDpsDataList = null;
+        _cachedSectionedDpsDataList = null;
+
         try
         {
             DpsDataUpdated?.Invoke();
@@ -573,6 +611,9 @@ public static class DataStorage
     private static void PrivateClearDpsData()
     {
         SectionedDpsDatas.Clear();
+
+        // Invalidate sectioned cache
+        _cachedSectionedDpsDataList = null;
 
         try
         {

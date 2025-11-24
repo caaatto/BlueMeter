@@ -458,9 +458,26 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
         var now = DateTime.UtcNow;
         if (now - last <= SectionTimeout) return;
 
-        // Timeout reached: clear section and notify
+        // Timeout reached: save and clear section
         try
         {
+            // CRITICAL FIX: Also save encounter on timeout (training dummy, wipe, etc.)
+            // Calculate duration from last activity
+            var durationMs = (long)(now - last).TotalMilliseconds;
+
+            try
+            {
+                // Save encounter before clearing (blocking to ensure data is captured)
+                DataStorageExtensions.EndCurrentEncounterAsync(durationMs, bossName: null, bossUuid: null)
+                    .GetAwaiter().GetResult();
+                logger.LogInformation("Encounter ended by timeout after {DurationMs}ms of inactivity", durationMs);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Failed to end encounter on timeout");
+            }
+
+            // Now safe to clear
             PrivateClearDpsData(); // raises DpsDataUpdated & DataUpdated
             RaiseNewSectionCreated();
         }

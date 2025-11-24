@@ -100,7 +100,14 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
     public IReadOnlyList<DpsData> ReadOnlySectionedDpsDataList => SectionedDpsData.Values.ToList().AsReadOnly();
 
     /// <summary>
+    /// Inactivity timeout for creating new sections (phase transitions, pauses)
+    /// Short timeout (1s) so boss phases don't count towards DPS
+    /// </summary>
+    public TimeSpan InactivityTimeout { get; set; } = TimeSpan.FromSeconds(1); // 1s for phase breaks
+
+    /// <summary>
     /// 战斗日志分段超时时间 (默认: 15s for dungeon fights and zone changes)
+    /// Used for final encounter ending and saving to history
     /// </summary>
     public TimeSpan SectionTimeout { get; set; } = TimeSpan.FromSeconds(15); // 15s timeout for dungeons
 
@@ -421,21 +428,20 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
                     ? (long)(DateTime.UtcNow - currentBossDeathTime.Value).TotalMilliseconds + (BossDeathDelaySeconds * 1000)
                     : (long)SectionTimeout.TotalMilliseconds;
 
-                // End encounter before clearing DPS data
-                _ = Task.Run(async () =>
+                // CRITICAL FIX: Save encounter data synchronously BEFORE clearing
+                // We must block here to ensure chart data is captured before it's deleted
+                try
                 {
-                    try
-                    {
-                        await DataStorageExtensions.EndCurrentEncounterAsync(durationMs, bossName, currentBossUuid);
-                        logger.LogInformation("Encounter ended for boss: {BossName} (UID={BossUid}), Duration={DurationMs}ms",
-                            bossName, currentBossUuid, durationMs);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogError(ex, "Failed to end encounter for boss fight");
-                    }
-                });
+                    DataStorageExtensions.EndCurrentEncounterAsync(durationMs, bossName, currentBossUuid).GetAwaiter().GetResult();
+                    logger.LogInformation("Encounter ended for boss: {BossName} (UID={BossUid}), Duration={DurationMs}ms",
+                        bossName, currentBossUuid, durationMs);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Failed to end encounter for boss fight");
+                }
 
+                // Now safe to clear - data has been saved
                 PrivateClearDpsData(); // raises DpsDataUpdated & DataUpdated
                 RaiseNewSectionCreated();
             }
@@ -452,9 +458,26 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
         var now = DateTime.UtcNow;
         if (now - last <= SectionTimeout) return;
 
-        // Timeout reached: clear section and notify
+        // Timeout reached: save and clear section
         try
         {
+            // CRITICAL FIX: Also save encounter on timeout (training dummy, wipe, etc.)
+            // Calculate duration from last activity
+            var durationMs = (long)(now - last).TotalMilliseconds;
+
+            try
+            {
+                // Save encounter before clearing (blocking to ensure data is captured)
+                DataStorageExtensions.EndCurrentEncounterAsync(durationMs, bossName: null, bossUuid: null)
+                    .GetAwaiter().GetResult();
+                logger.LogInformation("Encounter ended by timeout after {DurationMs}ms of inactivity", durationMs);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, "Failed to end encounter on timeout");
+            }
+
+            // Now safe to clear
             PrivateClearDpsData(); // raises DpsDataUpdated & DataUpdated
             RaiseNewSectionCreated();
         }
@@ -630,12 +653,29 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
         if (LastBattleLog != null)
         {
             var prevTt = new TimeSpan(LastBattleLog.Value.TimeTicks);
-            if (tt - prevTt > SectionTimeout || ForceNewBattleSection)
+            var gap = tt - prevTt;
+
+            // SectionTimeout (15s) for creating new sections when combat fully stops
+            // This handles: normal enemy deaths, dungeon transitions, etc.
+            if (gap > SectionTimeout || ForceNewBattleSection)
             {
                 PrivateClearDpsDataNoEvents();
                 sectionFlag = true;
                 ForceNewBattleSection = false;
             }
+
+            // Track active combat time (exclude downtime >1s)
+            // This ensures DPS calculations don't include boss phase transitions, running between packs, etc.
+            if (gap <= InactivityTimeout)
+            {
+                // Short gap - this is active combat, add to all active players
+                long gapTicks = gap.Ticks;
+                foreach (var dpsData in SectionedDpsData.Values)
+                {
+                    dpsData.ActiveCombatTicks += gapTicks;
+                }
+            }
+            // else: Gap >1s is downtime, don't add to ActiveCombatTicks
         }
 
         // Track healing done by players (regardless of target type)
@@ -646,6 +686,9 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
             TrySetSubProfessionBySkillId(log.AttackerUuid, log.SkillID);
             fullData.TotalHeal += log.Value;
             sectionedData.TotalHeal += log.Value;
+
+            // Real-time windowing for charts (Phase 2B)
+            sectionedData.AddHealToWindow(log.Value);
         }
 
         // Track damage dealt by players (regardless of target type)
@@ -655,6 +698,9 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
             TrySetSubProfessionBySkillId(log.AttackerUuid, log.SkillID);
             fullData.TotalAttackDamage += log.Value;
             sectionedData.TotalAttackDamage += log.Value;
+
+            // Real-time windowing for charts (Phase 2B)
+            sectionedData.AddDamageToWindow(log.Value);
         }
 
         // Track damage taken by players
@@ -694,6 +740,12 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
     /// </summary>
     private void PrivateClearDpsDataNoEvents()
     {
+        // Clear sliding windows for charts (Phase 2B)
+        foreach (var dpsData in SectionedDpsData.Values)
+        {
+            dpsData.ClearWindows();
+        }
+
         SectionedDpsData.Clear();
     }
 
@@ -757,6 +809,12 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
 
     private void PrivateClearDpsData()
     {
+        // Clear sliding windows for charts (Phase 2B)
+        foreach (var dpsData in SectionedDpsData.Values)
+        {
+            dpsData.ClearWindows();
+        }
+
         SectionedDpsData.Clear();
 
         // Reset boss tracking when section clears

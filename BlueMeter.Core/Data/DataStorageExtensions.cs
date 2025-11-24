@@ -14,6 +14,7 @@ public static class DataStorageExtensions
 {
     private static EncounterService? _encounterService;
     private static IDataStorage? _dataStorage;
+    private static object? _chartDataService; // IChartDataService from WPF
     private static bool _isInitialized;
     private static DateTime _lastSaveTime = DateTime.MinValue;
     private static readonly TimeSpan MinSaveDuration = TimeSpan.FromSeconds(3);
@@ -21,12 +22,13 @@ public static class DataStorageExtensions
     /// <summary>
     /// Initialize database integration with DataStorage
     /// </summary>
-    public static async Task InitializeDatabaseAsync(IDataStorage? dataStorage = null, string? databasePath = null)
+    public static async Task InitializeDatabaseAsync(IDataStorage? dataStorage = null, string? databasePath = null, object? chartDataService = null)
     {
         if (_isInitialized) return;
 
         databasePath ??= DatabaseInitializer.GetDefaultDatabasePath();
         _dataStorage = dataStorage;
+        _chartDataService = chartDataService; // Store reference to chart service
 
         // Initialize database
         await DatabaseInitializer.InitializeAsync(databasePath);
@@ -97,7 +99,50 @@ public static class DataStorageExtensions
                 dpsData = DataStorage.ReadOnlySectionedDpsDatas.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
             }
 
-            await _encounterService.SavePlayerStatsAsync(playerInfos, dpsData);
+            // Get chart history snapshots (using reflection to avoid circular dependency)
+            Dictionary<long, List<Database.ChartDataPoint>>? dpsHistory = null;
+            Dictionary<long, List<Database.ChartDataPoint>>? hpsHistory = null;
+
+            if (_chartDataService != null)
+            {
+                try
+                {
+                    var serviceType = _chartDataService.GetType();
+                    var getDpsMethod = serviceType.GetMethod("GetDpsHistorySnapshot");
+                    var getHpsMethod = serviceType.GetMethod("GetHpsHistorySnapshot");
+
+                    if (getDpsMethod != null && getHpsMethod != null)
+                    {
+                        // Get snapshots from WPF service (returns Dictionary<long, List<WPF.ChartDataPoint>>)
+                        var wpfDpsHistory = getDpsMethod.Invoke(_chartDataService, null) as dynamic;
+                        var wpfHpsHistory = getHpsMethod.Invoke(_chartDataService, null) as dynamic;
+
+                        // Convert WPF ChartDataPoints to Core ChartDataPoints
+                        dpsHistory = ConvertChartHistory(wpfDpsHistory);
+                        hpsHistory = ConvertChartHistory(wpfHpsHistory);
+
+                        // DEBUG: Log chart history capture
+                        Console.WriteLine($"[DataStorageExtensions] Chart history captured:");
+                        Console.WriteLine($"  - DPS History: {dpsHistory?.Count ?? 0} players, {dpsHistory?.Sum(kvp => kvp.Value.Count) ?? 0} total points");
+                        Console.WriteLine($"  - HPS History: {hpsHistory?.Count ?? 0} players, {hpsHistory?.Sum(kvp => kvp.Value.Count) ?? 0} total points");
+                    }
+                    else
+                    {
+                        Console.WriteLine("[DataStorageExtensions] WARNING: Chart snapshot methods not found!");
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[DataStorageExtensions] ERROR getting chart history: {ex.Message}");
+                    Console.WriteLine($"  Stack trace: {ex.StackTrace}");
+                }
+            }
+            else
+            {
+                Console.WriteLine("[DataStorageExtensions] WARNING: ChartDataService is null, no chart data will be saved!");
+            }
+
+            await _encounterService.SavePlayerStatsAsync(playerInfos, dpsData, dpsHistory, hpsHistory);
 
             _lastSaveTime = DateTime.Now;
         }
@@ -105,6 +150,34 @@ public static class DataStorageExtensions
         {
             Console.WriteLine($"Error saving encounter: {ex.Message}");
         }
+    }
+
+    /// <summary>
+    /// Convert chart history from WPF ChartDataPoint to Core ChartDataPoint
+    /// </summary>
+    private static Dictionary<long, List<Database.ChartDataPoint>>? ConvertChartHistory(dynamic? wpfHistory)
+    {
+        if (wpfHistory == null) return null;
+
+        var result = new Dictionary<long, List<Database.ChartDataPoint>>();
+
+        foreach (var kvp in wpfHistory)
+        {
+            long playerId = kvp.Key;
+            var points = new List<Database.ChartDataPoint>();
+
+            foreach (var wpfPoint in kvp.Value)
+            {
+                // Access properties via dynamic
+                DateTime timestamp = wpfPoint.Timestamp;
+                double value = wpfPoint.Value;
+                points.Add(new Database.ChartDataPoint(timestamp, value));
+            }
+
+            result[playerId] = points;
+        }
+
+        return result;
     }
 
     /// <summary>

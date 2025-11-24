@@ -11,6 +11,8 @@ using BlueMeter.Core.Data.Models;
 using System.Collections.Generic;
 using BlueMeter.Core.Models;
 using Newtonsoft.Json;
+using BlueMeter.WPF.Services;
+using Microsoft.Extensions.Logging;
 
 namespace BlueMeter.WPF.ViewModels;
 
@@ -19,6 +21,14 @@ namespace BlueMeter.WPF.ViewModels;
 /// </summary>
 public partial class EncounterHistoryViewModel : BaseViewModel
 {
+    private readonly IChartDataService _chartDataService;
+    private readonly ILogger<EncounterHistoryViewModel> _logger;
+
+    public EncounterHistoryViewModel(IChartDataService chartDataService, ILogger<EncounterHistoryViewModel> logger)
+    {
+        _chartDataService = chartDataService;
+        _logger = logger;
+    }
     [ObservableProperty]
     private ObservableCollection<EncounterSummaryViewModel> _encounters = new();
 
@@ -112,6 +122,45 @@ public partial class EncounterHistoryViewModel : BaseViewModel
             var encounterData = await DataStorageExtensions.LoadEncounterAsync(SelectedEncounter.EncounterId);
             if (encounterData != null)
             {
+                // Load chart history data into ChartDataService
+                var dpsHistory = new Dictionary<long, List<Models.ChartDataPoint>>();
+                var hpsHistory = new Dictionary<long, List<Models.ChartDataPoint>>();
+
+                foreach (var playerStats in encounterData.PlayerStats.Values)
+                {
+                    // Convert Core.ChartDataPoint to WPF.ChartDataPoint
+                    if (playerStats.DpsHistory != null && playerStats.DpsHistory.Count > 0)
+                    {
+                        dpsHistory[playerStats.UID] = playerStats.DpsHistory
+                            .Select(dp => new Models.ChartDataPoint(dp.Timestamp, dp.Value))
+                            .ToList();
+                        _logger.LogInformation("Loaded {Count} DPS history points for player {PlayerName}",
+                            playerStats.DpsHistory.Count, playerStats.Name);
+                    }
+
+                    if (playerStats.HpsHistory != null && playerStats.HpsHistory.Count > 0)
+                    {
+                        hpsHistory[playerStats.UID] = playerStats.HpsHistory
+                            .Select(dp => new Models.ChartDataPoint(dp.Timestamp, dp.Value))
+                            .ToList();
+                        _logger.LogInformation("Loaded {Count} HPS history points for player {PlayerName}",
+                            playerStats.HpsHistory.Count, playerStats.Name);
+                    }
+                }
+
+                // Load the chart data into the service
+                if (dpsHistory.Count > 0 || hpsHistory.Count > 0)
+                {
+                    _chartDataService.LoadHistoricalChartData(dpsHistory, hpsHistory);
+                    _logger.LogInformation("Loaded historical chart data: {DpsPlayers} DPS, {HpsPlayers} HPS",
+                        dpsHistory.Count, hpsHistory.Count);
+                }
+                else
+                {
+                    _logger.LogWarning("No chart history data found for encounter {EncounterId}",
+                        SelectedEncounter.EncounterId);
+                }
+
                 LoadEncounterRequested?.Invoke(encounterData);
                 RequestClose?.Invoke();
             }
@@ -122,6 +171,7 @@ public partial class EncounterHistoryViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
+            _logger.LogError(ex, "Error loading encounter {EncounterId}", SelectedEncounter?.EncounterId);
             StatusMessage = $"Error loading encounter: {ex.Message}";
         }
         finally

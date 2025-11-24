@@ -80,6 +80,31 @@ public static class DatabaseInitializer
 
                 Console.WriteLine("Successfully applied aggregate statistics migration to PlayerEncounterStats table");
             }
+
+            // Migration: Add chart history JSON columns to PlayerEncounterStats
+            // Check if DpsHistoryJson column exists
+            using var checkCommand = connection.CreateCommand();
+            checkCommand.CommandText = "SELECT COUNT(*) FROM pragma_table_info('PlayerEncounterStats') WHERE name='DpsHistoryJson'";
+            var historyColumnsExist = Convert.ToInt32(await checkCommand.ExecuteScalarAsync()) > 0;
+
+            if (!historyColumnsExist)
+            {
+                // Add chart history columns
+                var historyAlterCommands = new[]
+                {
+                    "ALTER TABLE PlayerEncounterStats ADD COLUMN DpsHistoryJson TEXT",
+                    "ALTER TABLE PlayerEncounterStats ADD COLUMN HpsHistoryJson TEXT"
+                };
+
+                foreach (var alterCommand in historyAlterCommands)
+                {
+                    using var alterCmd = connection.CreateCommand();
+                    alterCmd.CommandText = alterCommand;
+                    await alterCmd.ExecuteNonQueryAsync();
+                }
+
+                Console.WriteLine("Successfully applied chart history migration to PlayerEncounterStats table");
+            }
         }
         catch (Exception ex)
         {

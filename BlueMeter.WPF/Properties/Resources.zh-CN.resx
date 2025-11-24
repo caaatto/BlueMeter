@@ -174,8 +174,8 @@
   <data name="Menu_Training_Faction" xml:space="preserve">
     <value>组队打桩</value>
   </data>
-  <data name="Menu_SkillDiary" xml:space="preserve">
-    <value>技能日记</value>
+  <data name="Menu_AdvancedCombatLog" xml:space="preserve">
+    <value>高级战斗日志</value>
   </data>
   <data name="Menu_Exit" xml:space="preserve">
     <value>退出</value>

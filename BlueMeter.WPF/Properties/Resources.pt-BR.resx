@@ -174,8 +174,8 @@
   <data name="Menu_Training_Faction" xml:space="preserve">
     <value>Treino de Grupo</value>
   </data>
-  <data name="Menu_SkillDiary" xml:space="preserve">
-    <value>Diário de Habilidades</value>
+  <data name="Menu_AdvancedCombatLog" xml:space="preserve">
+    <value>Registro de Combate Avançado</value>
   </data>
   <data name="Menu_Exit" xml:space="preserve">
     <value>Sair</value>

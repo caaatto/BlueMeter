@@ -22,6 +22,11 @@ namespace BlueMeter.Core.Data.Models
         /// </summary>
         public long LastLoggedTick { get; internal set; } // TODO: 改成ulong
         /// <summary>
+        /// Active combat time in ticks (excluding downtime >1s)
+        /// Used for accurate DPS calculation without pauses
+        /// </summary>
+        public long ActiveCombatTicks { get; internal set; }
+        /// <summary>
         /// 统计的总伤害
         /// </summary>
         public long TotalAttackDamage { get; internal set; }// TODO: 改成ulong
@@ -37,6 +42,34 @@ namespace BlueMeter.Core.Data.Models
         /// 是否为NPC数据
         /// </summary>
         public bool IsNpcData { get; internal set; } = false;
+
+        // ==================== Real-Time Windowing for Charts ====================
+        // 1-second sliding window for instant DPS/HPS calculation (inspired by StarResonanceDps)
+
+        /// <summary>
+        /// Sliding window for damage events (1-second window)
+        /// </summary>
+        private readonly List<(DateTime timestamp, long damage)> _damageWindow = new();
+
+        /// <summary>
+        /// Sliding window for heal events (1-second window)
+        /// </summary>
+        private readonly List<(DateTime timestamp, long heal)> _healWindow = new();
+
+        /// <summary>
+        /// Lock for thread-safe window operations
+        /// </summary>
+        private readonly object _windowLock = new();
+
+        /// <summary>
+        /// Instant DPS calculated from 1-second sliding window
+        /// </summary>
+        public long InstantDps { get; private set; }
+
+        /// <summary>
+        /// Instant HPS calculated from 1-second sliding window
+        /// </summary>
+        public long InstantHps { get; private set; }
         /// <summary>
         /// 战斗日志列表
         /// </summary>
@@ -118,6 +151,67 @@ namespace BlueMeter.Core.Data.Models
                 MaxDamage = source.MaxDamage,
                 HighestCrit = source.HighestCrit
             };
+        }
+
+        // ==================== Real-Time Windowing Methods ====================
+
+        /// <summary>
+        /// Add damage to sliding window and update instant DPS
+        /// Called on every damage event for real-time chart data
+        /// </summary>
+        /// <param name="damage">Damage amount to add</param>
+        public void AddDamageToWindow(long damage)
+        {
+            lock (_windowLock)
+            {
+                _damageWindow.Add((DateTime.UtcNow, damage));
+                UpdateRealtimeStats();
+            }
+        }
+
+        /// <summary>
+        /// Add heal to sliding window and update instant HPS
+        /// Called on every heal event for real-time chart data
+        /// </summary>
+        /// <param name="heal">Heal amount to add</param>
+        public void AddHealToWindow(long heal)
+        {
+            lock (_windowLock)
+            {
+                _healWindow.Add((DateTime.UtcNow, heal));
+                UpdateRealtimeStats();
+            }
+        }
+
+        /// <summary>
+        /// Update instant DPS/HPS from sliding windows
+        /// Removes entries older than 1 second and recalculates instant values
+        /// </summary>
+        private void UpdateRealtimeStats()
+        {
+            var cutoff = DateTime.UtcNow.AddSeconds(-1);
+
+            // Remove old entries (older than 1 second)
+            _damageWindow.RemoveAll(x => x.timestamp < cutoff);
+            _healWindow.RemoveAll(x => x.timestamp < cutoff);
+
+            // Calculate instant values (sum of last 1 second)
+            InstantDps = _damageWindow.Sum(x => x.damage);
+            InstantHps = _healWindow.Sum(x => x.heal);
+        }
+
+        /// <summary>
+        /// Clear sliding windows (called when section ends or resets)
+        /// </summary>
+        public void ClearWindows()
+        {
+            lock (_windowLock)
+            {
+                _damageWindow.Clear();
+                _healWindow.Clear();
+                InstantDps = 0;
+                InstantHps = 0;
+            }
         }
     }
 }

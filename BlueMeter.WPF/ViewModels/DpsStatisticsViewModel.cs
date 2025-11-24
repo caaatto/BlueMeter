@@ -57,6 +57,8 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
     private readonly IWindowManagementService _windowManagement;
     private readonly ITopmostService _topmostService;
     private readonly ITrayService _trayService;
+    private readonly IChartDataService _chartDataService;
+    private readonly ILoggerFactory _loggerFactory;
     private DispatcherTimer? _durationTimer;
     private bool _isInitialized;
     // UI update throttling to prevent freezing during intense combat
@@ -93,7 +95,9 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         ITopmostService topmostService,
         ITrayService trayService,
         DebugFunctions debugFunctions,
-        Dispatcher dispatcher)
+        Dispatcher dispatcher,
+        IChartDataService chartDataService,
+        ILoggerFactory loggerFactory)
     {
         StatisticData = new Dictionary<StatisticType, DpsStatisticsSubViewModel>
         {
@@ -138,6 +142,8 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         _topmostService = topmostService;
         _trayService = trayService;
         _dispatcher = dispatcher;
+        _chartDataService = chartDataService;
+        _loggerFactory = loggerFactory;
 
         // Subscribe to DebugFunctions events to handle sample data requests
         DebugFunctions.SampleDataRequested += OnSampleDataRequested;
@@ -710,7 +716,7 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
             WindowStartupLocation = WindowStartupLocation.CenterOwner
         };
 
-        var viewModel = new EncounterHistoryViewModel();
+        var viewModel = new EncounterHistoryViewModel(_chartDataService, _loggerFactory.CreateLogger<EncounterHistoryViewModel>());
         historyWindow.DataContext = viewModel;
 
         // Handle RequestClose event
@@ -734,42 +740,22 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
     {
         if (player == null) return;
 
-        _logger.LogInformation("Opening skill breakdown for player: {PlayerName} (UID: {PlayerUid})",
+        _logger.LogInformation("Opening Advanced Combat Log for player: {PlayerName} (UID: {PlayerUid})",
             player.Player.Name, player.Player.Uid);
 
-        // Get the ViewModel and update it with the player data
-        if (_windowManagement.SkillBreakdownView.DataContext is SkillBreakdownViewModel viewModel)
-        {
-            viewModel.SetPlayerData(player);
-        }
-
-        _windowManagement.SkillBreakdownView.Show();
-        _windowManagement.SkillBreakdownView.Activate();
+        // Open ChartsWindow with focused player instead of separate SkillBreakdownView
+        var chartsWindow = _windowManagement.ChartsWindow;
+        chartsWindow.SetFocusedPlayer(player.Player.Uid);
+        chartsWindow.Show();
+        chartsWindow.Activate();
     }
 
     [RelayCommand]
-    private void OpenSkillDiary()
+    private void OpenAdvancedCombatLog()
     {
-        // Open skill breakdown for current player
-        var currentPlayer = CurrentStatisticData.CurrentPlayerSlot;
-
-        if (currentPlayer == null)
-        {
-            _logger.LogWarning("Cannot open Skill Diary: No current player data available");
-            return;
-        }
-
-        _logger.LogInformation("Opening Skill Diary for current player: {PlayerName} (UID: {PlayerUid})",
-            currentPlayer.Player.Name, currentPlayer.Player.Uid);
-
-        // Get the ViewModel and update it with the current player data
-        if (_windowManagement.SkillBreakdownView.DataContext is SkillBreakdownViewModel viewModel)
-        {
-            viewModel.SetPlayerData(currentPlayer);
-        }
-
-        _windowManagement.SkillBreakdownView.Show();
-        _windowManagement.SkillBreakdownView.Activate();
+        _logger.LogInformation("Opening Advanced Combat Log (Charts)");
+        _windowManagement.ChartsWindow.Show();
+        _windowManagement.ChartsWindow.Activate();
     }
 
     private async Task LoadHistoricalEncounterAsync(Core.Data.Database.EncounterData encounterData)

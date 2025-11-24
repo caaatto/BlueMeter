@@ -17,6 +17,7 @@ public class WindowManagementService(IServiceProvider provider, ILogger<WindowMa
     private SkillBreakdownView? _skillBreakDownView;
     private BossTrackerView? _bossTrackerView;
     private ChecklistWindow? _checklistWindow;
+    private ChartsWindow? _chartsWindow;
 
     public DpsStatisticsView DpsStatisticsView => _dpsStatisticsView ??= CreateDpsStatisticsView();
     public SettingsView SettingsView => _settingsView ??= CreateSettingsView();
@@ -26,6 +27,7 @@ public class WindowManagementService(IServiceProvider provider, ILogger<WindowMa
     public ModuleSolveView ModuleSolveView => _moduleSolveView ??= CreateModuleSolveView();
     public BossTrackerView BossTrackerView => _bossTrackerView ??= CreateBossTrackerView();
     public ChecklistWindow ChecklistWindow => _checklistWindow ??= CreateChecklistWindow();
+    public ChartsWindow ChartsWindow => _chartsWindow ??= CreateChartsWindow();
     public MainView MainView => provider.GetRequiredService<MainView>();
 
     private static void ConfigureOwnedToolWindow(Window view)
@@ -142,6 +144,19 @@ public class WindowManagementService(IServiceProvider provider, ILogger<WindowMa
         {
             if (_checklistWindow == view) _checklistWindow = null;
             logger.LogDebug(WpfLogEvents.WindowClosed, "Window closed: {Window}", nameof(ChecklistWindow));
+        };
+        return view;
+    }
+
+    private ChartsWindow CreateChartsWindow()
+    {
+        var view = provider.GetRequiredService<ChartsWindow>();
+        ConfigureOwnedToolWindow(view);
+        logger.LogDebug(WpfLogEvents.WindowCreated, "Window created: {Window}", nameof(ChartsWindow));
+        view.Closed += (_, _) =>
+        {
+            if (_chartsWindow == view) _chartsWindow = null;
+            logger.LogDebug(WpfLogEvents.WindowClosed, "Window closed: {Window}", nameof(ChartsWindow));
         };
         return view;
     }

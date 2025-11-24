@@ -13,5 +13,6 @@ public interface IWindowManagementService
     ModuleSolveView ModuleSolveView { get; }
     BossTrackerView BossTrackerView { get; }
     ChecklistWindow ChecklistWindow { get; }
+    ChartsWindow ChartsWindow { get; }
     MainView MainView { get; }
 }

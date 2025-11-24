@@ -72,6 +72,10 @@ public partial class App : Application
         var hotkeyService = Host.Services.GetRequiredService<IGlobalHotkeyService>();
         hotkeyService.Start();
 
+        // Start chart data service for real-time DPS/HPS sampling
+        var chartDataService = Host.Services.GetRequiredService<IChartDataService>();
+        chartDataService.Start();
+
         app.Run();
 
         // Centralized shutdown
@@ -136,6 +140,16 @@ public partial class App : Application
                 services.AddMessageDialogService();
                 services.AddChecklistServices();
 
+                // Charts Window registration (not auto-registered due to "Window" suffix)
+                services.AddTransient<ChartsWindowViewModel>();
+                services.AddTransient<ChartsWindow>();
+
+                // Chart Views and ViewModels (Phase 4-6)
+                services.AddTransient<DpsTrendChartViewModel>();
+                services.AddTransient<DpsTrendChartView>();
+                services.AddTransient<SkillBreakdownChartViewModel>();
+                services.AddTransient<SkillBreakdownChartView>();
+
                 services.AddSingleton<DebugFunctions>();
                 services.AddSingleton(CaptureDeviceList.Instance);
                 services.AddSingleton<IApplicationControlService, ApplicationControlService>();
@@ -153,6 +167,7 @@ public partial class App : Application
                 services.AddSingleton<ThemeService>();
                 services.AddHttpClient(); // Required for UpdateChecker
                 services.AddSingleton<IUpdateChecker, UpdateChecker>();
+                services.AddSingleton<IChartDataService, ChartDataService>(); // Chart data sampling service
 
                 if (_logStream != null) services.AddSingleton<IObservable<LogEvent>>(_logStream);
 

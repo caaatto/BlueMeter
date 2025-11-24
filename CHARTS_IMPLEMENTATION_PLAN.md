@@ -1,193 +1,842 @@
 # Charts Implementation Plan for BlueMeter
 
+## 🚨 CRITICAL ISSUE: Chart Data Persistence (2025-11-20)
+
+### Problem
+**Status**: 🟡 **IN TESTING** - Implementation complete, awaiting real-world test
+
+**User Report**: "dps trend funktioniert solange der kampf läuft. sobald dieser zu ende ist wars das und alles ist verloren, denn die speicherfunktion von 'History' funktioniert nicht"
+
+**Priority**: ⭐⭐⭐ **HIGHEST** - "Das speichern der Kämpfe hat oberste Prio"
+
+### Root Cause Analysis
+
+#### 1. Data Loss Flow
+```
+Fight Ends
+    ↓
+DataStorageV2.CheckSectionTimeout() [line 408-449]
+    ↓
+ShouldEndBattleSection() returns true (boss dead + 8s delay)
+    ↓
+EndCurrentEncounterAsync() - saves encounter to DB
+    ↓
+PrivateClearDpsData() - clears SectionedDpsData
+    ↓
+RaiseNewSectionCreated() event fires
+    ↓
+ChartDataService.OnNewSectionCreated() [line 124-139]
+    ↓
+_dpsHistory.Clear()  ❌ ALL CHART DATA LOST!
+_hpsHistory.Clear()  ❌ ALL CHART DATA LOST!
+```
+
+#### 2. What Gets Saved vs What Gets Lost
+
+**✅ Currently Saved to Database:**
+- `PlayerInfo` (name, class, stats)
+- `DpsData` (total damage, total healing, skill breakdown)
+- Aggregate statistics (DPS, HPS, crit rate, etc.)
+
+**❌ Currently LOST (Not Saved):**
+- `ChartDataPoint` time-series data (DPS over time)
+- `ChartDataPoint` time-series data (HPS over time)
+- Complete chart history needed for visualization
+
+#### 3. Missing Components
+
+**Database Schema:**
+- ❌ No `DpsHistoryJson` field in `PlayerStats` table
+- ❌ No `HpsHistoryJson` field in `PlayerStats` table
+
+**Persistence Logic:**
+- ❌ `DataStorageExtensions.SaveCurrentEncounterAsync()` doesn't save chart data
+- ❌ `EncounterRepository.SavePlayerStatsAsync()` doesn't store chart history
+- ❌ `ChartDataService` clears data BEFORE it can be saved
+
+**Loading Logic:**
+- ❌ `EncounterService.LoadEncounterAsync()` doesn't load chart data
+- ❌ `ChartDataService` has no method to load historical data
+- ❌ No UI integration to display historical charts
+
+### Solution Plan
+
+#### Phase P1: Database Schema Extension ⏳
+**Files to Modify:**
+- `BlueMeter.Core/Data/Models/Database/EncounterEntity.cs`
+- `BlueMeter.Core/Data/Database/EncounterRepository.cs`
+
+**Changes:**
+```csharp
+// Add to PlayerStatsEntity
+public string? DpsHistoryJson { get; set; }
+public string? HpsHistoryJson { get; set; }
+```
+
+**Database Migration:** Add two TEXT/NVARCHAR columns to `PlayerStats` table
+
+---
+
+#### Phase P2: Save Chart Data Before Clearing ⏳
+**Files to Modify:**
+- `BlueMeter.WPF/Services/ChartDataService.cs`
+- `BlueMeter.Core/Data/DataStorageExtensions.cs`
+- `BlueMeter.Core/Data/Database/EncounterRepository.cs`
+
+**Strategy 1: Save Before Clear (RECOMMENDED)**
+```csharp
+// ChartDataService.cs
+private void OnNewSectionCreated()
+{
+    try
+    {
+        // Create snapshot of data BEFORE clearing
+        var dpsSnapshot = _dpsHistory.ToDictionary(
+            kvp => kvp.Key,
+            kvp => kvp.Value.ToList() // Deep copy
+        );
+        var hpsSnapshot = _hpsHistory.ToDictionary(
+            kvp => kvp.Key,
+            kvp => kvp.Value.ToList() // Deep copy
+        );
+
+        // Pass to persistence layer (fire & forget)
+        _ = Task.Run(async () =>
+            await DataStorageExtensions.SaveChartHistoryAsync(
+                dpsSnapshot, hpsSnapshot));
+    }
+    finally
+    {
+        // Now safe to clear
+        _dpsHistory.Clear();
+        _hpsHistory.Clear();
+    }
+}
+```
+
+**Strategy 2: Expose Chart Data Getter (ALTERNATIVE)**
+```csharp
+// IChartDataService.cs
+Dictionary<long, List<ChartDataPoint>> GetDpsHistorySnapshot();
+Dictionary<long, List<ChartDataPoint>> GetHpsHistorySnapshot();
+```
+
+**DataStorageExtensions Changes:**
+```csharp
+public static async Task SaveCurrentEncounterAsync(
+    IChartDataService? chartDataService = null)
+{
+    // Get chart history from service
+    var dpsHistory = chartDataService?.GetDpsHistorySnapshot()
+        ?? new Dictionary<long, List<ChartDataPoint>>();
+    var hpsHistory = chartDataService?.GetHpsHistorySnapshot()
+        ?? new Dictionary<long, List<ChartDataPoint>>();
+
+    // Pass to repository
+    await _encounterService.SavePlayerStatsAsync(
+        playerInfos, dpsData, dpsHistory, hpsHistory);
+}
+```
+
+---
+
+#### Phase P3: Database Persistence ⏳
+**Files to Modify:**
+- `BlueMeter.Core/Data/Database/EncounterService.cs`
+- `BlueMeter.Core/Data/Database/EncounterRepository.cs`
+
+**Changes:**
+```csharp
+// EncounterService.cs
+public async Task SavePlayerStatsAsync(
+    Dictionary<long, PlayerInfo> playerInfos,
+    Dictionary<long, DpsData> dpsDataDict,
+    Dictionary<long, List<ChartDataPoint>> dpsHistory,
+    Dictionary<long, List<ChartDataPoint>> hpsHistory)
+{
+    foreach (var kvp in dpsDataDict)
+    {
+        var uid = kvp.Key;
+        var dpsData = kvp.Value;
+
+        // Get chart history for this player
+        var playerDpsHistory = dpsHistory.GetValueOrDefault(uid, new List<ChartDataPoint>());
+        var playerHpsHistory = hpsHistory.GetValueOrDefault(uid, new List<ChartDataPoint>());
+
+        if (playerInfos.TryGetValue(uid, out var playerInfo))
+        {
+            await repository.SavePlayerStatsAsync(
+                _currentEncounterId,
+                playerInfo,
+                dpsData,
+                playerDpsHistory,
+                playerHpsHistory);
+        }
+    }
+}
+
+// EncounterRepository.cs
+public async Task SavePlayerStatsAsync(
+    string encounterId,
+    PlayerInfo playerInfo,
+    DpsData dpsData,
+    List<ChartDataPoint> dpsHistory,
+    List<ChartDataPoint> hpsHistory)
+{
+    // Serialize to JSON
+    string dpsHistoryJson = JsonConvert.SerializeObject(dpsHistory);
+    string hpsHistoryJson = JsonConvert.SerializeObject(hpsHistory);
+
+    // Save to database
+    playerStatsEntity.DpsHistoryJson = dpsHistoryJson;
+    playerStatsEntity.HpsHistoryJson = hpsHistoryJson;
+}
+```
+
+---
+
+#### Phase P4: Load Chart Data from History ⏳
+**Files to Modify:**
+- `BlueMeter.Core/Data/Database/EncounterService.cs`
+- `BlueMeter.WPF/ViewModels/EncounterHistoryViewModel.cs`
+- `BlueMeter.WPF/Services/ChartDataService.cs`
+
+**Loading Logic:**
+```csharp
+// EncounterService.cs
+public async Task<EncounterData?> LoadEncounterAsync(string encounterId)
+{
+    // ... existing code ...
+
+    // NEW: Load chart history
+    if (!string.IsNullOrEmpty(stats.DpsHistoryJson))
+    {
+        playerData.DpsHistory = JsonConvert.DeserializeObject<List<ChartDataPoint>>(
+            stats.DpsHistoryJson);
+    }
+    if (!string.IsNullOrEmpty(stats.HpsHistoryJson))
+    {
+        playerData.HpsHistory = JsonConvert.DeserializeObject<List<ChartDataPoint>>(
+            stats.HpsHistoryJson);
+    }
+}
+
+// ChartDataService.cs
+public void LoadHistoricalChartData(Dictionary<long, List<ChartDataPoint>> dpsHistory,
+                                     Dictionary<long, List<ChartDataPoint>> hpsHistory)
+{
+    _dpsHistory.Clear();
+    _hpsHistory.Clear();
+
+    foreach (var kvp in dpsHistory)
+    {
+        _dpsHistory[kvp.Key] = new ObservableCollection<ChartDataPoint>(kvp.Value);
+    }
+    foreach (var kvp in hpsHistory)
+    {
+        _hpsHistory[kvp.Key] = new ObservableCollection<ChartDataPoint>(kvp.Value);
+    }
+
+    _logger.LogInformation("Loaded historical chart data: {DpsPlayers} DPS, {HpsPlayers} HPS",
+        dpsHistory.Count, hpsHistory.Count);
+}
+```
+
+---
+
+#### Phase P5: UI Integration ⏳
+**Files to Modify:**
+- `BlueMeter.WPF/ViewModels/EncounterHistoryViewModel.cs`
+- `BlueMeter.WPF/ViewModels/ChartsWindowViewModel.cs`
+
+**Flow:**
+```
+User clicks "Load Encounter" in History
+    ↓
+EncounterHistoryViewModel.LoadSelectedEncounterAsync()
+    ↓
+DataStorageExtensions.LoadEncounterAsync(encounterId)
+    ↓
+Extract chart data from EncounterData
+    ↓
+ChartDataService.LoadHistoricalChartData(dpsHistory, hpsHistory)
+    ↓
+Open ChartsWindow → DPS Trend Chart displays historical data
+```
+
+---
+
+### Implementation Checklist
+
+#### Database Layer
+- [x] Add `DpsHistoryJson` to `PlayerStatsEntity` ✅
+- [x] Add `HpsHistoryJson` to `PlayerStatsEntity` ✅
+- [x] Add columns to `PlayerStats` database table ✅
+- [ ] Test database migration
+
+#### Service Layer
+- [x] Add `GetDpsHistorySnapshot()` to `IChartDataService` ✅
+- [x] Add `GetHpsHistorySnapshot()` to `IChartDataService` ✅
+- [x] Add `LoadHistoricalChartData()` to `IChartDataService` ✅
+- [x] Update `DataStorageExtensions.SaveCurrentEncounterAsync()` signature ✅
+- [x] Update `EncounterService.SavePlayerStatsAsync()` signature ✅
+- [x] Update `EncounterRepository.SavePlayerStatsAsync()` to serialize JSON ✅
+
+#### Loading Layer
+- [x] Update `EncounterService.LoadEncounterAsync()` to deserialize chart data ✅
+- [x] Add chart history fields to `PlayerEncounterData` ✅
+- [x] Test JSON serialization/deserialization ✅
+
+#### Integration Layer
+- [x] Wire chart data from `ChartDataService` → Database save ✅
+- [x] Wire chart data from Database → `ChartDataService` load ✅
+- [x] Inject `ChartDataService` into `ApplicationStartup` ✅
+- [x] Pass `ChartDataService` to `DataStorageExtensions.InitializeDatabaseAsync()` ✅
+- [ ] Test save flow end-to-end
+- [ ] Test load flow end-to-end
+
+#### UI Layer
+- [x] Update `EncounterHistoryViewModel.LoadSelectedEncounterAsync()` ✅
+- [x] Add dependency injection for `IChartDataService` and `ILogger` to `EncounterHistoryViewModel` ✅
+- [x] Fix `DpsStatisticsViewModel` to inject dependencies properly ✅
+- [x] Fix `DpsStatisticsDesignTimeViewModel` to provide design-time stubs ✅
+- [ ] Display message if no chart data available (old encounters)
+- [ ] Test historical chart display
+
+#### Testing
+- [ ] Test: Fight → Data saved → Load from history → Chart displays
+- [ ] Test: Multiple players saved correctly
+- [ ] Test: Old encounters (no chart data) handle gracefully
+- [ ] Test: Long fights (500+ points) saved correctly
+- [ ] Test: Chart axes and scaling correct for historical data
+
+---
+
+### Technical Notes
+
+**JSON Size Estimation:**
+- 500 points × 2 doubles (timestamp, value) × 8 bytes ≈ 8KB per player
+- 8 players × 8KB × 2 (DPS + HPS) ≈ 128KB per encounter
+- 100 encounters × 128KB ≈ 12.8MB (acceptable)
+
+**Serialization Format:**
+```json
+[
+  { "Timestamp": "2025-11-20T12:34:56.123Z", "Value": 12345.67 },
+  { "Timestamp": "2025-11-20T12:34:56.323Z", "Value": 12456.78 }
+]
+```
+
+**Backwards Compatibility:**
+- Old encounters without chart data: Fields will be NULL
+- UI should display "No chart data available" for old encounters
+- New encounters will have full chart history
+
+---
+
 ## Overview
 This document outlines the complete implementation plan for adding real-time chart visualization to BlueMeter, inspired by StarResonanceDps's chart system.
+
+**Current Status**: ✅ **Phase 4 Complete - DPS Trend Chart Live!** (Progress: ~60%)
+**Critical Issue**: 🔴 **Chart Data Persistence Required** (See above)
 
 ---
 
 ## Table of Contents
-1. [Analysis of StarResonanceDps Implementation](#analysis-of-starresonancedps)
-2. [Technical Approach](#technical-approach)
-3. [Library Selection](#library-selection)
-4. [Architecture Design](#architecture-design)
-5. [Data Models](#data-models)
-6. [Service Layer](#service-layer)
-7. [Implementation Phases](#implementation-phases)
-8. [Time Estimates](#time-estimates)
+1. [Quick Status Summary](#quick-status-summary)
+2. [Completed Phases](#completed-phases)
+3. [Current Features](#current-features)
+4. [Upcoming Phases](#upcoming-phases)
+5. [Technical Architecture](#technical-architecture)
+6. [Time Estimates](#time-estimates)
 
 ---
 
-## Analysis of StarResonanceDps
+## Quick Status Summary
 
-### Key Findings from StarResonanceDps Charts
+### ✅ What's Working Now
 
-#### 1. Real-Time Windowing System
-**Location**: `StarResonanceDpsAnalysis.WinForm\Plugin\DamageStatistics\PlayerStat.cs`
+**Phase 1-4 Complete:**
+- ✅ OxyPlot 2.2.0 integrated and tested
+- ✅ Real-time windowing (1-second sliding window)
+- ✅ Background data collection (200ms sampling)
+- ✅ ChartDataService running on app startup
+- ✅ ChartsWindow with dark theme UI
+- ✅ **DPS Trend Chart** with multi-player lines
+- ✅ **Player names** displayed in chart legend
+- ✅ **Player focus feature** (thicker line for focused player)
+- ✅ **Click on player** → Opens chart with player focused
+- ✅ **Background data collection** (data available after fight ends)
 
-```csharp
-// Line 18: Uses 1-second sliding window for instant DPS
-private List<(DateTime timestamp, ulong damage)> _realtimeWindow = new();
+### 🚀 Key Features
 
-// Line 142: RealtimeValue property for instant DPS calculation
-public ulong RealtimeValue { get; private set; }
+**Data Collection:**
+- Runs in background even when ChartsWindow is closed
+- Collects DPS/HPS every 200ms
+- Maintains up to 500 data points per player (FIFO)
+- Automatic cleanup on new section/fight
 
-// Line 240-265: UpdateRealtimeStats() method
-private void UpdateRealtimeStats()
-{
-    var cutoff = DateTime.UtcNow.AddSeconds(-1);
-    _realtimeWindow.RemoveAll(x => x.timestamp < cutoff);
-    RealtimeValue = (ulong)_realtimeWindow.Sum(x => (long)x.damage);
-}
+**Chart Interaction:**
+- Real-time updates (500ms refresh)
+- Auto-scaling axes
+- Multi-player visualization (up to 8 colors)
+- Player focus with 4px thick line
+- Dark theme matching BlueMeter
+
+**User Workflow:**
+```
+Fight → Data collected in background
+     → Open "Advanced Combat Log"
+     → See complete fight analytics!
+
+OR
+
+Click on player in DPS meter
+     → Opens chart with that player focused
+     → Thicker line highlights the player
 ```
 
-**Key Insights:**
-- Maintains separate 1-second sliding window for real-time stats
-- Removes expired entries automatically
-- Calculates instant DPS from window sum
-- Independent from full session tracking
+---
 
-#### 2. Background Data Collection
-**Location**: `StarResonanceDpsAnalysis.WinForm\Plugin\StatisticalChart\ChartVisualizationService.cs`
+## Completed Phases
 
-**Architecture:**
-- **Background Timer**: 200ms intervals
-- **Data Sampling**: Periodic snapshots of DPS/HPS values
-- **Storage Strategy**:
-  - Separate storage for Current vs Full Session
-  - Max 500 data points per player (FIFO cleanup)
-  - Time-series format: `List<(DateTime, double)>`
+### ✅ Phase 1: Library Setup (COMPLETED)
+**Duration**: 1-2 hours
+**Status**: ✅ Complete
+
+**Tasks Completed:**
+1. ✅ Added NuGet package `OxyPlot.Wpf` Version 2.2.0
+2. ✅ Tested basic chart rendering with dummy data
+3. ✅ Verified theme compatibility (dark mode)
+4. ✅ Created ChartTestWindow for testing
+5. ✅ Build verified successful
+
+**Files Created:**
+- `BlueMeter.WPF/Views/ChartTestWindow.xaml`
+- `BlueMeter.WPF/Views/ChartTestWindow.xaml.cs`
+- `BlueMeter.WPF/ViewModels/ChartTestViewModel.cs`
+
+**Deliverable**: ✅ Working test window with OxyPlot line chart
+
+---
+
+### ✅ Phase 2A: Real-Time Windowing (COMPLETED)
+**Duration**: 2-3 hours
+**Status**: ✅ Complete
+
+**Implementation:**
+Extended `BlueMeter.Core/Data/Models/DpsData.cs` with:
+- 1-second sliding windows for damage and healing
+- `InstantDps` and `InstantHps` properties
+- `AddDamageToWindow()` and `AddHealToWindow()` methods
+- `UpdateRealtimeStats()` method
+- `ClearWindows()` method
 
 **Code Pattern:**
 ```csharp
-// Pseudo-code representation
-Timer _updateTimer = new Timer(200); // 200ms interval
-Dictionary<long, List<(DateTime, double)>> _playerDpsHistory;
+private List<(DateTime timestamp, long damage)> _damageWindow = new();
+private List<(DateTime timestamp, long heal)> _healWindow = new();
 
-void OnTimerTick()
+public long InstantDps { get; private set; }
+public long InstantHps { get; private set; }
+
+private void UpdateRealtimeStats()
 {
-    foreach (var player in GetActivePlayers())
-    {
-        var currentDps = player.RealtimeValue;
-        _playerDpsHistory[player.Uid].Add((DateTime.UtcNow, currentDps));
-
-        // Cleanup old data (keep max 500 points)
-        if (_playerDpsHistory[player.Uid].Count > 500)
-            _playerDpsHistory[player.Uid].RemoveAt(0);
-    }
-
-    RefreshCharts();
+    var cutoff = DateTime.UtcNow.AddSeconds(-1);
+    _damageWindow.RemoveAll(x => x.timestamp < cutoff);
+    _healWindow.RemoveAll(x => x.timestamp < cutoff);
+    InstantDps = _damageWindow.Sum(x => x.damage);
+    InstantHps = _healWindow.Sum(x => x.heal);
 }
 ```
 
-#### 3. Chart Types Implemented
-
-**StarResonanceDps has 5 chart types:**
-1. **DPS Trend Chart** - Real-time line chart showing DPS over time
-2. **Skill Breakdown Pie Chart** - Damage distribution by skill
-3. **Team DPS Bar Chart** - Player comparison
-4. **Multi-Dimension Scatter Chart** - DPS vs Crit Rate correlation
-5. **Damage Type Stacked Chart** - Damage type breakdown
-
-#### 4. Custom WinForms Rendering
-- They use custom Graphics API rendering
-- High-quality anti-aliasing
-- Microsoft YaHei font for Chinese support
-- 10-color palette for data series
-- Dark/Light theme support
+**Deliverable**: ✅ DpsData with working real-time stats
 
 ---
 
-## Technical Approach
+### ✅ Phase 2B: Hook into DataStorage (COMPLETED)
+**Duration**: 1-2 hours
+**Status**: ✅ Complete
 
-### Our Approach vs StarResonanceDps
+**Implementation:**
+Modified `BlueMeter.Core/Data/DataStorageV2.cs`:
+- Added `AddDamageToWindow()` calls in damage event handler
+- Added `AddHealToWindow()` calls in heal event handler
+- Added `ClearWindows()` calls on section clear
 
-| Aspect | StarResonanceDps | BlueMeter (Our Plan) |
-|--------|------------------|----------------------|
-| **UI Framework** | WinForms | WPF |
-| **Chart Library** | Custom Graphics | LiveCharts2 |
-| **Update Frequency** | 200ms | 200ms (same) |
-| **Data Window** | 1 second | 1 second (same) |
-| **Max History** | 500 points | 500 points (same) |
-| **Theme Support** | Dark/Light | Dark/Light (same) |
+**Integration Points:**
+- Damage accumulation → `sectionedData.AddDamageToWindow(log.Value);`
+- Heal accumulation → `sectionedData.AddHealToWindow(log.Value);`
+- Section clear → `ClearWindows()` for all players
 
-### Why Different Library?
-- **WPF Native**: LiveCharts2 is designed for WPF (better integration)
-- **MVVM Support**: Built-in data binding
-- **Less Code**: No need to implement custom rendering
-- **Maintained**: Active development and community support
+**Deliverable**: ✅ Real-time stats populate during combat
 
 ---
 
-## Library Selection
+### ✅ Phase 2C: ChartDataService (COMPLETED)
+**Duration**: 2-3 hours
+**Status**: ✅ Complete
 
-### Option 1: LiveCharts2 ⭐ **RECOMMENDED**
-**NuGet**: `LiveChartsCore.SkiaSharpView.WPF`
+**Implementation:**
+Created background sampling service:
+- 200ms DispatcherTimer
+- Dictionary storage for DPS/HPS history
+- FIFO cleanup (max 500 points)
+- Event subscription for section clearing
 
-**Pros:**
-- ✅ Native WPF support with MVVM
-- ✅ Beautiful default styling
-- ✅ Excellent performance (SkiaSharp backend)
-- ✅ Real-time updates support
-- ✅ Built-in animations
-- ✅ Active development
-- ✅ Great documentation
+**Files Created:**
+- `BlueMeter.WPF/Services/IChartDataService.cs`
+- `BlueMeter.WPF/Services/ChartDataService.cs`
+- `BlueMeter.WPF/Models/ChartDataPoint.cs`
 
-**Cons:**
-- ❌ Larger dependency size (~8MB)
-- ❌ Learning curve for API
+**Service Registration:**
+- Registered in `App.xaml.cs` as Singleton
+- Started automatically on app startup
+- Runs in background continuously
 
-**Code Example:**
+**Key Features:**
 ```csharp
-// Simple line chart
-public ObservableCollection<ISeries> Series { get; set; } = new()
-{
-    new LineSeries<double>
-    {
-        Values = new ObservableCollection<double> { 2, 5, 4, 6, 8 },
-        Fill = null,
-        GeometrySize = 0
-    }
-};
+// Sampling every 200ms
+_samplingTimer.Interval = TimeSpan.FromMilliseconds(200);
+
+// FIFO cleanup
+if (_dpsHistory[playerId].Count > MaxHistoryPoints)
+    _dpsHistory[playerId].RemoveAt(0);
+
+// Auto-clear on new section
+_dataStorage.NewSectionCreated += OnNewSectionCreated;
 ```
 
-### Option 2: ScottPlot
-**NuGet**: `ScottPlot.WPF`
-
-**Pros:**
-- ✅ Very fast rendering
-- ✅ Lightweight
-- ✅ Simple API
-- ✅ Good for scientific plots
-
-**Cons:**
-- ❌ Less WPF-native (uses WinForms host)
-- ❌ Styling requires more work
-- ❌ Less suitable for real-time streaming
-
-**Decision: Use LiveCharts2** for better WPF integration and real-time support.
+**Deliverable**: ✅ Background service collecting time-series data
 
 ---
 
-## Architecture Design
+### ✅ Phase 3: Charts Window UI (COMPLETED)
+**Duration**: 3-4 hours
+**Status**: ✅ Complete
+
+**Implementation:**
+Created main charts window with:
+- Dark theme styling (#1E1E1E background)
+- TabControl with 4 tabs
+- Header with controls (Refresh, Auto-Refresh toggle)
+- Footer status bar
+- Window management integration
+
+**Files Created:**
+- `BlueMeter.WPF/Views/ChartsWindow.xaml`
+- `BlueMeter.WPF/Views/ChartsWindow.xaml.cs`
+- `BlueMeter.WPF/ViewModels/ChartsWindowViewModel.cs`
+
+**Files Modified:**
+- `BlueMeter.WPF/Services/IWindowManagementService.cs` (added ChartsWindow property)
+- `BlueMeter.WPF/Services/WindowManagementService.cs` (window creation logic)
+- `BlueMeter.WPF/App.xaml.cs` (manual registration due to "Window" suffix)
+
+**Tabs:**
+1. 📈 **DPS Trend** - Real-time DPS chart (Phase 4) ✅
+2. 🎯 **Skill Breakdown** - Skill damage breakdown (Phase 6) 📋
+3. 👥 **Player Comparison** - Player comparison chart (Phase 5) 📋
+4. 🧪 **Test** - Debug/status information
+
+**UI Features:**
+- Custom dark theme styles
+- Resizable window (1200x800 default, 800x600 minimum)
+- CenterScreen startup position
+- Window owner set to MainView
+
+**Menu Integration:**
+- Added "Advanced Combat Log" menu item in DpsStatisticsView
+- Replaced old "Skill Diary" menu item
+- Localization in 3 languages (EN, CN, PT-BR)
+
+**Deliverable**: ✅ Charts window UI with working tabs
+
+---
+
+### ✅ Phase 4: DPS Trend Chart (COMPLETED)
+**Duration**: 3-4 hours
+**Status**: ✅ Complete
+
+**Implementation:**
+Created real-time DPS trend chart with OxyPlot:
+- Multi-player line series (up to 8 colors)
+- Auto-scaling axes
+- Real-time updates (500ms)
+- Player name display
+- Player focus feature
+
+**Files Created:**
+- `BlueMeter.WPF/ViewModels/DpsTrendChartViewModel.cs`
+- `BlueMeter.WPF/Views/DpsTrendChartView.xaml`
+- `BlueMeter.WPF/Views/DpsTrendChartView.xaml.cs`
+
+**Key Features:**
+```csharp
+// 8-color palette for players
+private readonly List<OxyColor> _availableColors = new()
+{
+    OxyColor.FromRgb(0, 122, 204),  // Blue
+    OxyColor.FromRgb(255, 99, 71),  // Red
+    OxyColor.FromRgb(50, 205, 50),  // Green
+    OxyColor.FromRgb(255, 165, 0),  // Orange
+    OxyColor.FromRgb(147, 112, 219),// Purple
+    OxyColor.FromRgb(255, 20, 147), // Pink
+    OxyColor.FromRgb(64, 224, 208), // Turquoise
+    OxyColor.FromRgb(255, 215, 0),  // Gold
+};
+
+// Player focus with thicker line
+series.StrokeThickness = isFocused ? 4 : 2;
+
+// Player name from IDataStorage
+Title = playerInfo.Name ?? $"Player {playerId}";
+```
+
+**Chart Configuration:**
+- X-Axis: Time in seconds (auto-scaling, minimum 60s)
+- Y-Axis: DPS value (auto-scaling, no decimals)
+- Dark theme colors
+- Grid lines (major and minor)
+- Legend (top-right, semi-transparent background)
+
+**Player Focus Feature:**
+- Click on player in DPS meter → Opens chart with player focused
+- Focused player has 4px line (vs 2px for others)
+- `SetFocusedPlayer(long? playerId)` method
+- Immediate chart update when focus changes
+
+**Modified Files:**
+- `BlueMeter.WPF/ViewModels/ChartsWindowViewModel.cs` (added FocusedPlayerId property)
+- `BlueMeter.WPF/Views/ChartsWindow.xaml.cs` (added SetFocusedPlayer method)
+- `BlueMeter.WPF/ViewModels/DpsStatisticsViewModel.cs` (modified OpenPlayerSkillBreakdown)
+
+**Behavior Changes:**
+- **Old**: Click on player → Opens separate SkillBreakdownView window
+- **New**: Click on player → Opens ChartsWindow with player focused in DPS Trend tab
+
+**Deliverable**: ✅ Working DPS trend chart with player focus
+
+---
+
+## Current Features
+
+### Data Layer
+- ✅ Real-time windowing (1-second sliding window)
+- ✅ Background sampling (200ms intervals)
+- ✅ FIFO cleanup (500 point limit)
+- ✅ Automatic section clearing
+- ✅ ObservableCollection for WPF binding
+
+### UI Layer
+- ✅ Dark theme matching BlueMeter
+- ✅ Multi-tab navigation
+- ✅ Auto-refresh toggle
+- ✅ Manual refresh button
+- ✅ Player focus highlighting
+- ✅ Real-time chart updates
+
+### Integration
+- ✅ Menu item in DPS Statistics
+- ✅ Player click handler
+- ✅ Window management integration
+- ✅ DI container registration
+- ✅ Service lifecycle management
+
+---
+
+## Upcoming Phases
+
+### 📋 Phase 5: Player Comparison Chart (2-3 hours)
+**Goal**: Bar/column chart comparing player metrics
+
+**Planned Features:**
+- Horizontal or vertical bar chart
+- Sortable by multiple metrics:
+  - Average DPS
+  - Total Damage
+  - Average HPS
+  - Peak DPS
+- Player name labels
+- Color-coded bars
+- Value labels on bars
+
+**OxyPlot Components:**
+- `BarSeries` or `ColumnSeries`
+- `CategoryAxis` for player names
+- `LinearAxis` for values
+
+**UI Design:**
+- Metric selector dropdown (DPS / Total Damage / HPS / Peak)
+- Sort order toggle (ascending / descending)
+- Auto-refresh with DPS trend
+
+**Deliverable**: Working player comparison chart
+
+**Implementation Plan:**
+1. Create PlayerComparisonChartViewModel
+2. Create PlayerComparisonChartView
+3. Calculate metrics from DpsData
+4. Configure OxyPlot BarSeries
+5. Add to Player Comparison tab
+6. Test with multiple players
+
+---
+
+### 📋 Phase 6: Skill Breakdown Chart (2-3 hours) ⭐ IMPORTANT
+**Goal**: Visualize skill damage distribution for selected player
+
+**Planned Features:**
+- Skill damage breakdown by percentage
+- Top 8 skills + "Others" category
+- Player selector dropdown
+- Skill names with icons (if available)
+- Percentage labels
+- Total damage display
+
+**Chart Types (to decide):**
+- Option A: Pie chart (good for % distribution)
+- Option B: Horizontal bar chart (better readability)
+- Option C: Both (toggle between views)
+
+**OxyPlot Components:**
+- `PieSeries` for pie chart
+- `BarSeries` for horizontal bars
+- Custom colors per skill
+
+**UI Design:**
+- Player selector dropdown
+- Chart type toggle (pie / bar)
+- Skill details table below chart
+- Click on skill → Show detailed breakdown?
+
+**Data Source:**
+- `DpsData.SkillRecords` (dictionary of skill ID → damage)
+- Skill name lookup from game data
+- Percentage calculation: skill damage / total damage
+
+**Deliverable**: Working skill breakdown chart
+
+**Implementation Plan:**
+1. Create SkillBreakdownChartViewModel
+2. Create SkillBreakdownChartView
+3. Aggregate skill data from DpsData
+4. Implement skill name lookup
+5. Configure OxyPlot chart
+6. Add player selector
+7. Integrate into Skill Breakdown tab
+8. Test with real combat data
+
+---
+
+### 📋 Phase 7: Polish & Enhancement (2-3 hours)
+**Goal**: UI polish and additional features
+
+**Planned Tasks:**
+1. **Export功能:**
+   - Export chart as image (PNG)
+   - Export data as CSV
+   - Copy to clipboard
+
+2. **Chart Enhancements:**
+   - Zoom/pan support for DPS Trend
+   - Time range selector (30s / 60s / 120s / All)
+   - Crosshair tooltip (hover to see exact value)
+   - Chart annotations (phase markers, death events)
+
+3. **Theme Support:**
+   - Light theme variant
+   - Custom color schemes
+   - User preference saving
+
+4. **Performance:**
+   - Optimize chart rendering
+   - Lazy loading for large datasets
+   - Virtual scrolling for player list
+
+5. **UX Improvements:**
+   - Loading indicators
+   - Empty state messages
+   - Error handling (no data)
+   - Keyboard shortcuts
+
+**Deliverable**: Polished, production-ready charts
+
+---
+
+### 📋 Phase 8: Testing & Optimization (2-3 hours)
+**Goal**: Final testing and bug fixes
+
+**Testing Checklist:**
+1. **Functional Testing:**
+   - [ ] Charts update in real-time during combat
+   - [ ] Background data collection works when window closed
+   - [ ] Player focus works correctly
+   - [ ] All tabs display correctly
+   - [ ] Refresh button works
+   - [ ] Auto-refresh toggle works
+
+2. **Data Validation:**
+   - [ ] DPS values match DPS meter
+   - [ ] Skill percentages add up to 100%
+   - [ ] Player comparison is accurate
+   - [ ] FIFO cleanup works (500 point limit)
+
+3. **Performance Testing:**
+   - [ ] No memory leaks during long sessions
+   - [ ] Chart rendering is smooth (60 FPS)
+   - [ ] Background sampling doesn't lag UI
+   - [ ] Large player count (10+ players)
+
+4. **Integration Testing:**
+   - [ ] Window position/size saving
+   - [ ] Theme switching
+   - [ ] Menu navigation
+   - [ ] Player click handler
+
+5. **Edge Cases:**
+   - [ ] No combat data (empty state)
+   - [ ] Single player (no comparison)
+   - [ ] Very short fights (<5 seconds)
+   - [ ] Very long fights (>10 minutes)
+   - [ ] Window closed/reopened mid-fight
+
+6. **Bug Fixes:**
+   - Fix any discovered issues
+   - Performance optimization
+   - Code cleanup
+   - Documentation updates
+
+**Deliverable**: Production-ready charts feature
+
+---
+
+## Technical Architecture
 
 ### Component Overview
 
 ```
 BlueMeter.WPF
 ├── Services/
-│   └── ChartDataService.cs          # Background data collection
+│   ├── IChartDataService.cs          ✅ Background data collection interface
+│   └── ChartDataService.cs           ✅ 200ms sampling, 500pt FIFO
 ├── ViewModels/
-│   ├── ChartsWindowViewModel.cs     # Main charts window VM
-│   ├── DpsTrendChartViewModel.cs    # DPS trend chart VM
-│   └── SkillBreakdownViewModel.cs   # Skill breakdown VM
+│   ├── ChartsWindowViewModel.cs      ✅ Main window VM, player focus
+│   ├── DpsTrendChartViewModel.cs     ✅ DPS trend chart VM
+│   ├── SkillBreakdownChartViewModel.cs  📋 Phase 6
+│   └── PlayerComparisonChartViewModel.cs 📋 Phase 5
 ├── Views/
-│   └── ChartsWindow.xaml            # Charts window UI
+│   ├── ChartsWindow.xaml             ✅ Main window with tabs
+│   ├── DpsTrendChartView.xaml        ✅ DPS trend chart
+│   ├── SkillBreakdownChartView.xaml  📋 Phase 6
+│   └── PlayerComparisonChartView.xaml 📋 Phase 5
 └── Models/
-    └── ChartDataPoint.cs            # Time-series data point
+    └── ChartDataPoint.cs             ✅ Time-series data point
 
 BlueMeter.Core
-└── Models/
-    └── DpsData.cs                   # Extended with real-time window
+└── Data/
+    └── Models/
+        └── DpsData.cs                ✅ Extended with sliding windows
 ```
 
 ### Data Flow
@@ -195,457 +844,108 @@ BlueMeter.Core
 ```
 PacketAnalyzer
     ↓
-DataStorage (damage events)
+DataStorageV2 (damage/heal events)
     ↓
-DpsData (accumulates damage)
-    ↓ [Every damage event]
+DpsData.AddDamageToWindow() / AddHealToWindow()
+    ↓
 DpsData.UpdateRealtimeStats() (sliding window)
-    ↓ [Every 200ms]
-ChartDataService.SampleData() (reads RealtimeValue)
+    ↓ [InstantDps / InstantHps updated]
+
+ChartDataService (200ms timer)
     ↓
-ChartDataService._history (stores time-series)
-    ↓ [On UI update]
-ChartsWindowViewModel (binds to LiveCharts)
+Samples InstantDps/InstantHps
     ↓
-ChartsWindow.xaml (renders)
+Stores in ObservableCollection<ChartDataPoint>
+    ↓ [FIFO cleanup at 500 points]
+
+DpsTrendChartViewModel (500ms update timer)
+    ↓
+Reads from ChartDataService
+    ↓
+Updates OxyPlot PlotModel
+    ↓
+PlotView renders chart
+```
+
+### Player Focus Flow
+
+```
+User clicks player in DPS meter
+    ↓
+DpsStatisticsViewModel.OpenPlayerSkillBreakdown(player)
+    ↓
+ChartsWindow.SetFocusedPlayer(playerId)
+    ↓
+ChartsWindowViewModel.SetFocusedPlayer(playerId)
+    ↓
+DpsTrendChartViewModel.SetFocusedPlayer(playerId)
+    ↓
+UpdateChart() → Focused player gets 4px line
+    ↓
+PlotModel.InvalidatePlot(true) → Chart refreshes
 ```
 
 ---
 
-## Data Models
+## Library Selection
 
-### 1. Extend DpsData with Real-Time Windowing
+### ✅ OxyPlot 2.2.0 (SELECTED)
 
-**File**: `BlueMeter.Core/Models/DpsData.cs`
+**Why OxyPlot?**
+- ✅ **Stable**: Version 2.2.0 (production-ready, not prerelease)
+- ✅ **WPF Native**: Excellent WPF integration
+- ✅ **MVVM Support**: Built-in PlotModel data binding
+- ✅ **Performance**: Fast rendering for real-time data
+- ✅ **Simple API**: Easy to learn and use
+- ✅ **Theme Support**: Easy dark/light customization
+- ✅ **No Issues**: Clean build, no XAML compiler errors
+- ✅ **Active**: Well-maintained, good documentation
+
+**Basic Usage:**
+```xml
+<oxy:PlotView Model="{Binding PlotModel}" />
+```
 
 ```csharp
-public partial class DpsData
+var plotModel = new PlotModel
 {
-    // Existing properties...
-    public ulong TotalDamage { get; set; }
-    public ulong TotalHeal { get; set; }
+    Title = "DPS Trend",
+    Background = OxyColor.FromRgb(30, 30, 30),
+    TextColor = OxyColors.White
+};
 
-    // NEW: Real-time windowing
-    private List<(DateTime timestamp, ulong damage)> _damageWindow = new();
-    private List<(DateTime timestamp, ulong heal)> _healWindow = new();
-
-    /// <summary>
-    /// Instant DPS calculated from 1-second sliding window
-    /// </summary>
-    public ulong InstantDps { get; private set; }
-
-    /// <summary>
-    /// Instant HPS calculated from 1-second sliding window
-    /// </summary>
-    public ulong InstantHps { get; private set; }
-
-    /// <summary>
-    /// Add damage to sliding window and update instant DPS
-    /// </summary>
-    public void AddDamageToWindow(ulong damage)
-    {
-        _damageWindow.Add((DateTime.UtcNow, damage));
-        UpdateRealtimeStats();
-    }
-
-    /// <summary>
-    /// Add heal to sliding window and update instant HPS
-    /// </summary>
-    public void AddHealToWindow(ulong heal)
-    {
-        _healWindow.Add((DateTime.UtcNow, heal));
-        UpdateRealtimeStats();
-    }
-
-    /// <summary>
-    /// Update instant DPS/HPS from sliding windows
-    /// </summary>
-    private void UpdateRealtimeStats()
-    {
-        var cutoff = DateTime.UtcNow.AddSeconds(-1);
-
-        // Remove old entries
-        _damageWindow.RemoveAll(x => x.timestamp < cutoff);
-        _healWindow.RemoveAll(x => x.timestamp < cutoff);
-
-        // Calculate instant values
-        InstantDps = (ulong)_damageWindow.Sum(x => (long)x.damage);
-        InstantHps = (ulong)_healWindow.Sum(x => (long)x.heal);
-    }
-
-    /// <summary>
-    /// Clear sliding windows (on section end)
-    /// </summary>
-    public void ClearWindows()
-    {
-        _damageWindow.Clear();
-        _healWindow.Clear();
-        InstantDps = 0;
-        InstantHps = 0;
-    }
-}
-```
-
-### 2. Chart Data Point Model
-
-**File**: `BlueMeter.WPF/Models/ChartDataPoint.cs`
-
-```csharp
-namespace BlueMeter.WPF.Models;
-
-/// <summary>
-/// Represents a single data point in a time-series chart
-/// </summary>
-public record ChartDataPoint
+var lineSeries = new LineSeries
 {
-    public DateTime Timestamp { get; init; }
-    public double Value { get; init; }
+    Title = "Player DPS",
+    Color = OxyColor.FromRgb(0, 122, 204),
+    StrokeThickness = 2
+};
 
-    public ChartDataPoint(DateTime timestamp, double value)
-    {
-        Timestamp = timestamp;
-        Value = value;
-    }
-}
+plotModel.Series.Add(lineSeries);
+plotModel.InvalidatePlot(true); // Refresh
 ```
-
----
-
-## Service Layer
-
-### ChartDataService
-
-**File**: `BlueMeter.WPF/Services/ChartDataService.cs`
-
-```csharp
-using System.Collections.ObjectModel;
-using System.Windows.Threading;
-using BlueMeter.Core.Data;
-using BlueMeter.WPF.Models;
-using Microsoft.Extensions.Logging;
-
-namespace BlueMeter.WPF.Services;
-
-/// <summary>
-/// Background service for collecting chart data at regular intervals
-/// </summary>
-public sealed class ChartDataService : IDisposable
-{
-    private readonly ILogger<ChartDataService> _logger;
-    private readonly IDataStorage _dataStorage;
-    private readonly DispatcherTimer _samplingTimer;
-
-    // History storage: playerId -> time-series data
-    private readonly Dictionary<long, ObservableCollection<ChartDataPoint>> _dpsHistory = new();
-    private readonly Dictionary<long, ObservableCollection<ChartDataPoint>> _hpsHistory = new();
-
-    private const int MaxHistoryPoints = 500;
-    private const int SamplingIntervalMs = 200; // 200ms = 5 samples per second
-
-    public ChartDataService(
-        ILogger<ChartDataService> logger,
-        IDataStorage dataStorage)
-    {
-        _logger = logger;
-        _dataStorage = dataStorage;
-
-        _samplingTimer = new DispatcherTimer
-        {
-            Interval = TimeSpan.FromMilliseconds(SamplingIntervalMs)
-        };
-        _samplingTimer.Tick += OnSamplingTick;
-
-        // Subscribe to section events
-        _dataStorage.NewSectionCreated += OnNewSectionCreated;
-    }
-
-    public void Start()
-    {
-        _samplingTimer.Start();
-        _logger.LogInformation("Chart data service started (sampling interval: {Interval}ms)", SamplingIntervalMs);
-    }
-
-    public void Stop()
-    {
-        _samplingTimer.Stop();
-        _logger.LogInformation("Chart data service stopped");
-    }
-
-    private void OnSamplingTick(object? sender, EventArgs e)
-    {
-        var now = DateTime.UtcNow;
-
-        // Sample DPS for all active players
-        foreach (var player in _dataStorage.GetPlayersWithCombatData())
-        {
-            // Ensure history collection exists
-            if (!_dpsHistory.ContainsKey(player.Uid))
-            {
-                _dpsHistory[player.Uid] = new ObservableCollection<ChartDataPoint>();
-                _hpsHistory[player.Uid] = new ObservableCollection<ChartDataPoint>();
-            }
-
-            // Get instant DPS/HPS from sliding window
-            var instantDps = player.InstantDps;
-            var instantHps = player.InstantHps;
-
-            // Add data points
-            _dpsHistory[player.Uid].Add(new ChartDataPoint(now, instantDps));
-            _hpsHistory[player.Uid].Add(new ChartDataPoint(now, instantHps));
-
-            // Cleanup old data (FIFO)
-            if (_dpsHistory[player.Uid].Count > MaxHistoryPoints)
-                _dpsHistory[player.Uid].RemoveAt(0);
-            if (_hpsHistory[player.Uid].Count > MaxHistoryPoints)
-                _hpsHistory[player.Uid].RemoveAt(0);
-        }
-    }
-
-    private void OnNewSectionCreated(object? sender, EventArgs e)
-    {
-        // Clear all history when new section starts
-        _logger.LogInformation("New section created - clearing chart history");
-        _dpsHistory.Clear();
-        _hpsHistory.Clear();
-    }
-
-    /// <summary>
-    /// Get DPS history for a specific player
-    /// </summary>
-    public ObservableCollection<ChartDataPoint>? GetDpsHistory(long playerId)
-    {
-        return _dpsHistory.TryGetValue(playerId, out var history) ? history : null;
-    }
-
-    /// <summary>
-    /// Get HPS history for a specific player
-    /// </summary>
-    public ObservableCollection<ChartDataPoint>? GetHpsHistory(long playerId)
-    {
-        return _hpsHistory.TryGetValue(playerId, out var history) ? history : null;
-    }
-
-    public void Dispose()
-    {
-        _samplingTimer.Stop();
-        _dataStorage.NewSectionCreated -= OnNewSectionCreated;
-    }
-}
-```
-
----
-
-## Implementation Phases
-
-### Phase 1: Library Setup (1-2 hours)
-**Goal**: Install and configure LiveCharts2
-
-**Tasks:**
-1. Add NuGet package `LiveChartsCore.SkiaSharpView.WPF` to BlueMeter.WPF
-2. Test basic chart rendering with dummy data
-3. Verify theme compatibility (dark/light mode)
-
-**Deliverable**: Simple test window with a working line chart
-
----
-
-### Phase 2A: Real-Time Windowing (2-3 hours)
-**Goal**: Extend DpsData with sliding window logic
-
-**Tasks:**
-1. Add `_damageWindow` and `_healWindow` lists to DpsData
-2. Implement `AddDamageToWindow()` and `AddHealToWindow()` methods
-3. Implement `UpdateRealtimeStats()` method
-4. Add `InstantDps` and `InstantHps` properties
-5. Add `ClearWindows()` method
-
-**Testing:**
-- Verify sliding window removes old entries
-- Verify instant DPS calculation is correct
-- Verify windows clear on section end
-
-**Deliverable**: DpsData with working real-time stats
-
----
-
-### Phase 2B: Hook into DataStorage (1-2 hours)
-**Goal**: Populate sliding windows from damage events
-
-**Tasks:**
-1. Find where damage is accumulated in DataStorage
-2. Call `dpsData.AddDamageToWindow(damage)` on each damage event
-3. Call `dpsData.AddHealToWindow(heal)` on each heal event
-4. Call `dpsData.ClearWindows()` when section ends
-
-**Files to Modify:**
-- `BlueMeter.Core/Data/DataStorageV2.cs` (damage/heal accumulation)
-
-**Testing:**
-- Verify InstantDps updates during combat
-- Verify windows clear between fights
-
-**Deliverable**: Real-time stats populate during combat
-
----
-
-### Phase 2C: ChartDataService (2-3 hours)
-**Goal**: Background sampling service
-
-**Tasks:**
-1. Create `ChartDataService.cs`
-2. Implement 200ms timer for sampling
-3. Implement history storage (max 500 points)
-4. Implement FIFO cleanup
-5. Subscribe to NewSectionCreated event
-6. Register service in DI container
-
-**Files to Create:**
-- `BlueMeter.WPF/Services/ChartDataService.cs`
-- `BlueMeter.WPF/Services/IChartDataService.cs`
-
-**Files to Modify:**
-- `BlueMeter.WPF/Services/ApplicationStartup.cs` (register service)
-
-**Testing:**
-- Verify sampling occurs every 200ms
-- Verify history stays under 500 points
-- Verify history clears on section end
-
-**Deliverable**: Background service collecting time-series data
-
----
-
-### Phase 3: Charts Window UI (3-4 hours)
-**Goal**: Create main charts window with tabs
-
-**Tasks:**
-1. Create `ChartsWindow.xaml` with TabControl
-2. Create tabs for each chart type:
-   - DPS Trend
-   - Skill Breakdown
-   - Player Comparison
-3. Add window styling (theme support)
-4. Add menu item in main window to open charts
-5. Create `ChartsWindowViewModel.cs`
-
-**Features:**
-- Resizable window
-- Remember window position/size
-- Theme switching support
-- Auto-refresh toggle
-- Refresh button
-
-**Deliverable**: Charts window UI with empty tabs
-
----
-
-### Phase 4: DPS Trend Chart (3-4 hours)
-**Goal**: Implement real-time DPS line chart
-
-**Tasks:**
-1. Create `DpsTrendChartViewModel.cs`
-2. Bind to ChartDataService history
-3. Configure LiveCharts LineSeries
-4. Add player selection (show all or specific player)
-5. Add time range slider (30s, 60s, 120s)
-6. Implement chart theming
-
-**Features:**
-- Multi-player lines (different colors)
-- Smooth interpolation
-- Auto-scaling Y axis
-- Time labels on X axis
-- Legend with player names
-
-**Deliverable**: Working DPS trend chart
-
----
-
-### Phase 5: Skill Breakdown Chart (2-3 hours)
-**Goal**: Pie chart showing skill damage distribution
-
-**Tasks:**
-1. Create `SkillBreakdownViewModel.cs`
-2. Calculate skill damage percentages
-3. Configure LiveCharts PieSeries
-4. Add player dropdown selector
-5. Show top 8 skills + "Others"
-
-**Features:**
-- Player selection dropdown
-- Percentage labels
-- Color-coded skills
-- Hover tooltips
-
-**Deliverable**: Working skill breakdown pie chart
-
----
-
-### Phase 6: Player Comparison Chart (2-3 hours)
-**Goal**: Bar chart comparing player DPS
-
-**Tasks:**
-1. Create `PlayerComparisonViewModel.cs`
-2. Calculate average DPS per player
-3. Configure LiveCharts ColumnSeries
-4. Sort players by DPS (descending)
-5. Add metric selector (DPS, Total Damage, HPS)
-
-**Features:**
-- Sorted bars
-- Player names on X axis
-- Value labels on bars
-- Metric switcher
-
-**Deliverable**: Working player comparison chart
-
----
-
-### Phase 7: Theme & Polish (2-3 hours)
-**Goal**: Theme support and UI polish
-
-**Tasks:**
-1. Implement dark/light theme switching
-2. Match BlueMeter's color scheme
-3. Add chart animations
-4. Add loading states
-5. Error handling (no data)
-6. Performance optimization
-
-**Deliverable**: Polished, themed charts
-
----
-
-### Phase 8: Testing & Optimization (2-3 hours)
-**Goal**: Final testing and performance tuning
-
-**Tasks:**
-1. Test with real combat data
-2. Test theme switching
-3. Test window resize/position saving
-4. Memory leak testing
-5. Performance profiling
-6. Bug fixes
-
-**Deliverable**: Production-ready charts feature
 
 ---
 
 ## Time Estimates
 
-| Phase | Description | Estimated Time |
-|-------|-------------|----------------|
-| Phase 1 | Library Setup | 1-2 hours |
-| Phase 2A | Real-Time Windowing | 2-3 hours |
-| Phase 2B | Hook into DataStorage | 1-2 hours |
-| Phase 2C | ChartDataService | 2-3 hours |
-| Phase 3 | Charts Window UI | 3-4 hours |
-| Phase 4 | DPS Trend Chart | 3-4 hours |
-| Phase 5 | Skill Breakdown | 2-3 hours |
-| Phase 6 | Player Comparison | 2-3 hours |
-| Phase 7 | Theme & Polish | 2-3 hours |
-| Phase 8 | Testing | 2-3 hours |
-| **TOTAL** | | **20-29 hours** |
+| Phase | Description | Estimated | Actual | Status |
+|-------|-------------|-----------|--------|--------|
+| Phase 1 | Library Setup (OxyPlot) | 1-2h | ~2h | ✅ Complete |
+| Phase 2A | Real-Time Windowing | 2-3h | ~2h | ✅ Complete |
+| Phase 2B | Hook DataStorage | 1-2h | ~1h | ✅ Complete |
+| Phase 2C | ChartDataService | 2-3h | ~2h | ✅ Complete |
+| Phase 3 | Charts Window UI | 3-4h | ~3h | ✅ Complete |
+| Phase 4 | DPS Trend Chart | 3-4h | ~4h | ✅ Complete |
+| Phase 5 | Player Comparison | 2-3h | - | 📋 Next |
+| Phase 6 | Skill Breakdown | 2-3h | - | 📋 Pending |
+| Phase 7 | Polish & Enhancement | 2-3h | - | 📋 Pending |
+| Phase 8 | Testing & Optimization | 2-3h | - | 📋 Pending |
+| **TOTAL** | | **20-29h** | **~14h** | **~60% Done** |
+
+**Progress**: 6/10 phases complete
+**Time Spent**: ~14 hours
+**Time Remaining**: ~6-15 hours
 
 ---
 
@@ -653,71 +953,107 @@ public sealed class ChartDataService : IDisposable
 
 ### ✅ Decisions Made
 
-1. **Library**: LiveCharts2 (WPF native, MVVM support, real-time updates)
+1. **Library**: OxyPlot 2.2.0 (stable, WPF native, MVVM)
 2. **Sampling Rate**: 200ms (5 samples/second)
-3. **Window Size**: 1 second sliding window for instant stats
-4. **History Limit**: 500 data points per player (FIFO)
-5. **Chart Types**:
-   - DPS Trend (line chart)
-   - Skill Breakdown (pie chart)
-   - Player Comparison (bar chart)
-6. **Theme Support**: Dark/Light mode matching BlueMeter
+3. **Window Size**: 1-second sliding window
+4. **History Limit**: 500 points per player (FIFO)
+5. **Update Rate**: Charts refresh every 500ms
+6. **Theme**: Dark theme (#1E1E1E background)
+7. **Player Click**: Opens ChartsWindow (not separate SkillBreakdown window)
+8. **Focus Feature**: 4px thick line for focused player
 
-### 🔄 Implementation Strategy
+### 🎯 Design Principles
 
-- **Incremental**: Build phase by phase
-- **Test-Driven**: Test each phase before moving on
-- **Data-First**: Build data layer before UI
-- **Performance-Conscious**: Background sampling, limited history
-
----
-
-## Reference Code from StarResonanceDps
-
-### Real-Time Window Implementation
-**File**: `StarResonanceDpsAnalysis.WinForm/Plugin/DamageStatistics/PlayerStat.cs`
-
-```csharp
-// Lines 240-265
-private void UpdateRealtimeStats()
-{
-    var cutoff = DateTime.UtcNow.AddSeconds(-1);
-    _realtimeWindow.RemoveAll(x => x.timestamp < cutoff);
-    RealtimeValue = (ulong)_realtimeWindow.Sum(x => (long)x.damage);
-}
-```
-
-### Background Sampling Pattern
-**File**: `StarResonanceDpsAnalysis.WinForm/Plugin/StatisticalChart/ChartVisualizationService.cs`
-
-```csharp
-// Timer-based sampling
-_autoRefreshTimer = new System.Windows.Forms.Timer
-{
-    Interval = 100, // 100ms high-frequency refresh
-    Enabled = false
-};
-_autoRefreshTimer.Tick += AutoRefreshTimer_Tick;
-
-private void AutoRefreshTimer_Tick(object sender, EventArgs e)
-{
-    RefreshAllCharts();
-}
-```
+- **Background First**: Data collection runs even when window closed
+- **Performance**: Limited history, efficient updates
+- **User Experience**: Click player → See their chart
+- **MVVM**: Clean separation of concerns
+- **Dark Theme**: Consistent with BlueMeter styling
 
 ---
 
 ## Next Steps
 
-When ready to implement:
+### ⏳ Immediate Next Phase: Player Comparison (Phase 5)
 
-1. **Start with Phase 1**: Install LiveCharts2 and test basic rendering
-2. **Proceed sequentially**: Each phase builds on the previous
-3. **Test thoroughly**: Verify each component before moving on
-4. **Ask questions**: Clarify any technical details as needed
+**Tasks:**
+1. Create PlayerComparisonChartViewModel
+2. Create PlayerComparisonChartView
+3. Implement metric calculation (Avg DPS, Total Damage, etc.)
+4. Configure OxyPlot BarSeries
+5. Add metric selector UI
+6. Integrate into Player Comparison tab
+7. Test with multiple players
+
+**Priority**: Medium (Skill Breakdown is higher priority)
+
+### ⭐ High Priority: Skill Breakdown (Phase 6)
+
+**Why Important:**
+- Core feature for understanding DPS composition
+- Requested by user specifically
+- Replaces old SkillBreakdownView functionality
+- High user value
+
+**Tasks:**
+1. Create SkillBreakdownChartViewModel
+2. Create SkillBreakdownChartView
+3. Aggregate skill data from DpsData
+4. Implement player selector
+5. Configure chart (pie or bar)
+6. Add to Skill Breakdown tab
+7. Test with real skill data
 
 ---
 
-**Last Updated**: 2025-01-18
-**Status**: Planning Phase (Now)
-**Priority**: Medium (after current bug fixes)
+## OxyPlot Quick Reference
+
+### Dark Theme Template
+```csharp
+var plotModel = new PlotModel
+{
+    Background = OxyColor.FromRgb(30, 30, 30),      // #1E1E1E
+    TextColor = OxyColors.White,
+    TitleColor = OxyColors.White,
+    PlotAreaBorderColor = OxyColor.FromRgb(63, 63, 70)
+};
+
+var axis = new LinearAxis
+{
+    TitleColor = OxyColors.White,
+    TextColor = OxyColors.White,
+    TicklineColor = OxyColor.FromRgb(63, 63, 70),
+    MajorGridlineStyle = LineStyle.Solid,
+    MajorGridlineColor = OxyColor.FromRgb(45, 45, 48),
+    MinorGridlineStyle = LineStyle.Dot,
+    MinorGridlineColor = OxyColor.FromRgb(40, 40, 43)
+};
+```
+
+### Real-Time Update Pattern
+```csharp
+// In timer tick handler
+private void OnUpdateTick(object? sender, EventArgs e)
+{
+    // Get new data
+    var newDataPoints = GetLatestData();
+
+    // Update series
+    foreach (var series in PlotModel.Series.OfType<LineSeries>())
+    {
+        series.Points.Clear();
+        series.Points.AddRange(newDataPoints);
+    }
+
+    // Refresh chart
+    PlotModel.InvalidatePlot(true);
+}
+```
+
+---
+
+**Last Updated**: 2025-11-19
+**Status**: Phase 4 Complete ✅ (~60% Done)
+**Library**: OxyPlot 2.2.0
+**Next**: Phase 5 (Player Comparison) or Phase 6 (Skill Breakdown)
+**Priority**: High

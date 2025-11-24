@@ -428,21 +428,20 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
                     ? (long)(DateTime.UtcNow - currentBossDeathTime.Value).TotalMilliseconds + (BossDeathDelaySeconds * 1000)
                     : (long)SectionTimeout.TotalMilliseconds;
 
-                // End encounter before clearing DPS data
-                _ = Task.Run(async () =>
+                // CRITICAL FIX: Save encounter data synchronously BEFORE clearing
+                // We must block here to ensure chart data is captured before it's deleted
+                try
                 {
-                    try
-                    {
-                        await DataStorageExtensions.EndCurrentEncounterAsync(durationMs, bossName, currentBossUuid);
-                        logger.LogInformation("Encounter ended for boss: {BossName} (UID={BossUid}), Duration={DurationMs}ms",
-                            bossName, currentBossUuid, durationMs);
-                    }
-                    catch (Exception ex)
-                    {
-                        logger.LogError(ex, "Failed to end encounter for boss fight");
-                    }
-                });
+                    DataStorageExtensions.EndCurrentEncounterAsync(durationMs, bossName, currentBossUuid).GetAwaiter().GetResult();
+                    logger.LogInformation("Encounter ended for boss: {BossName} (UID={BossUid}), Duration={DurationMs}ms",
+                        bossName, currentBossUuid, durationMs);
+                }
+                catch (Exception ex)
+                {
+                    logger.LogError(ex, "Failed to end encounter for boss fight");
+                }
 
+                // Now safe to clear - data has been saved
                 PrivateClearDpsData(); // raises DpsDataUpdated & DataUpdated
                 RaiseNewSectionCreated();
             }

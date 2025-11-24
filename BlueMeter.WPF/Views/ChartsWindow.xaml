@@ -6,7 +6,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:BlueMeter.WPF.ViewModels"
     xmlns:views="clr-namespace:BlueMeter.WPF.Views"
-    Title="Advanced Combat Log - Charts"
+    Title="Advanced Combat Log - Charts (BETA)"
     Width="1200"
     Height="800"
     MinWidth="800"

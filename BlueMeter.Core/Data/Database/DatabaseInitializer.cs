@@ -13,7 +13,7 @@ public static class DatabaseInitializer
     /// <summary>
     /// Initialize database and run migrations
     /// </summary>
-    public static async Task InitializeAsync(string databasePath, bool autoCleanup = true, int maxEncounters = 100, double maxSizeMB = 100)
+    public static async Task InitializeAsync(string databasePath, bool autoCleanup = true, int maxEncounters = 20, double maxSizeMB = 100)
     {
         // Ensure directory exists
         var directory = Path.GetDirectoryName(databasePath);

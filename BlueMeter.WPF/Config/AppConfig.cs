@@ -242,7 +242,7 @@ public partial class AppConfig : ObservableObject
     /// Maximum number of encounters to keep in database
     /// </summary>
     [ObservableProperty]
-    private int _maxEncountersToKeep = 100;
+    private int _maxEncountersToKeep = 20;
 
     /// <summary>
     /// Maximum database size in MB before triggering cleanup

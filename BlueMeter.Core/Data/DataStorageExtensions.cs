@@ -27,7 +27,7 @@ public static class DataStorageExtensions
         string? databasePath = null,
         object? chartDataService = null,
         bool autoCleanup = true,
-        int maxEncounters = 100,
+        int maxEncounters = 20,
         double maxSizeMB = 100)
     {
         if (_isInitialized) return;
@@ -232,7 +232,7 @@ public static class DataStorageExtensions
     /// <summary>
     /// Cleanup old encounters from database
     /// </summary>
-    public static async Task CleanupOldEncountersAsync(int keepCount = 100)
+    public static async Task CleanupOldEncountersAsync(int keepCount = 20)
     {
         if (_encounterService == null) return;
 

@@ -465,7 +465,7 @@ public class EncounterRepository
     /// <summary>
     /// Clean up old encounters, keeping only the most recent ones
     /// </summary>
-    public async Task<int> CleanupOldEncountersAsync(int keepCount = 100)
+    public async Task<int> CleanupOldEncountersAsync(int keepCount = 20)
     {
         var encountersToKeep = await _context.Encounters
             .OrderByDescending(e => e.StartTime)

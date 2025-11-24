@@ -92,6 +92,10 @@ public sealed class ChartDataService : IChartDataService
                 var playerId = kvp.Key;
                 var dpsData = kvp.Value;
 
+                // Skip NPCs - only track real players
+                if (dpsData.IsNpcData)
+                    continue;
+
                 // Ensure history collections exist for this player
                 if (!_dpsHistory.ContainsKey(playerId))
                 {

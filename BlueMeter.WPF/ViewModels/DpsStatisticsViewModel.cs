@@ -519,18 +519,18 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
                 playerSpec = ClassSpec.Unknown;
             }
 
-            // Process Damage
+            // Process Damage (only for players, not NPCs)
             var damageValue = dpsData.TotalAttackDamage.ConvertToUnsigned();
-            if (damageValue > 0)
+            if (damageValue > 0 && !dpsData.IsNpcData)
             {
                 result[StatisticType.Damage][dpsData.UID] = new DpsDataProcessed(
                     dpsData, damageValue, duration, skillList, playerName, playerClass, playerSpec,
                     powerLevel);
             }
 
-            // Process Healing
+            // Process Healing (only for players, not NPCs)
             var healingValue = dpsData.TotalHeal.ConvertToUnsigned();
-            if (healingValue > 0)
+            if (healingValue > 0 && !dpsData.IsNpcData)
             {
                 result[StatisticType.Healing][dpsData.UID] = new DpsDataProcessed(
                     dpsData, healingValue, duration, skillList, playerName, playerClass, playerSpec, powerLevel);

@@ -775,11 +775,49 @@ begin
   end;
 end;
 
+function Dependency_IsNpcapInstalled: Boolean;
+var
+  System32Path: String;
+begin
+  // Check for Npcap in registry (64-bit)
+  if RegKeyExists(HKLM, 'SOFTWARE\Npcap') then begin
+    Result := True;
+    exit;
+  end;
+
+  // Check for Npcap in registry (32-bit on 64-bit system)
+  if RegKeyExists(HKLM, 'SOFTWARE\WOW6432Node\Npcap') then begin
+    Result := True;
+    exit;
+  end;
+
+  // Check for WinPcap in registry (legacy)
+  if RegKeyExists(HKLM, 'SOFTWARE\WinPcap') then begin
+    Result := True;
+    exit;
+  end;
+
+  // Check for Npcap DLL in system32
+  System32Path := ExpandConstant('{sys}');
+  if FileExists(System32Path + '\Npcap\wpcap.dll') then begin
+    Result := True;
+    exit;
+  end;
+
+  // Check for WinPcap DLL in system32 (legacy)
+  if FileExists(System32Path + '\wpcap.dll') then begin
+    Result := True;
+    exit;
+  end;
+
+  Result := False;
+end;
+
 procedure Dependency_AddNpcap;
 begin
   // Npcap is required for packet capturing with SharpPcap
   // Using free edition (non-silent installer)
-  if not RegKeyExists(HKLM, 'SOFTWARE\Npcap') then begin
+  if not Dependency_IsNpcapInstalled then begin
     Dependency_Add('npcap-1.79.exe',
       '/winpcap_mode=yes /loopback_support=no /admin_only=no',
       'Npcap (Packet Capture Driver)',

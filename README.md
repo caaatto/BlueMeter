@@ -56,6 +56,25 @@ The tool does not require modifying the game client and does not violate the gam
 
 ⚠️ **Important**: Do NOT run `BlueMeter.WPF.exe` directly on first launch. Windows SmartScreen may incorrectly flag it as suspicious. Always use the installer or `setup.bat` → `launcher.bat` instead.
 
+⚠️ **Internet Required**: This version requires an internet connection during initial build to download NuGet packages. See Option 3 below for offline/VM usage.
+
+#### Option 3: Pre-Built Portable (For Offline/VM Usage) 💻
+**Perfect for running in VMs or offline environments!**
+
+1. Go to the [Releases page](https://github.com/caaatto/BlueMeter/releases)
+2. Download `BlueMeter-vX.X.X-portable.zip`
+3. Extract the ZIP file
+4. **Double-click `BlueMeter.bat`** to launch
+
+✅ **Advantages**:
+- No internet required (after downloading)
+- No building needed - ready to run
+- Includes .NET runtime (no separate installation)
+- Perfect for isolated VMs or secure environments
+- Only requires Npcap (one-time download)
+
+⚠️ **Note**: You still need to install Npcap once. Download it from [npcap.com](https://npcap.com) on a machine with internet, then transfer the installer to your offline environment if needed.
+
 ### Running BlueMeter
 Once installed, simply **double-click `launcher.bat`** (portable) or use the Start Menu shortcut (installer) to start BlueMeter anytime.
 
@@ -75,6 +94,7 @@ BlueMeter-vX.X.X-windows-x64/
 
 #### Prerequisites
 - .NET 8.0 SDK
+- Internet connection (for NuGet package restore)
 
 #### Build Steps
 ```bash
@@ -95,6 +115,36 @@ For a publishable build:
 dotnet publish BlueMeter.WPF/BlueMeter.WPF.csproj -c Release -o publish
 ```
 The executable will be in the `publish` folder.
+
+#### Creating a Pre-Built Portable Release
+To create a portable version that doesn't require building (perfect for offline/VM environments):
+```bash
+.\create-portable-release.bat
+```
+This creates a self-contained package with embedded .NET runtime in `release-portable/`.
+
+### Offline & VM Usage
+
+If you want to run BlueMeter in an **offline VM or isolated environment** (e.g., for security/testing):
+
+1. **On a machine with internet:**
+   - Download `BlueMeter-vX.X.X-portable.zip` from [Releases](https://github.com/caaatto/BlueMeter/releases)
+   - Download Npcap installer from [npcap.com](https://npcap.com/#download)
+
+2. **Transfer to offline environment:**
+   - Copy both files to your VM/offline machine
+
+3. **Install Npcap:**
+   - Run the Npcap installer once
+   - Use WinPcap compatibility mode if asked
+   - No admin-only mode required
+
+4. **Run BlueMeter:**
+   - Extract the portable ZIP
+   - Double-click `BlueMeter.bat`
+   - Works completely offline - no telemetry or online requirements
+
+✅ **Perfect for security testing** - BlueMeter makes no outbound connections and stores all data locally.
 
 ## 📋 System Requirements
 

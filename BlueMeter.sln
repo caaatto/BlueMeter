@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35919.96
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueMeter.WinForm", "BlueMeter.WinForm\BlueMeter.WinForm.csproj", "{AA1BF9A8-D834-428C-A2BF-938392A76FB7}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueMeter.Assets", "BlueMeter.Assets\BlueMeter.Assets.csproj", "{B18E1B47-56AC-4889-8FF5-555A9153B7E1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlueMeter.Core", "BlueMeter.Core\BlueMeter.Core.csproj", "{984EA7E8-2102-4E33-BBF9-E3915C4D2650}"
@@ -32,18 +30,6 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{AA1BF9A8-D834-428C-A2BF-938392A76FB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AA1BF9A8-D834-428C-A2BF-938392A76FB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AA1BF9A8-D834-428C-A2BF-938392A76FB7}.Debug|x64.ActiveCfg = Debug|x64
-		{AA1BF9A8-D834-428C-A2BF-938392A76FB7}.Debug|x64.Build.0 = Debug|x64
-		{AA1BF9A8-D834-428C-A2BF-938392A76FB7}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{AA1BF9A8-D834-428C-A2BF-938392A76FB7}.Debug|x86.Build.0 = Debug|Any CPU
-		{AA1BF9A8-D834-428C-A2BF-938392A76FB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AA1BF9A8-D834-428C-A2BF-938392A76FB7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AA1BF9A8-D834-428C-A2BF-938392A76FB7}.Release|x64.ActiveCfg = Release|x64
-		{AA1BF9A8-D834-428C-A2BF-938392A76FB7}.Release|x64.Build.0 = Release|x64
-		{AA1BF9A8-D834-428C-A2BF-938392A76FB7}.Release|x86.ActiveCfg = Release|Any CPU
-		{AA1BF9A8-D834-428C-A2BF-938392A76FB7}.Release|x86.Build.0 = Release|Any CPU
 		{B18E1B47-56AC-4889-8FF5-555A9153B7E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B18E1B47-56AC-4889-8FF5-555A9153B7E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B18E1B47-56AC-4889-8FF5-555A9153B7E1}.Debug|x64.ActiveCfg = Debug|x64

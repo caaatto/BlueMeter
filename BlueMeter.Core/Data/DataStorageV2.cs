@@ -74,6 +74,20 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
         // Remove messages older than the detection window
         _recentReturnMessageTimes.RemoveAll(time => (now - time) > _returnBurstWindow);
 
+        // Log burst activity in real-time
+        if (EnableQueueDetectionLogging && _recentReturnMessageTimes.Count >= 3)
+        {
+            try
+            {
+                var logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "queue-detection-summary.log");
+                var timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+                var logMsg = $"[{timestamp}] RETURN BURST: {_recentReturnMessageTimes.Count} messages in last {_returnBurstWindow.TotalSeconds}s\n";
+                Directory.CreateDirectory(Path.GetDirectoryName(logPath)!);
+                File.AppendAllText(logPath, logMsg);
+            }
+            catch { }
+        }
+
         // Check if we have enough Return messages in the window
         if (_recentReturnMessageTimes.Count >= MinReturnMessagesForQueuePop)
         {
@@ -82,6 +96,20 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
             {
                 logger.LogInformation("[RETURN BURST] Queue pop detected! {Count} Return messages in {Window:F1}s",
                     _recentReturnMessageTimes.Count, _returnBurstWindow.TotalSeconds);
+
+                // Log queue pop detection
+                if (EnableQueueDetectionLogging)
+                {
+                    try
+                    {
+                        var logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "queue-detection-summary.log");
+                        var timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+                        var logMsg = $"[{timestamp}] ★★★ QUEUE POP DETECTED! ★★★ {_recentReturnMessageTimes.Count} Return messages triggered alert\n";
+                        Directory.CreateDirectory(Path.GetDirectoryName(logPath)!);
+                        File.AppendAllText(logPath, logMsg);
+                    }
+                    catch { }
+                }
 
                 _lastQueuePopAlertTime = now;
                 QueuePopDetected?.Invoke();

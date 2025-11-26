@@ -177,6 +177,13 @@ public class DeviceManagementService(
 
     private string BuildFilter(IReadOnlyCollection<int> tcpPorts, IReadOnlyCollection<int> udpPorts)
     {
+        // TEMPORARY: Capture ALL TCP/UDP traffic to find queue pop packets
+        // TODO: Revert to port-specific filtering after finding queue system port
+        logger.LogWarning("[QUEUE DEBUG] Capturing ALL TCP/UDP traffic (port filter disabled)");
+        return "(ip or ip6) and (tcp or udp)";
+
+        // OLD CODE (port-specific filtering):
+        /*
         // Build BPF like: (ip or ip6) and ((tcp and (port a or port b)) or (udp and (port c or port d)))
         var parts = new List<string>();
         if (tcpPorts.Count > 0)
@@ -197,6 +204,7 @@ public class DeviceManagementService(
         }
 
         return $"(ip or ip6) and ({string.Join(" or ", parts)})";
+        */
     }
 
     private void TrySetDeviceFilter(string filter)

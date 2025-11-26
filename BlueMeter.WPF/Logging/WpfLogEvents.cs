@@ -32,4 +32,7 @@ public static class WpfLogEvents
     public static readonly EventId VmLoaded = new(2400, nameof(VmLoaded));
     public static readonly EventId VmRefresh = new(2401, nameof(VmRefresh));
     public static readonly EventId VmUpdateData = new(2402, nameof(VmUpdateData));
+
+    // Queue detection
+    public static readonly EventId QueueDetector = new(2500, nameof(QueueDetector));
 }

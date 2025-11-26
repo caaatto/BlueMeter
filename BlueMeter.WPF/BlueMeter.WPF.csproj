@@ -49,6 +49,11 @@
     <Content Include="Assets\sounds\*.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <!-- Copy Tesseract language data -->
+    <Content Include="bin\Release\net8.0-windows\tessdata\eng.traineddata">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Link>tessdata\eng.traineddata</Link>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Remove="App.xaml" />
@@ -74,6 +79,7 @@
     </PackageReference>
     <PackageReference Include="OxyPlot.Wpf" />
     <PackageReference Include="Serilog.Extensions.Logging.File" />
+    <PackageReference Include="Tesseract" />
     <PackageReference Include="WPFLocalizeExtension" />
     <PackageReference Include="CommunityToolkit.Mvvm" />
     <PackageReference Include="Microsoft.Extensions.Hosting" />

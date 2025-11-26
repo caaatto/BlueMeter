@@ -170,6 +170,7 @@ public partial class App : Application
                 services.AddSingleton<IChartDataService, ChartDataService>(); // Chart data sampling service
                 services.AddSingleton<ISoundPlayerService, SoundPlayerService>(); // Sound player for queue pop alerts
                 services.AddSingleton<IQueueAlertManager, QueueAlertManager>(); // Queue pop alert manager
+                services.AddSingleton<IQueuePopUIDetector, QueuePopUIDetector>(); // UI Automation queue pop detector
 
                 if (_logStream != null) services.AddSingleton<IObservable<LogEvent>>(_logStream);
 

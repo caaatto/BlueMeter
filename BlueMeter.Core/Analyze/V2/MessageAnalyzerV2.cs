@@ -25,6 +25,7 @@ public sealed class MessageAnalyzerV2
         _registry = new MessageHandlerRegistry(storage, logger);
         _messageHandlerMap = new Dictionary<MessageType, Action<ByteReader, bool>>
         {
+            { MessageType.Call, ProcessCallMsg },
             { MessageType.Notify, ProcessNotifyMsg },
             { MessageType.FrameDown, ProcessFrameDown },
             { MessageType.Return, ProcessReturnMsg }
@@ -68,6 +69,19 @@ public sealed class MessageAnalyzerV2
 
             if (!_messageHandlerMap.TryGetValue(msgTypeId, out var handler))
             {
+                // Log unknown message types
+                if (Data.DataStorageV2.EnableQueueDetectionLogging)
+                {
+                    try
+                    {
+                        var logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "unknown-messages.log");
+                        var timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+                        var logMsg = $"[{timestamp}] UNKNOWN MessageType: {msgTypeId} (0x{(int)msgTypeId:X}), Compressed: {isZstdCompressed}\n";
+                        Directory.CreateDirectory(Path.GetDirectoryName(logPath)!);
+                        File.AppendAllText(logPath, logMsg);
+                    }
+                    catch { }
+                }
                 continue;
             }
 
@@ -142,6 +156,9 @@ public sealed class MessageAnalyzerV2
 
             switch (msgTypeId)
             {
+                case MessageType.Call:
+                    ProcessCallMsg(inner, isZstdCompressed);
+                    break;
                 case MessageType.Notify:
                     ProcessNotifyMsg(inner, isZstdCompressed);
                     break;
@@ -152,7 +169,19 @@ public sealed class MessageAnalyzerV2
                     ProcessReturnMsg(inner, isZstdCompressed);
                     break;
                 default:
-                    // Unknown, skip
+                    // Log unknown message types
+                    if (Data.DataStorageV2.EnableQueueDetectionLogging)
+                    {
+                        try
+                        {
+                            var logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "unknown-messages.log");
+                            var timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+                            var logMsg = $"[{timestamp}] [SPAN] UNKNOWN MessageType: {msgTypeId} (0x{(int)msgTypeId:X}), Compressed: {isZstdCompressed}\n";
+                            Directory.CreateDirectory(Path.GetDirectoryName(logPath)!);
+                            File.AppendAllText(logPath, logMsg);
+                        }
+                        catch { }
+                    }
                     break;
             }
         }
@@ -394,6 +423,96 @@ public sealed class MessageAnalyzerV2
         {
             dataStorageV2.TrackReturnMessage();
         }
+    }
+
+    /// <summary>
+    /// Processes Call messages (client->server RPC calls, may include queue requests)
+    /// </summary>
+    private void ProcessCallMsg(ByteReader packet, bool isZstdCompressed)
+    {
+        if (packet.Remaining < 16) return; // Need at least serviceUuid + stubId + methodId
+
+        var serviceUuid = packet.ReadUInt64BE();
+        var stubId = packet.ReadUInt32BE();
+        var methodId = packet.ReadUInt32BE();
+        var payload = packet.ReadRemaining();
+
+        if (isZstdCompressed)
+        {
+            payload = DecompressZstdIfNeeded(payload);
+        }
+
+        // DEBUG: Log ALL Call messages to find queue/matchmaking requests
+        if (Data.DataStorageV2.EnableQueueDetectionLogging)
+        {
+            try
+            {
+                var logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "call-messages.log");
+                var timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+                var logMsg = $"[{timestamp}] Call - ServiceUuid: 0x{serviceUuid:X16}, StubId: 0x{stubId:X8}, MethodId: 0x{methodId:X8} ({methodId}), PayloadSize: {payload.Length} bytes\n";
+                Directory.CreateDirectory(Path.GetDirectoryName(logPath)!);
+                File.AppendAllText(logPath, logMsg);
+
+                // Log payload hex for analysis (if small enough)
+                if (payload.Length > 0 && payload.Length <= 128)
+                {
+                    var hexDump = BitConverter.ToString(payload).Replace("-", " ");
+                    File.AppendAllText(logPath, $"  Payload: {hexDump}\n");
+                }
+            }
+            catch { }
+        }
+
+        _logger?.LogInformation("[CALL MSG] ServiceUuid: 0x{ServiceUuid:X16}, StubId: 0x{StubId:X8}, MethodId: 0x{MethodId:X8}",
+            serviceUuid, stubId, methodId);
+    }
+
+    /// <summary>
+    /// Span-based Call message parser
+    /// </summary>
+    private void ProcessCallMsg(ReadOnlySpan<byte> packet, bool isZstdCompressed)
+    {
+        var r = new SpanReader(packet);
+        if (r.Remaining < 16) return;
+
+        var serviceUuid = r.ReadUInt64BE();
+        var stubId = r.ReadUInt32BE();
+        var methodId = r.ReadUInt32BE();
+        var payloadSpan = r.ReadRemainingSpan();
+
+        byte[] payload;
+        if (isZstdCompressed)
+        {
+            payload = DecompressZstdIfNeeded(payloadSpan.ToArray());
+        }
+        else
+        {
+            payload = payloadSpan.ToArray();
+        }
+
+        // DEBUG: Log ALL Call messages to find queue/matchmaking requests
+        if (Data.DataStorageV2.EnableQueueDetectionLogging)
+        {
+            try
+            {
+                var logPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "call-messages.log");
+                var timestamp = DateTime.Now.ToString("HH:mm:ss.fff");
+                var logMsg = $"[{timestamp}] [SPAN] Call - ServiceUuid: 0x{serviceUuid:X16}, StubId: 0x{stubId:X8}, MethodId: 0x{methodId:X8} ({methodId}), PayloadSize: {payload.Length} bytes\n";
+                Directory.CreateDirectory(Path.GetDirectoryName(logPath)!);
+                File.AppendAllText(logPath, logMsg);
+
+                // Log payload hex for analysis (if small enough)
+                if (payload.Length > 0 && payload.Length <= 128)
+                {
+                    var hexDump = BitConverter.ToString(payload).Replace("-", " ");
+                    File.AppendAllText(logPath, $"  Payload: {hexDump}\n");
+                }
+            }
+            catch { }
+        }
+
+        _logger?.LogInformation("[CALL MSG] ServiceUuid: 0x{ServiceUuid:X16}, StubId: 0x{StubId:X8}, MethodId: 0x{MethodId:X8}",
+            serviceUuid, stubId, methodId);
     }
 
     #region Zstd Decompression

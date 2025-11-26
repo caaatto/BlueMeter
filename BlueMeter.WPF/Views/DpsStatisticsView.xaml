@@ -69,6 +69,7 @@
         <converters:PanelContentColorModeConverter x:Key="PanelContentColorModeConverter" />
         <converters:PercentToOpacityConverter x:Key="PercentToOpacityConverter" />
         <converters:TrainingModeCheckConverter x:Key="TrainingModeCheckConverter" />
+        <converters:NumberToVisibilityConverter x:Key="NumberToVisibilityConverter" />
 
         <!-- DPS Settings MenuItem with black text for readability on light background -->
         <Style x:Key="DpsSettingsMenuItem" TargetType="MenuItem" BasedOn="{StaticResource ModernMenuItem}">
@@ -272,7 +273,63 @@
                     IsHitTestVisible="False"
                     Text="{Binding SkillList.Count, StringFormat='Skills Count: {0}'}"
                     Visibility="{Binding Debug.Enabled, Converter={StaticResource BoolToVisibilityConverter}}" />
-                <!--  Original popup content  -->
+
+                <!--  Tank/Mitigation Stats - Show when player has taken damage  -->
+                <Border
+                    Margin="0,0,0,8"
+                    Padding="10"
+                    Background="#DD1a1a1a"
+                    CornerRadius="6"
+                    Visibility="{Binding DamageTaken, Converter={StaticResource NumberToVisibilityConverter}}">
+                    <StackPanel>
+                        <TextBlock
+                            Margin="0,0,0,6"
+                            FontSize="12"
+                            FontWeight="Bold"
+                            Foreground="#FFA855"
+                            Style="{StaticResource FooterTextContent}"
+                            Text="Tank Stats" />
+
+                        <!--  Damage Taken (HP)  -->
+                        <TextBlock Style="{StaticResource FooterTextContent}">
+                            <Run Foreground="#FF6B6B" Text="HP Damage Taken: " />
+                            <Run FontWeight="Bold" Foreground="White" Text="{Binding DamageTaken, StringFormat=N0}" />
+                        </TextBlock>
+
+                        <!--  Damage Mitigated (Shield)  -->
+                        <TextBlock Style="{StaticResource FooterTextContent}">
+                            <Run Foreground="#6BCF7F" Text="Damage Mitigated: " />
+                            <Run FontWeight="Bold" Foreground="White" Text="{Binding DamageMitigated, StringFormat=N0}" />
+                        </TextBlock>
+
+                        <!--  Effective Damage (Total Threat)  -->
+                        <TextBlock Style="{StaticResource FooterTextContent}">
+                            <Run Foreground="#FFD93D" Text="Effective Damage: " />
+                            <Run FontWeight="Bold" Foreground="White" Text="{Binding EffectiveDamage, StringFormat=N0}" />
+                            <Run Foreground="Gray" Text=" (HP + Shield)" />
+                        </TextBlock>
+
+                        <!--  Mitigation Percentage  -->
+                        <TextBlock
+                            Margin="0,4,0,0"
+                            Style="{StaticResource FooterTextContent}">
+                            <Run Foreground="#95E1D3" Text="Mitigation: " />
+                            <Run
+                                FontSize="13"
+                                FontWeight="Bold"
+                                Foreground="#6BCF7F"
+                                Text="{Binding MitigationPercent, StringFormat='{}{0:F1}%'}" />
+                        </TextBlock>
+
+                        <!--  Effective TPS  -->
+                        <TextBlock Style="{StaticResource FooterTextContent}">
+                            <Run Foreground="#C8A2C8" Text="Effective TPS: " />
+                            <Run FontWeight="Bold" Foreground="White" Text="{Binding EffectiveTps, StringFormat='{}{0:F0}'}" />
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <!--  Original popup content (Skills)  -->
                 <ctrl:DpsDetailPopup SkillList="{Binding SkillList}" />
             </StackPanel>
         </DataTemplate>

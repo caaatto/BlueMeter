@@ -398,9 +398,11 @@ public static class DataStorage
             // 设置通用基础信息
             var (fullData, sectionedData) = SetLogInfos(log.TargetUuid, log);
 
-            // 叠加受击伤害
-            fullData.TotalTakenDamage += log.Value;
-            sectionedData.TotalTakenDamage += log.Value;
+            // 叠加受击伤害和护盾减伤
+            fullData.TotalTakenDamage += log.HpLessenValue;
+            sectionedData.TotalTakenDamage += log.HpLessenValue;
+            fullData.TotalDamageMitigated += log.ShieldLessenValue;
+            sectionedData.TotalDamageMitigated += log.ShieldLessenValue;
         }
 
         // 如果目标不是玩家 (跟踪NPC/怪物受到的伤害)
@@ -409,9 +411,11 @@ public static class DataStorage
             // 设置通用基础信息
             var (fullData, sectionedData) = SetLogInfos(log.TargetUuid, log);
 
-            // 叠加受击伤害
-            fullData.TotalTakenDamage += log.Value;
-            sectionedData.TotalTakenDamage += log.Value;
+            // 叠加受击伤害和护盾减伤
+            fullData.TotalTakenDamage += log.HpLessenValue;
+            sectionedData.TotalTakenDamage += log.HpLessenValue;
+            fullData.TotalDamageMitigated += log.ShieldLessenValue;
+            sectionedData.TotalDamageMitigated += log.ShieldLessenValue;
 
             // 将Dps数据记录为NPC数据
             fullData.IsNpcData = true;

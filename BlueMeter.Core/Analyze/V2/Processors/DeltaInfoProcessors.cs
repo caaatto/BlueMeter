@@ -126,6 +126,8 @@ public abstract class BaseDeltaInfoProcessor(IDataStorage storage, ILogger? logg
                 AttackerUuid = attackerUuid,
                 TargetUuid = targetUuid,
                 Value = damageSigned,
+                HpLessenValue = d.HasHpLessenValue ? d.HpLessenValue : 0L,
+                ShieldLessenValue = d.HasShieldLessenValue ? d.ShieldLessenValue : 0L,
                 ValueElementType = (int)d.Property,
                 DamageSourceType = (int)(d.HasDamageSource ? d.DamageSource : 0),
                 IsAttackerPlayer = isAttackerPlayer,

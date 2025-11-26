@@ -707,16 +707,20 @@ public sealed partial class DataStorageV2(ILogger<DataStorageV2> logger) : IData
         if (!log.IsHeal && log.IsTargetPlayer)
         {
             var (fullData, sectionedData) = SetLogInfos(log.TargetUuid, log);
-            fullData.TotalTakenDamage += log.Value;
-            sectionedData.TotalTakenDamage += log.Value;
+            fullData.TotalTakenDamage += log.HpLessenValue; // HP damage actually taken
+            sectionedData.TotalTakenDamage += log.HpLessenValue;
+            fullData.TotalDamageMitigated += log.ShieldLessenValue; // Shield/mitigation absorbed
+            sectionedData.TotalDamageMitigated += log.ShieldLessenValue;
         }
 
         // Track damage/effects on NPCs/monsters (non-player targets)
         if (!log.IsTargetPlayer)
         {
             var (fullData, sectionedData) = SetLogInfos(log.TargetUuid, log);
-            fullData.TotalTakenDamage += log.Value;
-            sectionedData.TotalTakenDamage += log.Value;
+            fullData.TotalTakenDamage += log.HpLessenValue;
+            sectionedData.TotalTakenDamage += log.HpLessenValue;
+            fullData.TotalDamageMitigated += log.ShieldLessenValue;
+            sectionedData.TotalDamageMitigated += log.ShieldLessenValue;
             fullData.IsNpcData = true;
             sectionedData.IsNpcData = true;
         }

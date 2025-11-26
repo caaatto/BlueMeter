@@ -31,9 +31,13 @@ namespace BlueMeter.Core.Data.Models
         /// </summary>
         public long TotalAttackDamage { get; internal set; }// TODO: 改成ulong
         /// <summary>
-        /// 统计的总承受伤害
+        /// 统计的总承受伤害 (HP damage taken)
         /// </summary>
         public long TotalTakenDamage { get; internal set; }// TODO: 改成ulong
+        /// <summary>
+        /// 统计的总减伤/护盾吸收 (Shield/mitigation damage absorbed)
+        /// </summary>
+        public long TotalDamageMitigated { get; internal set; }
         /// <summary>
         /// 统计的总治疗量
         /// </summary>

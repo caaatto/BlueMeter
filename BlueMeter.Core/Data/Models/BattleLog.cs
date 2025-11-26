@@ -40,6 +40,14 @@ namespace BlueMeter.Core.Data.Models
         /// </summary>
         public long Value { get; internal set; }
         /// <summary>
+        /// HP damage taken (actual HP loss)
+        /// </summary>
+        public long HpLessenValue { get; internal set; }
+        /// <summary>
+        /// Shield damage absorbed (mitigation)
+        /// </summary>
+        public long ShieldLessenValue { get; internal set; }
+        /// <summary>
         /// 数值元素类型
         /// </summary>
         public int ValueElementType { get; internal set; }

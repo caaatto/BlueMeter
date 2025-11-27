@@ -270,12 +270,12 @@ public sealed class QueuePopUIDetector : IQueuePopUIDetector
             if (fullWidth <= 0 || fullHeight <= 0)
                 return null;
 
-            // Capture only bottom RIGHT quarter (where Accept/Decline buttons are)
-            // Bottom 50% of height, right 50% of width
-            int captureWidth = fullWidth / 2;
-            int captureHeight = fullHeight / 2;
-            int captureX = fullWidth / 2;  // Start at 50% from left (right half)
-            int captureY = fullHeight / 2; // Start at 50% from top (bottom half)
+            // Capture center area (where queue pop dialog typically appears)
+            // Capture 60% width x 60% height from the center
+            int captureWidth = (int)(fullWidth * 0.6);
+            int captureHeight = (int)(fullHeight * 0.6);
+            int captureX = (int)(fullWidth * 0.2);   // Start at 20% from left (centered)
+            int captureY = (int)(fullHeight * 0.2);  // Start at 20% from top (centered)
 
             var hdcSrc = GetDC(hWnd);
             var hdcDest = CreateCompatibleDC(hdcSrc);
@@ -329,8 +329,21 @@ public sealed class QueuePopUIDetector : IQueuePopUIDetector
 
                     var allText = page.GetText()?.ToLowerInvariant() ?? string.Empty;
 
-                    if (shouldLogDebug && !string.IsNullOrWhiteSpace(allText))
-                        _logger.LogDebug("[OCR] Detected text: {Text}", allText.Substring(0, Math.Min(200, allText.Length)));
+                    // Log ALL text detections to catch queue pop (not just every 30 seconds)
+                    if (!string.IsNullOrWhiteSpace(allText) && allText.Length > 5)
+                    {
+                        _logger.LogInformation("[OCR] Text: {Text}", allText.Substring(0, Math.Min(300, allText.Length)));
+
+                        // Save screenshot when we detect significant text
+                        try
+                        {
+                            var debugPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ocr_debug");
+                            Directory.CreateDirectory(debugPath);
+                            var screenshotPath = Path.Combine(debugPath, $"screenshot_{DateTime.Now:HHmmss}.png");
+                            screenshot.Save(screenshotPath, System.Drawing.Imaging.ImageFormat.Png);
+                        }
+                        catch { }
+                    }
 
                     // Check for Cancel and Confirm patterns
                     bool foundCancel = CancelPatterns.Any(pattern => allText.Contains(pattern));

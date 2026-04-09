@@ -29,6 +29,7 @@
     <PackageReference Include="Microsoft.Extensions.Hosting" />
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="Microsoft.Extensions.Logging" />
+    <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="Serilog" />
     <PackageReference Include="Serilog.Extensions.Hosting" />
     <PackageReference Include="Serilog.Extensions.Logging" />
@@ -37,6 +38,24 @@
     <PackageReference Include="Serilog.Sinks.File" />
     <PackageReference Include="Serilog.Sinks.Observable" />
     <PackageReference Include="System.Reactive" />
+    <PackageReference Include="Ihon.ResXKeyCodeGenerator">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <ClassNamePostfix>Keys</ClassNamePostfix>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\Resources.zh-CN.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Properties\Resources.pt-BR.resx">
+      <DependentUpon>Resources.resx</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
 
   <ItemGroup>

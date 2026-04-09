@@ -1,0 +1,42 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        x:Class="BlueMeter.Views.MainWindow"
+        Title="BlueMeter — Avalonia skeleton"
+        Width="900" Height="560"
+        MinWidth="600" MinHeight="400"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <StackPanel Grid.Row="0"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Spacing="12">
+            <TextBlock Text="BlueMeter"
+                       FontSize="42"
+                       FontWeight="SemiBold"
+                       HorizontalAlignment="Center" />
+            <TextBlock Text="Avalonia skeleton — Phase 1"
+                       FontSize="18"
+                       Opacity="0.7"
+                       HorizontalAlignment="Center" />
+            <TextBlock Text="WPF → Avalonia migration in progress"
+                       FontSize="13"
+                       Opacity="0.5"
+                       HorizontalAlignment="Center" />
+        </StackPanel>
+
+        <Border Grid.Row="1"
+                Padding="12,8"
+                Background="#1A000000">
+            <TextBlock Text="DI host, services, views and styles ship in later phases. See CLAUDE.md."
+                       FontSize="12"
+                       Opacity="0.6" />
+        </Border>
+
+    </Grid>
+
+</Window>

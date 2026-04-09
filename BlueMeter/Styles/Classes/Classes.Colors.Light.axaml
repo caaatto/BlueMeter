@@ -1,0 +1,97 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Per-class color resources keyed by BlueMeter.Core.Models.Classes enum name.
+        Light variant — lighter class colors for readability on pale backgrounds.
+        Resource keys MUST stay in sync with the converters in
+        BlueMeter/Converters/ClassesColorConverter.cs and
+        BlueMeter/Converters/ClassSpecColorConverter.cs.
+    -->
+
+    <!--  Unknown  -->
+    <Color x:Key="ClassesUnknownColor">#FF7A7A7A</Color>
+    <SolidColorBrush x:Key="ClassesUnknownBrush" Color="{StaticResource ClassesUnknownColor}" />
+
+    <!--  ShieldKnight  -->
+    <Color x:Key="ClassesShieldKnightColor">#BFE6FF</Color>
+    <SolidColorBrush x:Key="ClassesShieldKnightBrush" Color="{StaticResource ClassesShieldKnightColor}" />
+
+    <!--  HeavyGuardian  -->
+    <Color x:Key="ClassesHeavyGuardianColor">#8EE392</Color>
+    <SolidColorBrush x:Key="ClassesHeavyGuardianBrush" Color="{StaticResource ClassesHeavyGuardianColor}" />
+
+    <!--  Stormblade  -->
+    <Color x:Key="ClassesStormbladeColor">#B8A3FF</Color>
+    <SolidColorBrush x:Key="ClassesStormbladeBrush" Color="{StaticResource ClassesStormbladeColor}" />
+
+    <!--  WindKnight  -->
+    <Color x:Key="ClassesWindKnightColor">#ABFAFF</Color>
+    <SolidColorBrush x:Key="ClassesWindKnightBrush" Color="{StaticResource ClassesWindKnightColor}" />
+
+    <!--  FrostMage  -->
+    <Color x:Key="ClassesFrostMageColor">#AAA6FF</Color>
+    <SolidColorBrush x:Key="ClassesFrostMageBrush" Color="{StaticResource ClassesFrostMageColor}" />
+
+    <!--  Marksman  -->
+    <Color x:Key="ClassesMarksmanColor">#FFFCA3</Color>
+    <SolidColorBrush x:Key="ClassesMarksmanBrush" Color="{StaticResource ClassesMarksmanColor}" />
+
+    <!--  VerdantOracle  -->
+    <Color x:Key="ClassesVerdantOracleColor">#78FF95</Color>
+    <SolidColorBrush x:Key="ClassesVerdantOracleBrush" Color="{StaticResource ClassesVerdantOracleColor}" />
+
+    <!--  SoulMusician  -->
+    <Color x:Key="ClassesSoulMusicianColor">#FF5353</Color>
+    <SolidColorBrush x:Key="ClassesSoulMusicianBrush" Color="{StaticResource ClassesSoulMusicianColor}" />
+
+    <!--  ===== ClassSpec-specific Colors (Skill-specific) =====  -->
+
+    <!--  ShieldKnight  -->
+    <Color x:Key="ClassSpecShieldKnightRecoveryColor">#AA6F25</Color>
+    <SolidColorBrush x:Key="ClassSpecShieldKnightRecoveryBrush" Color="{StaticResource ClassSpecShieldKnightRecoveryColor}" />
+    <Color x:Key="ClassSpecShieldKnightShieldColor">#8A5B23</Color>
+    <SolidColorBrush x:Key="ClassSpecShieldKnightShieldBrush" Color="{StaticResource ClassSpecShieldKnightShieldColor}" />
+
+    <!--  HeavyGuardian  -->
+    <Color x:Key="ClassSpecHeavyGuardianEarthfortColor">#1F4165</Color>
+    <SolidColorBrush x:Key="ClassSpecHeavyGuardianEarthfortBrush" Color="{StaticResource ClassSpecHeavyGuardianEarthfortColor}" />
+    <Color x:Key="ClassSpecHeavyGuardianBlockColor">#244A7D</Color>
+    <SolidColorBrush x:Key="ClassSpecHeavyGuardianBlockBrush" Color="{StaticResource ClassSpecHeavyGuardianBlockColor}" />
+
+    <!--  Stormblade  -->
+    <Color x:Key="ClassSpecStormbladeIaidoSlashColor">#8C1B28</Color>
+    <SolidColorBrush x:Key="ClassSpecStormbladeIaidoSlashBrush" Color="{StaticResource ClassSpecStormbladeIaidoSlashColor}" />
+    <Color x:Key="ClassSpecStormbladeMoonStrikeColor">#A0212F</Color>
+    <SolidColorBrush x:Key="ClassSpecStormbladeMoonStrikeBrush" Color="{StaticResource ClassSpecStormbladeMoonStrikeColor}" />
+
+    <!--  WindKnight  -->
+    <Color x:Key="ClassSpecWindKnightVanGuardColor">#143A55</Color>
+    <SolidColorBrush x:Key="ClassSpecWindKnightVanGuardBrush" Color="{StaticResource ClassSpecWindKnightVanGuardColor}" />
+    <Color x:Key="ClassSpecWindKnightSkywardColor">#1A5A93</Color>
+    <SolidColorBrush x:Key="ClassSpecWindKnightSkywardBrush" Color="{StaticResource ClassSpecWindKnightSkywardColor}" />
+
+    <!--  FrostMage  -->
+    <Color x:Key="ClassSpecFrostMageIcicleColor">#6A7BFF</Color>
+    <SolidColorBrush x:Key="ClassSpecFrostMageIcicleBrush" Color="{StaticResource ClassSpecFrostMageIcicleColor}" />
+    <Color x:Key="ClassSpecFrostMageFrostBeamColor">#7250C7</Color>
+    <SolidColorBrush x:Key="ClassSpecFrostMageFrostBeamBrush" Color="{StaticResource ClassSpecFrostMageFrostBeamColor}" />
+
+    <!--  Marksman  -->
+    <Color x:Key="ClassSpecMarksmanWildpackColor">#A4831D</Color>
+    <SolidColorBrush x:Key="ClassSpecMarksmanWildpackBrush" Color="{StaticResource ClassSpecMarksmanWildpackColor}" />
+    <Color x:Key="ClassSpecMarksmanFalconryColor">#A5861A</Color>
+    <SolidColorBrush x:Key="ClassSpecMarksmanFalconryBrush" Color="{StaticResource ClassSpecMarksmanFalconryColor}" />
+
+    <!--  VerdantOracle  -->
+    <Color x:Key="ClassSpecVerdantOracleSmiteColor">#467D46</Color>
+    <SolidColorBrush x:Key="ClassSpecVerdantOracleSmiteBrush" Color="{StaticResource ClassSpecVerdantOracleSmiteColor}" />
+    <Color x:Key="ClassSpecVerdantOracleLifeBindColor">#3E6A3F</Color>
+    <SolidColorBrush x:Key="ClassSpecVerdantOracleLifeBindBrush" Color="{StaticResource ClassSpecVerdantOracleLifeBindColor}" />
+
+    <!--  SoulMusician  -->
+    <Color x:Key="ClassSpecSoulMusicianDissonanceColor">#5B2B8A</Color>
+    <SolidColorBrush x:Key="ClassSpecSoulMusicianDissonanceBrush" Color="{StaticResource ClassSpecSoulMusicianDissonanceColor}" />
+    <Color x:Key="ClassSpecSoulMusicianConcertoColor">#5C1F95</Color>
+    <SolidColorBrush x:Key="ClassSpecSoulMusicianConcertoBrush" Color="{StaticResource ClassSpecSoulMusicianConcertoColor}" />
+</ResourceDictionary>

@@ -1,0 +1,32 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:converters="using:BlueMeter.Converters">
+
+    <!--  All Theme Converters — centralized for easy XAML access  -->
+    <converters:ThemeColorConverter x:Key="ThemeColorConverter" />
+    <converters:ThemeColorOverlayConverter x:Key="ThemeColorOverlayConverter" />
+    <converters:ThemeBackgroundConverter x:Key="ThemeBackgroundConverter" />
+    <converters:ThemeAccentConverter x:Key="ThemeAccentConverter" />
+    <converters:ThemeForegroundConverter x:Key="ThemeForegroundConverter" />
+    <converters:ThemeToAppNameConverter x:Key="ThemeToAppNameConverter" />
+    <converters:BackgroundImageConverter x:Key="BackgroundImageConverter" />
+    <converters:PanelColorModeConverter x:Key="PanelColorModeConverter" />
+    <converters:PanelContentColorModeConverter x:Key="PanelContentColorModeConverter" />
+
+    <!--  Static theme brush fallbacks — converters drive the actual theming at runtime  -->
+
+    <!--  Background brushes  -->
+    <SolidColorBrush x:Key="ThemeDarkBackground" Color="#12192B" />
+    <SolidColorBrush x:Key="ThemeMediumBackground" Color="#151D2E" />
+    <SolidColorBrush x:Key="ThemeLightBackground" Color="#1C2738" />
+
+    <!--  Accent / border brushes  -->
+    <SolidColorBrush x:Key="ThemeAccentBrush" Color="#00D9FF" />
+    <SolidColorBrush x:Key="ThemeBorderBrush" Color="#2A3547" />
+
+    <!--  Text brushes  -->
+    <SolidColorBrush x:Key="ThemeTextPrimary" Color="#FFFFFF" />
+    <SolidColorBrush x:Key="ThemeTextSecondary" Color="#B4BCD6" />
+    <SolidColorBrush x:Key="ThemeTextTertiary" Color="#8B95A8" />
+
+</ResourceDictionary>

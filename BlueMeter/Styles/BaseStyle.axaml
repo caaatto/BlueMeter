@@ -1,0 +1,74 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Port notes:
+          - WPF's keyed `TransparentWindow` / `TransparentWindowAlt` Window styles are
+            dropped here. Chromeless windows in Avalonia set
+            `SystemDecorations="None"` + `TransparencyLevelHint="Transparent"` +
+            `ExtendClientAreaToDecorationsHint="True"` directly on the Window element.
+            The per-window wiring lives alongside the Views (Phase 10).
+          - The WPF custom ScrollBar ControlTemplate is deferred to a dedicated
+            scrollbar restyle (Phase 8 follow-up).
+          - WPF keyed `Style x:Key="CardHeaderBaseStyle"` etc. become Avalonia CSS-style
+            class selectors. Consumers will move from
+            `Style="{StaticResource CardHeaderMainTitleStyle}"` to
+            `Classes="cardHeader mainTitle"` when the views are ported.
+    -->
+
+    <Styles.Resources>
+        <!--  Shared numeric + corner-radius resources  -->
+        <x:Double x:Key="MainCornerRadiusDouble">6</x:Double>
+        <CornerRadius x:Key="MainCornerRadius">6</CornerRadius>
+        <x:Double x:Key="CardHeaderHeight">25</x:Double>
+    </Styles.Resources>
+
+    <!--  Shadow wrapper border (used to frame frameless window content)  -->
+    <Style Selector="Border.shadowWindow">
+        <Setter Property="Margin" Value="5" />
+        <Setter Property="CornerRadius" Value="{DynamicResource MainCornerRadius}" />
+        <Setter Property="BoxShadow" Value="0 0 5 0 #80000000" />
+    </Style>
+
+    <!--  Thin horizontal splitter  -->
+    <Style Selector="Border.splitter">
+        <Setter Property="Height" Value="1" />
+        <Setter Property="Background" Value="#ECECEC" />
+    </Style>
+
+    <!--  Default TextBlock font — HarmonyOS Sans SC  -->
+    <Style Selector="TextBlock">
+        <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC" />
+    </Style>
+
+    <!--  Card border (white background, rounded)  -->
+    <Style Selector="Border.card">
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="Background" Value="#FFFFFF" />
+        <Setter Property="CornerRadius" Value="{StaticResource MainCornerRadius}" />
+    </Style>
+
+    <!--  Card header text (blue, shared across main and sub title)  -->
+    <Style Selector="TextBlock.cardHeader">
+        <Setter Property="Foreground" Value="#2297F4" />
+    </Style>
+
+    <Style Selector="TextBlock.cardHeader.mainTitle">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <Style Selector="TextBlock.cardHeader.subTitle">
+        <Setter Property="FontSize" Value="9" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!--  Default GridSplitter stretch on both axes  -->
+    <Style Selector="GridSplitter">
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+    </Style>
+
+</Styles>

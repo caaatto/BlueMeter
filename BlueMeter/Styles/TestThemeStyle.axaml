@@ -1,0 +1,9 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <Style Selector="TextBlock.testTheme">
+        <Setter Property="Foreground" Value="{DynamicResource TestTextSolidBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+
+</Styles>

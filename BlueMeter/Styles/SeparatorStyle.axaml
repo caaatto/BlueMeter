@@ -1,0 +1,15 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Horizontal separator: thin, #ECECEC line. Avalonia's default Separator is a
+        simple Border internally, so setters are enough — no ControlTemplate rewrite
+        needed (unlike the WPF version which declared an explicit Line-based template).
+    -->
+    <Style Selector="Separator.horizontal">
+        <Setter Property="Background" Value="#ECECEC" />
+        <Setter Property="Height" Value="1" />
+        <Setter Property="Focusable" Value="False" />
+    </Style>
+
+</Styles>

@@ -75,4 +75,19 @@
     <ProjectReference Include="..\BlueMeter.Assets\BlueMeter.Assets.csproj" />
   </ItemGroup>
 
+  <!--
+    The BlueMeter.Assets project is a plain class library (no Avalonia build targets),
+    so its contents are not exposed as avares:// resources automatically. Link the
+    image and font files into this assembly instead so they resolve under
+    avares://BlueMeter/Assets/... — matching the URI scheme referenced throughout
+    the ported XAML and code.
+  -->
+  <ItemGroup>
+    <AvaloniaResource Include="..\BlueMeter.Assets\Images\**\*.png" Link="Assets\Images\%(RecursiveDir)%(FileName)%(Extension)" />
+    <AvaloniaResource Include="..\BlueMeter.Assets\Images\**\*.ico" Link="Assets\Images\%(RecursiveDir)%(FileName)%(Extension)" />
+    <AvaloniaResource Include="..\BlueMeter.Assets\Images\**\*.jpg" Link="Assets\Images\%(RecursiveDir)%(FileName)%(Extension)" />
+    <AvaloniaResource Include="..\BlueMeter.Assets\Fonts\**\*.ttf" Link="Assets\Fonts\%(RecursiveDir)%(FileName)%(Extension)" />
+    <AvaloniaResource Include="..\BlueMeter.Assets\Fonts\**\*.otf" Link="Assets\Fonts\%(RecursiveDir)%(FileName)%(Extension)" />
+  </ItemGroup>
+
 </Project>

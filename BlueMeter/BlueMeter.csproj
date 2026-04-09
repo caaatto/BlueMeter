@@ -40,6 +40,7 @@
     <PackageReference Include="System.Reactive" />
     <PackageReference Include="System.Drawing.Common" />
     <PackageReference Include="Tesseract" />
+    <PackageReference Include="OxyPlot.Core" />
     <PackageReference Include="Ihon.ResXKeyCodeGenerator">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

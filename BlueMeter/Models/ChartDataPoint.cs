@@ -1,3 +1,5 @@
+using OxyPlot;
+
 namespace BlueMeter.Models;
 
 /// <summary>
@@ -20,5 +22,16 @@ public record ChartDataPoint
     {
         Timestamp = timestamp;
         Value = value;
+    }
+
+    /// <summary>
+    /// Convert to OxyPlot DataPoint for chart rendering
+    /// </summary>
+    /// <param name="baseTime">Base time to calculate relative seconds from</param>
+    /// <returns>OxyPlot DataPoint with X as seconds since baseTime, Y as value</returns>
+    public DataPoint ToOxyDataPoint(DateTime baseTime)
+    {
+        var seconds = (Timestamp - baseTime).TotalSeconds;
+        return new DataPoint(seconds, Value);
     }
 }

@@ -11,6 +11,7 @@
     <!-- <InternalsVisibleTo>BlueMeter.WPF</InternalsVisibleTo> -->
   </PropertyGroup>
   <ItemGroup>
+    <InternalsVisibleTo Include="BlueMeter" />
     <InternalsVisibleTo Include="BlueMeter.WPF" />
     <InternalsVisibleTo Include="BlueMeter.Tests" />
     <InternalsVisibleTo Include="BlueMeter.Core.Benchmarks" />

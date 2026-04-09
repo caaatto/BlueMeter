@@ -1,0 +1,9 @@
+namespace BlueMeter.Services;
+
+public interface ITrayService
+{
+    void Initialize(string? toolTip = null);
+    void MinimizeToTray();
+    void Restore();
+    void Exit();
+}

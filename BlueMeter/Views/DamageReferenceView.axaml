@@ -1,0 +1,164 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="using:BlueMeter.Controls"
+        xmlns:loc="using:BlueMeter.Localization"
+        x:Class="BlueMeter.Views.DamageReferenceView"
+        x:CompileBindings="False"
+        Title="{loc:Localize Window_DamageReference_Title}"
+        Width="770"
+        Height="780"
+        MinWidth="770"
+        MinHeight="300"
+        SystemDecorations="None"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        WindowStartupLocation="CenterOwner"
+        mc:Ignorable="d">
+
+    <Window.Styles>
+        <Style Selector="ToggleButton.tabSelector">
+            <Setter Property="MinWidth" Value="65" />
+            <Setter Property="Height" Value="22" />
+            <Setter Property="Margin" Value="4,4,0,4" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#777" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Name="bd"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="10">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="ToggleButton.tabSelector:pointerover /template/ Border#bd">
+            <Setter Property="Background" Value="#F8F8F8" />
+        </Style>
+        <Style Selector="ToggleButton.tabSelector:checked /template/ Border#bd">
+            <Setter Property="Background" Value="#FFF" />
+            <Setter Property="BorderBrush" Value="#FFF" />
+            <Setter Property="BoxShadow" Value="0 0 4 0 #4D000000" />
+        </Style>
+        <Style Selector="ToggleButton.tabSelector:checked">
+            <Setter Property="Foreground" Value="#000" />
+        </Style>
+    </Window.Styles>
+
+    <Border Background="#ECEBE9" Classes="shadowWindow">
+        <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+            <controls:Header Grid.Row="0"
+                             Title="{loc:Localize DamageReference_Header_Title}" />
+
+            <Grid Grid.Row="1" Background="#FFF" ColumnDefinitions="Auto,*,Auto">
+
+                <Border Grid.Column="0"
+                        Width="100"
+                        Height="30"
+                        Background="#9CF"
+                        CornerRadius="3"
+                        Margin="10,0,0,0">
+                    <TextBlock HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Foreground="#FFF"
+                               Text="{loc:Localize DamageReference_Ribbon_Title}" />
+                </Border>
+
+                <Border Grid.Column="2"
+                        Padding="0,0,4,0"
+                        Margin="10"
+                        Background="#EEE"
+                        CornerRadius="15">
+                    <StackPanel x:Name="TabControlIndexChanger"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                        <ToggleButton Classes="tabSelector"
+                                      Click="TabSelector_Click"
+                                      Content="{loc:Localize DamageReference_Classes_All}"
+                                      Tag="0" />
+                        <ToggleButton Classes="tabSelector"
+                                      Click="TabSelector_Click"
+                                      Content="{loc:Localize Classes_Stormblade}"
+                                      Tag="1" />
+                        <ToggleButton Classes="tabSelector"
+                                      Click="TabSelector_Click"
+                                      Content="{loc:Localize Classes_FrostMage}"
+                                      Tag="2" />
+                        <ToggleButton Classes="tabSelector"
+                                      Click="TabSelector_Click"
+                                      Content="{loc:Localize Classes_WindKnight}"
+                                      Tag="4" />
+                        <ToggleButton Classes="tabSelector"
+                                      Click="TabSelector_Click"
+                                      Content="{loc:Localize Classes_VerdantOracle}"
+                                      Tag="5" />
+                        <ToggleButton Classes="tabSelector"
+                                      Click="TabSelector_Click"
+                                      Content="{loc:Localize Classes_HeavyGuardian}"
+                                      Tag="9" />
+                        <ToggleButton Classes="tabSelector"
+                                      Click="TabSelector_Click"
+                                      Content="{loc:Localize Classes_Marksman}"
+                                      Tag="11" />
+                        <ToggleButton Classes="tabSelector"
+                                      Click="TabSelector_Click"
+                                      Content="{loc:Localize Classes_ShieldKnight}"
+                                      Tag="12" />
+                        <ToggleButton Classes="tabSelector"
+                                      Click="TabSelector_Click"
+                                      Content="{loc:Localize Classes_SoulMusician}"
+                                      Tag="13" />
+                    </StackPanel>
+                </Border>
+
+            </Grid>
+
+            <Grid Grid.Row="2" RowDefinitions="Auto,*,Auto">
+
+                <TextBlock Grid.Row="0"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Top"
+                           Margin="0,10"
+                           FontSize="12"
+                           FontWeight="Bold"
+                           Text="{loc:Localize DamageReference_Table_Title}" />
+
+                <Grid Grid.Row="1">
+                    <Image Width="40"
+                           Height="40"
+                           Margin="0,-35,0,0"
+                           Source="avares://BlueMeter/Assets/Images/cancel_normal.png" />
+                    <TextBlock HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               Margin="0,35,0,0"
+                               Text="{loc:Localize DamageReference_NoData}" />
+                </Grid>
+
+                <TextBlock Grid.Row="2"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Margin="0,10"
+                           Text="{loc:Localize DamageReference_Disclaimer}" />
+
+            </Grid>
+
+            <controls:Footer Grid.Row="3"
+                             Height="50"
+                             ConfirmClick="OnConfirm"
+                             CancelClick="OnCancel" />
+        </Grid>
+    </Border>
+</Window>

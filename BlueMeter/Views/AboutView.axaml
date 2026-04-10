@@ -1,0 +1,151 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="using:BlueMeter.Controls"
+        xmlns:loc="using:BlueMeter.Localization"
+        xmlns:view="using:BlueMeter.Views"
+        x:Class="BlueMeter.Views.AboutView"
+        x:CompileBindings="False"
+        Title="{loc:Localize Window_About_Title}"
+        Width="800"
+        Height="540"
+        SystemDecorations="None"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        WindowStartupLocation="CenterOwner"
+        mc:Ignorable="d">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="BackgroundColor">#EFEFEF</SolidColorBrush>
+    </Window.Resources>
+
+    <Border Background="#EFEFEF" Classes="shadowWindow">
+        <Grid RowDefinitions="Auto,*,Auto">
+
+            <controls:Header Grid.Row="0"
+                             Title="{loc:Localize Window_About_Title}" />
+
+            <Border Grid.Row="1"
+                    Padding="10,20,10,10"
+                    Margin="10,20,10,10"
+                    BorderBrush="#DCDCDC"
+                    BorderThickness="1"
+                    CornerRadius="3">
+                <Grid>
+
+                    <TextBlock FontSize="16"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Padding="8,4"
+                               Margin="-8,-36,0,0"
+                               Background="#EFEFEF"
+                               Text="{loc:Localize Window_About_Title}" />
+
+                    <Image Width="80"
+                           Height="80"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Top"
+                           Source="avares://BlueMeter/Assets/Images/ApplicationIcon.png" />
+
+                    <TextBlock FontSize="16"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="90,0,0,0"
+                               Text="{loc:Localize App_Name}" />
+
+                    <TextBlock FontSize="12"
+                               VerticalAlignment="Top"
+                               TextWrapping="Wrap"
+                               Margin="90,32,0,0">
+                        <Run Text="{loc:Localize About_Intro_Primary}" />
+                        <LineBreak />
+                        <Run Text="{loc:Localize About_Intro_Details}" />
+                    </TextBlock>
+
+                    <TextBlock FontSize="16"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="0,100,0,0"
+                               Text="{loc:Localize About_Version_Label}" />
+
+                    <TextBlock FontSize="12"
+                               VerticalAlignment="Top"
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Left"
+                               Margin="0,130,0,0"
+                               Text="{x:Static view:AboutView.Version}" />
+
+                    <TextBlock FontSize="16"
+                               FontWeight="Bold"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Top"
+                               Margin="0,160,0,0"
+                               Text="{loc:Localize About_Developers_Label}" />
+
+                    <TextBlock FontSize="12"
+                               VerticalAlignment="Top"
+                               TextWrapping="Wrap"
+                               HorizontalAlignment="Left"
+                               Margin="0,190,0,0">
+                        <Run Text="{loc:Localize About_Developer_Lead}" />
+                        <LineBreak />
+                        <Run Text="{loc:Localize About_Developer_RocyJune}" />
+                        <LineBreak />
+                        <Run Text="{loc:Localize About_Developer_QingLan}" />
+                        <LineBreak />
+                        <Run Text="{loc:Localize About_Developer_Ihonliu}" />
+                    </TextBlock>
+
+                    <TextBlock FontSize="12"
+                               TextWrapping="Wrap"
+                               VerticalAlignment="Bottom">
+                        <Run Text="{loc:Localize About_OpenSource_Prefix}" />
+                        <InlineUIContainer BaselineAlignment="Center">
+                            <HyperlinkButton NavigateUri="https://github.com/anying1073/StarResonanceDps"
+                                             Padding="0"
+                                             Content="{loc:Localize About_OpenSource_RepositoryUrl}" />
+                        </InlineUIContainer>
+                        <Run Text="{loc:Localize About_OpenSource_Suffix}" />
+                        <LineBreak />
+                        <Run Text="{loc:Localize About_Contribution}" />
+                        <LineBreak />
+                        <Run Text="{loc:Localize About_Community_Invite}" />
+                        <InlineUIContainer BaselineAlignment="Center">
+                            <HyperlinkButton NavigateUri="https://qm.qq.com/cgi-bin/qm/qr?k=QeIozXvLSRH9dL_CTZeisQ1Ae4CZpiSc&amp;jump_from=webapi&amp;authKey=HNr5BrrIhqRPyGs2R54NucKsg7Pb9/c0a03gih69PekWfSNLh9MIi/ClXXnaMzHK"
+                                             Padding="0"
+                                             Content="{loc:Localize About_Community_GroupOne}" />
+                        </InlineUIContainer>
+                        <InlineUIContainer BaselineAlignment="Center">
+                            <HyperlinkButton NavigateUri="https://qm.qq.com/cgi-bin/qm/qr?k=ZbyXsDqWZm9mQN0R7cg-EVYlISgbik4M&amp;jump_from=webapi&amp;authKey=S8y8TcbKHzd2yWYUz4YA+Ojrq93PfFCyENqUgXho632ELRIiK6MmnauLuEB4BjhE"
+                                             Padding="0"
+                                             Content="{loc:Localize About_Community_GroupTwo}" />
+                        </InlineUIContainer>
+                        <LineBreak />
+                        <Run Text="{loc:Localize About_Thanks_Prefix}" />
+                        <InlineUIContainer BaselineAlignment="Center">
+                            <HyperlinkButton NavigateUri="https://github.com/dmlgzs/StarResonanceDamageCounter"
+                                             Padding="0"
+                                             Content="{loc:Localize About_Thanks_RepositoryUrl}" />
+                        </InlineUIContainer>
+                        <Run Text="{loc:Localize About_Thanks_Suffix}" />
+                        <LineBreak />
+                        <LineBreak />
+                        <Run Text="{loc:Localize About_Copyright}" />
+                        <LineBreak />
+                        <Run Text="{loc:Localize About_PoweredBy}" />
+                    </TextBlock>
+                </Grid>
+            </Border>
+
+            <controls:Footer Grid.Row="2"
+                             Height="50"
+                             ConfirmClick="OnConfirm"
+                             CancelClick="OnCancel" />
+        </Grid>
+    </Border>
+</Window>

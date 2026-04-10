@@ -1,0 +1,194 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:loc="using:BlueMeter.Localization"
+        xmlns:local="using:BlueMeter.Views"
+        xmlns:viewModels="using:BlueMeter.ViewModels"
+        x:Class="BlueMeter.Views.DebugView"
+        x:CompileBindings="False"
+        Title="{loc:Localize Window_Debug_Title}"
+        Width="1000"
+        Height="700"
+        d:DataContext="{d:DesignInstance viewModels:DebugFunctions}"
+        mc:Ignorable="d">
+
+    <Window.Resources>
+        <local:LogLevelToBrushConverter x:Key="LogLevelToBrushConverter" />
+        <local:LogLevelToBackgroundConverter x:Key="LogLevelToBackgroundConverter" />
+        <local:ExceptionToStringConverter x:Key="ExceptionToStringConverter" />
+    </Window.Resources>
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+        <!--  Control Panel  -->
+        <Border Grid.Row="0" Padding="10" Background="LightGray">
+            <WrapPanel Orientation="Horizontal">
+                <Button Margin="0,0,5,0"
+                        Padding="8,4"
+                        Command="{Binding LoadDebugDataSourceCommand}"
+                        Content="{loc:Localize Debug_LoadPcap}" />
+                <Button Margin="5,0"
+                        Padding="8,4"
+                        Command="{Binding AddSampleDataCommand}"
+                        Content="{loc:Localize Debug_AddSampleData}" />
+                <Button Margin="5,0"
+                        Padding="8,4"
+                        Command="{Binding ClearLogsCommand}"
+                        Content="{loc:Localize Debug_ClearLogs}" />
+                <Button Margin="5,0"
+                        Padding="8,4"
+                        Command="{Binding AddTestLogCommand}"
+                        Content="{loc:Localize Debug_AddTestLog}" />
+                <Button Margin="5,0"
+                        Padding="8,4"
+                        Command="{Binding SaveLogsCommand}"
+                        Content="{loc:Localize Debug_SaveLogs}" />
+                <CheckBox Margin="5,0"
+                          VerticalAlignment="Center"
+                          Content="{loc:Localize Debug_AutoScroll}"
+                          IsChecked="{Binding AutoScrollEnabled}" />
+                <CheckBox Margin="5,0"
+                          VerticalAlignment="Center"
+                          Content="Queue Detection"
+                          IsChecked="{Binding QueueDetectionLoggingEnabled}"
+                          ToolTip.Tip="Enable logging for queue pop detection (logs when players join)" />
+                <TextBlock Margin="5,0"
+                           VerticalAlignment="Center"
+                           Text="{loc:Localize Debug_Filter_Level}" />
+                <ComboBox Width="100"
+                          Margin="2,0,5,0"
+                          ItemsSource="{Binding AvailableLogLevels}"
+                          SelectedItem="{Binding SelectedLogLevel}" />
+                <TextBlock Margin="5,0"
+                           VerticalAlignment="Center"
+                           Text="{loc:Localize Debug_Filter_Label}" />
+                <TextBox Width="150"
+                         Margin="2,0,5,0"
+                         Text="{Binding FilterText}"
+                         ToolTip.Tip="{loc:Localize Debug_Filter_Tooltip}" />
+            </WrapPanel>
+        </Border>
+
+        <!--  Localization Test Panel  -->
+        <Border Grid.Row="1" Padding="10" Background="LightBlue">
+            <WrapPanel Orientation="Horizontal">
+                <TextBlock Margin="5,0"
+                           VerticalAlignment="Center"
+                           Text="{loc:Localize Debug_Localization_Language}" />
+                <ComboBox Width="120"
+                          Margin="2,0,5,0"
+                          ItemsSource="{Binding AvailableLanguages}"
+                          SelectedItem="{Binding SelectedLanguage}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Display}" />
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+                <Button Margin="5,0"
+                        Padding="8,4"
+                        Command="{Binding ApplyLanguageCommand}"
+                        Content="{loc:Localize Debug_Localization_Apply}" />
+                <TextBlock Margin="5,0"
+                           VerticalAlignment="Center"
+                           Text="{loc:Localize Debug_Localization_TestKey}" />
+                <TextBox Width="200"
+                         Margin="2,0,5,0"
+                         Text="{Binding TestLocalizationKey}" />
+                <Button Margin="5,0"
+                        Padding="8,4"
+                        Command="{Binding TestLocalizationCommand}"
+                        Content="{loc:Localize Debug_Localization_Test}" />
+                <TextBlock Margin="10,0,0,0"
+                           VerticalAlignment="Center"
+                           FontWeight="Bold"
+                           Text="{Binding LocalizedTestValue}" />
+            </WrapPanel>
+        </Border>
+
+        <!--  Log Display  -->
+        <Border Grid.Row="2" BorderBrush="Gray" BorderThickness="1">
+            <Grid RowDefinitions="Auto,*">
+                <Border Grid.Row="0"
+                        Background="LightGray"
+                        BorderBrush="Gray"
+                        BorderThickness="0,0,0,1">
+                    <Grid Margin="2,4" ColumnDefinitions="90,70,140,*">
+                        <TextBlock Grid.Column="0" FontSize="10" FontWeight="Bold"
+                                   Text="{loc:Localize Debug_Header_Time}" />
+                        <TextBlock Grid.Column="1" FontSize="10" FontWeight="Bold"
+                                   Text="{loc:Localize Debug_Header_Level}" />
+                        <TextBlock Grid.Column="2" FontSize="10" FontWeight="Bold"
+                                   Text="{loc:Localize Debug_Header_Category}" />
+                        <TextBlock Grid.Column="3" FontSize="10" FontWeight="Bold"
+                                   Text="{loc:Localize Debug_Header_Message}" />
+                    </Grid>
+                </Border>
+
+                <ListBox x:Name="LogListBox"
+                         Grid.Row="1"
+                         Background="White"
+                         BorderThickness="0"
+                         ItemsSource="{Binding FilteredLogs}"
+                         SelectionMode="Multiple">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Background="{Binding Level, Converter={StaticResource LogLevelToBackgroundConverter}}"
+                                    Padding="2,1">
+                                <Grid ColumnDefinitions="90,70,140,*">
+                                    <TextBlock Grid.Column="0"
+                                               VerticalAlignment="Center"
+                                               FontFamily="Consolas"
+                                               FontSize="10"
+                                               Foreground="Gray"
+                                               Text="{Binding TimeDisplay}" />
+                                    <TextBlock Grid.Column="1"
+                                               VerticalAlignment="Center"
+                                               FontSize="10"
+                                               FontWeight="Bold"
+                                               Foreground="{Binding Level, Converter={StaticResource LogLevelToBrushConverter}}"
+                                               Text="{Binding LevelDisplay}" />
+                                    <TextBlock Grid.Column="2"
+                                               VerticalAlignment="Center"
+                                               FontFamily="Consolas"
+                                               FontSize="10"
+                                               Foreground="DarkBlue"
+                                               Text="{Binding Category}"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Grid.Column="3"
+                                               VerticalAlignment="Center"
+                                               FontFamily="Consolas"
+                                               FontSize="11"
+                                               Text="{Binding Message}"
+                                               TextTrimming="CharacterEllipsis"
+                                               ToolTip.Tip="{Binding Exception, Converter={StaticResource ExceptionToStringConverter}}" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </Border>
+
+        <!--  Status Bar  -->
+        <Border Grid.Row="3" Padding="8,4" Background="LightGray">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Margin="0,0,15,0">
+                    <Run Text="{loc:Localize Debug_Status_TotalPrefix}" />
+                    <Run Text="{Binding LogCount}" />
+                    <Run Text="{loc:Localize Debug_Status_TotalSuffix}" />
+                </TextBlock>
+                <TextBlock Margin="0,0,15,0">
+                    <Run Text="{loc:Localize Debug_Status_FilteredPrefix}" />
+                    <Run Text="{Binding FilteredLogCount}" />
+                    <Run Text="{loc:Localize Debug_Status_FilteredSuffix}" />
+                </TextBlock>
+                <TextBlock>
+                    <Run Text="{loc:Localize Debug_Status_LastPrefix}" />
+                    <Run Text="{Binding LastLogTime, StringFormat='{}{0:HH:mm:ss}'}" />
+                </TextBlock>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

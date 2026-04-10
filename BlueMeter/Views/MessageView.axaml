@@ -1,0 +1,44 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="using:BlueMeter.Controls"
+        x:Class="BlueMeter.Views.MessageView"
+        x:CompileBindings="False"
+        Title="Message"
+        Width="400"
+        SizeToContent="Height"
+        SystemDecorations="None"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        WindowStartupLocation="CenterOwner"
+        mc:Ignorable="d">
+
+    <Border Background="#ECEBE9" Classes="shadowWindow">
+        <Grid RowDefinitions="Auto,Auto,Auto">
+
+            <controls:Header x:Name="HeaderControl"
+                             Grid.Row="0"
+                             Title="{Binding Title}" />
+
+            <!-- Auto-sized content area. Height grows with text. -->
+            <Border Grid.Row="1"
+                    MinHeight="120"
+                    Padding="15,12">
+                <TextBlock x:Name="ContentTextBlock"
+                           Text="{Binding Content}"
+                           TextWrapping="Wrap"
+                           VerticalAlignment="Center"
+                           HorizontalAlignment="Center"
+                           FontSize="14" />
+            </Border>
+
+            <controls:Footer Grid.Row="2"
+                             Height="50"
+                             Background="#FFF"
+                             ConfirmClick="OnConfirm"
+                             CancelClick="OnCancel" />
+        </Grid>
+    </Border>
+</Window>

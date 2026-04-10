@@ -19,6 +19,13 @@ public interface IWindowManagementService
     /// <summary>Show the settings window.</summary>
     void ShowSettings();
 
+    /// <summary>
+    /// Show the settings window and scroll/highlight the manual player UID field.
+    /// Used by the DPS statistics window when the user enables Solo Training mode
+    /// without having configured a UID yet.
+    /// </summary>
+    void ShowSettingsAndHighlightUidField();
+
     /// <summary>Show the about window.</summary>
     void ShowAbout();
 

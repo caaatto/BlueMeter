@@ -1,0 +1,578 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:BlueMeter.Controls"
+        xmlns:converters="using:BlueMeter.Converters"
+        xmlns:loc="using:BlueMeter.Localization"
+        xmlns:sys="using:System"
+        xmlns:viewModels="using:BlueMeter.ViewModels"
+        xmlns:models="using:BlueMeter.Models"
+        x:Class="BlueMeter.Views.DpsStatisticsView"
+        x:CompileBindings="False"
+        Title="{Binding AppConfig, Converter={StaticResource HolidayTitleConverter}}"
+        Width="380"
+        Height="360"
+        MinWidth="300"
+        MinHeight="35"
+        Topmost="{Binding AppConfig.TopmostEnabled, Mode=OneWay}"
+        Opacity="{Binding AppConfig.Opacity, Converter={StaticResource PercentToOpacityConverter}}"
+        WindowStartupLocation="Manual"
+        SystemDecorations="None"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        CanResize="True">
+
+    <Window.Resources>
+        <converters:DoubleNegateConverter x:Key="DoubleNegateConverter" />
+        <converters:DoubleSumConverter x:Key="DoubleSumConverter" />
+        <converters:BackgroundImageConverter x:Key="BackgroundImageConverter" />
+        <converters:ThemeColorConverter x:Key="ThemeColorConverter" />
+        <converters:ThemeColorOverlayConverter x:Key="ThemeColorOverlayConverter" />
+        <converters:ThemeBackgroundConverter x:Key="ThemeBackgroundConverter" />
+        <converters:ThemeAccentConverter x:Key="ThemeAccentConverter" />
+        <converters:ThemeForegroundConverter x:Key="ThemeForegroundConverter" />
+        <converters:HolidayTitleConverter x:Key="HolidayTitleConverter" />
+        <converters:PanelColorModeConverter x:Key="PanelColorModeConverter" />
+        <converters:PanelContentColorModeConverter x:Key="PanelContentColorModeConverter" />
+        <converters:PercentToOpacityConverter x:Key="PercentToOpacityConverter" />
+        <converters:TrainingModeCheckConverter x:Key="TrainingModeCheckConverter" />
+        <converters:NumberToBoolConverter x:Key="NumberToBoolConverter" />
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+        <converters:EqualsConverter x:Key="EqualsConverter" />
+        <converters:HumanReadableNumberConverter x:Key="HumanReadableNumberConverter" />
+        <converters:DpsConverter x:Key="DpsConverter" />
+        <converters:LessThanToBoolConverter x:Key="LessThanToBoolConverter" />
+        <converters:ClassesToIconConverter x:Key="ClassesToIconConverter" />
+        <converters:ClassSpecColorConverter x:Key="ClassSpecColorConverter" />
+        <converters:ConditionalPercentToOpacityConverter x:Key="ConditionalPercentToOpacityConverter" />
+
+        <!-- Per-row details template: rank, class icon, player name, value, percent. -->
+        <DataTemplate x:Key="StatisticDetailDataTemplate" DataType="{x:Type viewModels:StatisticDataViewModel}">
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="A" />
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="B" />
+                    <ColumnDefinition Width="*" SharedSizeGroup="C" />
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="D" />
+                    <ColumnDefinition Width="Auto" SharedSizeGroup="E" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Margin="4,0,4,0"
+                           VerticalAlignment="Center"
+                           FontFamily="avares://BlueMeter/Assets/Fonts/SAOWelcomeTT-Regular.ttf#SAO Welcome TT"
+                           Foreground="White"
+                           Text="{Binding Index, StringFormat='{}00'}" />
+
+                <Image Grid.Column="1"
+                       Width="22"
+                       Height="22"
+                       Margin="2"
+                       Source="{Binding Player.Class, Converter={StaticResource ClassesToIconConverter}, FallbackValue={DynamicResource ClassesUnknownIcon}}"
+                       Stretch="Uniform" />
+
+                <StackPanel Grid.Column="2" Orientation="Horizontal">
+                    <TextBlock Name="PlayerName"
+                               VerticalAlignment="Center"
+                               FontFamily="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC"
+                               Foreground="White"
+                               Text="{Binding Player.Name}"
+                               IsVisible="{Binding !Player.IsNpc}" />
+                    <TextBlock VerticalAlignment="Center"
+                               FontFamily="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC"
+                               Foreground="White"
+                               IsVisible="{Binding !Player.IsNpc}">
+                        <Run Text=" -" />
+                        <Run Text="{Binding Player.Spec, StringFormat='ClassSpec_{0}'}" />
+                        <Run Text="{Binding Player.PowerLevel, StringFormat='({0})'}" />
+                    </TextBlock>
+                </StackPanel>
+
+                <TextBlock Grid.Column="3"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           FontFamily="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC"
+                           FontWeight="Bold"
+                           Foreground="White">
+                    <Run>
+                        <Run.Text>
+                            <MultiBinding Converter="{StaticResource HumanReadableNumberConverter}">
+                                <Binding Path="Value" />
+                                <Binding Path="DataContext.AppConfig.DamageDisplayType" RelativeSource="{RelativeSource AncestorType=Window}" />
+                            </MultiBinding>
+                        </Run.Text>
+                    </Run>
+                    <Run>
+                        <Run.Text>
+                            <MultiBinding Converter="{StaticResource DpsConverter}" StringFormat="[{0}]">
+                                <Binding Path="Value" />
+                                <Binding Path="DataContext.BattleDuration" RelativeSource="{RelativeSource AncestorType=Window}" />
+                                <Binding Path="DataContext.AppConfig.DamageDisplayType" RelativeSource="{RelativeSource AncestorType=Window}" />
+                            </MultiBinding>
+                        </Run.Text>
+                    </Run>
+                </TextBlock>
+
+                <TextBlock Grid.Column="4"
+                           HorizontalAlignment="Right"
+                           VerticalAlignment="Center"
+                           FontFamily="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC"
+                           FontWeight="Bold"
+                           Foreground="White"
+                           Text="{Binding Percent, StringFormat='({0:P1})'}" />
+            </Grid>
+        </DataTemplate>
+
+        <!-- Skill breakdown popup (Tank stats + skill list). -->
+        <DataTemplate x:Key="PopupTemplate" DataType="{x:Type viewModels:StatisticDataViewModel}">
+            <StackPanel>
+                <Border Margin="0,0,0,8"
+                        Padding="10"
+                        Background="#DD1a1a1a"
+                        CornerRadius="6"
+                        IsVisible="{Binding DamageTaken, Converter={StaticResource NumberToBoolConverter}}">
+                    <StackPanel>
+                        <TextBlock Classes="footerText"
+                                   Margin="0,0,0,6"
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="#FFA855"
+                                   Text="Tank Stats" />
+
+                        <TextBlock Classes="footerText">
+                            <Run Foreground="#FF6B6B" Text="HP Damage Taken: " />
+                            <Run FontWeight="Bold" Foreground="White" Text="{Binding DamageTaken, StringFormat=N0}" />
+                        </TextBlock>
+
+                        <TextBlock Classes="footerText">
+                            <Run Foreground="#6BCF7F" Text="Damage Mitigated: " />
+                            <Run FontWeight="Bold" Foreground="White" Text="{Binding DamageMitigated, StringFormat=N0}" />
+                        </TextBlock>
+
+                        <TextBlock Classes="footerText">
+                            <Run Foreground="#FFD93D" Text="Effective Damage: " />
+                            <Run FontWeight="Bold" Foreground="White" Text="{Binding EffectiveDamage, Mode=OneWay, StringFormat=N0}" />
+                            <Run Foreground="Gray" Text=" (HP + Shield)" />
+                        </TextBlock>
+
+                        <TextBlock Classes="footerText" Margin="0,4,0,0">
+                            <Run Foreground="#95E1D3" Text="Mitigation: " />
+                            <Run FontSize="13" FontWeight="Bold" Foreground="#6BCF7F"
+                                 Text="{Binding MitigationPercent, Mode=OneWay, StringFormat='{}{0:F1}%'}" />
+                        </TextBlock>
+
+                        <TextBlock Classes="footerText">
+                            <Run Foreground="#C8A2C8" Text="Effective TPS: " />
+                            <Run FontWeight="Bold" Foreground="White" Text="{Binding EffectiveTps, Mode=OneWay, StringFormat='{}{0:F0}'}" />
+                        </TextBlock>
+                    </StackPanel>
+                </Border>
+
+                <controls:DpsDetailPopup SkillList="{Binding SkillList}" />
+            </StackPanel>
+        </DataTemplate>
+
+        <!-- Per-row progress bar template, referenced as ItemTemplate on SortedDpsControl. -->
+        <DataTemplate x:Key="ProgressBarDataTemplate" DataType="{x:Type viewModels:StatisticDataViewModel}">
+            <Grid Height="36" Margin="0">
+                <Button Margin="1"
+                        Padding="0"
+                        HorizontalAlignment="Stretch"
+                        HorizontalContentAlignment="Stretch"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Cursor="Arrow"
+                        Focusable="False"
+                        Command="{Binding $parent[controls:SortedDpsControl].ItemClickCommand}"
+                        CommandParameter="{Binding}">
+                    <Button.Template>
+                        <ControlTemplate TargetType="Button">
+                            <Border Padding="{TemplateBinding Padding}"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}">
+                                <ContentPresenter HorizontalAlignment="Stretch"
+                                                  VerticalAlignment="Stretch"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+
+                    <Grid HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <controls:DpsIndicatorControl Grid.Column="1"
+                                                      Margin="1"
+                                                      HorizontalAlignment="Stretch"
+                                                      IndicatorForeground="{Binding Player.Spec, Converter={StaticResource ClassSpecColorConverter}}"
+                                                      OverlayContent="{Binding}"
+                                                      OverlayTemplate="{StaticResource StatisticDetailDataTemplate}"
+                                                      Percentage="{Binding PercentOfMax}"
+                                                      PopupContent="{Binding}"
+                                                      PopupTemplate="{StaticResource PopupTemplate}">
+                            <controls:DpsIndicatorControl.TrackOpacity>
+                                <MultiBinding Converter="{StaticResource ConditionalPercentToOpacityConverter}">
+                                    <Binding Path="DataContext.AppConfig.Opacity" RelativeSource="{RelativeSource AncestorType=Window}" />
+                                    <Binding Path="DataContext.AppConfig.MouseThroughEnabled" RelativeSource="{RelativeSource AncestorType=Window}" />
+                                </MultiBinding>
+                            </controls:DpsIndicatorControl.TrackOpacity>
+                        </controls:DpsIndicatorControl>
+                    </Grid>
+                </Button>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Window.Styles>
+        <!-- Default icon button style (white iconfont glyphs over transparent background). -->
+        <Style Selector="Button.icon">
+            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts/iconfont.ttf#iconfont" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="Button.icon:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#22FFFFFF" />
+        </Style>
+
+        <!-- Statistic type label (centered, theme-driven foreground). -->
+        <Style Selector="TextBlock.statisticType">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC" />
+            <Setter Property="Foreground" Value="{Binding AppConfig.EffectiveThemeColor, Mode=OneWay, Converter={StaticResource ThemeForegroundConverter}, ConverterParameter=text}" />
+        </Style>
+
+        <!-- Settings context menu items: black foreground for legibility on the light menu background. -->
+        <Style Selector="MenuItem.dpsSettings">
+            <Setter Property="Foreground" Value="#000000" />
+        </Style>
+    </Window.Styles>
+
+    <!-- Main border: theme colour + shadow + rounded corners. -->
+    <Border Classes="shadowWindow"
+            Background="{Binding AppConfig.EffectiveThemeColor, Mode=OneWay, Converter={StaticResource ThemeColorConverter}, FallbackValue=#0047AB}"
+            ClipToBounds="False">
+        <Grid ClipToBounds="False">
+            <!-- Optional background image layer. -->
+            <Border CornerRadius="{DynamicResource MainCornerRadius}"
+                    ZIndex="0"
+                    IsVisible="{Binding AppConfig.ShowBackgroundInDpsMeter}"
+                    Background="{Binding AppConfig.BackgroundImagePath, Converter={StaticResource BackgroundImageConverter}}" />
+
+            <!-- Theme colour filter overlay on top of the background image. -->
+            <Border CornerRadius="{DynamicResource MainCornerRadius}"
+                    ZIndex="1"
+                    IsVisible="{Binding AppConfig.ShowBackgroundInDpsMeter}"
+                    Background="{Binding AppConfig.EffectiveThemeColor, Mode=OneWay, Converter={StaticResource ThemeColorOverlayConverter}, ConverterParameter=0.4}" />
+
+            <!-- Main content grid. -->
+            <Grid ZIndex="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="25" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="25" />
+                </Grid.RowDefinitions>
+
+                <!-- Top bar -->
+                <Border Grid.Row="0"
+                        Height="25"
+                        VerticalAlignment="Top"
+                        ZIndex="2"
+                        Background="{Binding AppConfig.EffectiveThemeColor, Mode=OneWay, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=dark}"
+                        BorderBrush="{Binding AppConfig.EffectiveThemeColor, Mode=OneWay, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}"
+                        BorderThickness="0,0,0,1"
+                        CornerRadius="6,6,0,0"
+                        PointerPressed="OnTitleBarPointerPressed">
+                    <Grid Margin="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="120" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0"
+                                Name="LeftButton"
+                                Classes="icon"
+                                VerticalAlignment="Center"
+                                Command="{Binding PreviousMetricTypeCommand}"
+                                Content="&#xe689;"
+                                FontSize="15" />
+
+                        <TextBlock Grid.Column="1" Classes="statisticType">
+                            <Run Text="{Binding StatisticIndex, StringFormat='StatisticType_{0}'}" />
+                            <Run Text="(" />
+                            <Run Text="{Binding ScopeTime, StringFormat='ScopeTime_{0}'}" />
+                            <Run Text=")" />
+                        </TextBlock>
+
+                        <Button Grid.Column="2"
+                                Name="RightButton"
+                                Classes="icon"
+                                VerticalAlignment="Center"
+                                Command="{Binding NextMetricTypeCommand}"
+                                Content="&#xe688;"
+                                FontSize="15" />
+
+                        <Button Grid.Column="3"
+                                Name="SwitchButton"
+                                Classes="icon"
+                                Command="{Binding ToggleScopeTimeCommand}"
+                                Content=""
+                                FontSize="12"
+                                ToolTip.Tip="{loc:Localize Tooltip_ToggleScope}" />
+
+                        <StackPanel Grid.Column="4" HorizontalAlignment="Right" Orientation="Horizontal">
+                            <Button Classes="icon"
+                                    Width="21"
+                                    Command="{Binding MinimizeWindowCommand}"
+                                    Content="—"
+                                    FontSize="12" />
+
+                            <TextBlock Width="21"
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       FontFamily="avares://BlueMeter/Assets/Fonts/iconfont.ttf#iconfont"
+                                       FontSize="15"
+                                       Foreground="White"
+                                       Text="&#xe83a;"
+                                       TextAlignment="Center"
+                                       ToolTip.Tip="{loc:Localize DpsStatistics_Indicator_ClickThrough_Tooltip}"
+                                       IsVisible="{Binding AppConfig.MouseThroughEnabled}" />
+
+                            <!-- Topmost toggle: glyph swaps via a data trigger on the Topmost window property. -->
+                            <Button Name="TopmostButton"
+                                    Classes="icon topmost"
+                                    Width="21"
+                                    Command="{Binding ToggleTopmostCommand}"
+                                    FontFamily="avares://BlueMeter/Assets/Fonts/iconfont.ttf#iconfont"
+                                    FontSize="15"
+                                    Content="&#xe864;"
+                                    ToolTip.Tip="{loc:Localize DpsStatistics_Indicator_WindowTopMost_Tooltip}" />
+
+                            <Button Classes="icon"
+                                    Width="21"
+                                    Command="{Binding ResetAllCommand}"
+                                    Content="&#xE644;" />
+
+                            <!-- Settings button with context menu. -->
+                            <Button Classes="icon"
+                                    Width="24"
+                                    Content="&#xE600;">
+                                <Button.Flyout>
+                                    <MenuFlyout>
+                                        <MenuItem Classes="dpsSettings"
+                                                  Command="{Binding OpenSettingsCommand}"
+                                                  Header="{loc:Localize Menu_Settings}" />
+                                        <MenuItem Classes="dpsSettings"
+                                                  Command="{Binding OpenMainViewCommand}"
+                                                  Header="Open Main Window" />
+                                        <Separator />
+
+                                        <MenuItem Classes="dpsSettings"
+                                                  Command="{Binding ToggleScopeTimeCommand}"
+                                                  Header="{loc:Localize Menu_ShowTotal}">
+                                            <MenuItem.IsChecked>
+                                                <MultiBinding Converter="{StaticResource EqualsConverter}" Mode="OneWay">
+                                                    <Binding Path="ScopeTime" />
+                                                    <Binding Source="{x:Static models:ScopeTime.Total}" />
+                                                </MultiBinding>
+                                            </MenuItem.IsChecked>
+                                        </MenuItem>
+
+                                        <MenuItem Classes="dpsSettings"
+                                                  Header="{loc:Localize Menu_RecordSettings}">
+                                            <MenuItem Classes="dpsSettings"
+                                                      Command="{Binding Options.SetMinimalDurationCommand}"
+                                                      CommandParameter="-1"
+                                                      Header="{loc:Localize Menu_Record_Always}"
+                                                      IsChecked="{Binding Options.IsRecordAll, Mode=OneWay}" />
+                                            <MenuItem Classes="dpsSettings"
+                                                      Command="{Binding Options.SetMinimalDurationCommand}"
+                                                      CommandParameter="2"
+                                                      Header="{loc:Localize Menu_Record_Skip1Min}"
+                                                      IsChecked="{Binding Options.IsSkip2Sec, Mode=OneWay}" />
+                                            <MenuItem Classes="dpsSettings"
+                                                      Command="{Binding Options.SetMinimalDurationCommand}"
+                                                      CommandParameter="5"
+                                                      Header="{loc:Localize Menu_Record_Skip2Min}"
+                                                      IsChecked="{Binding Options.IsSkip5Sec, Mode=OneWay}" />
+                                        </MenuItem>
+
+                                        <MenuItem Classes="dpsSettings"
+                                                  Header="{loc:Localize Menu_SkillDisplay}">
+                                            <MenuItem Classes="dpsSettings"
+                                                      Command="{Binding SetSkillDisplayLimitCommand}"
+                                                      CommandParameter="5"
+                                                      Header="{loc:Localize Menu_SkillDisplay_Top5}" />
+                                            <MenuItem Classes="dpsSettings"
+                                                      Command="{Binding SetSkillDisplayLimitCommand}"
+                                                      CommandParameter="8"
+                                                      Header="{loc:Localize Menu_SkillDisplay_Top8}" />
+                                            <MenuItem Classes="dpsSettings"
+                                                      Command="{Binding SetSkillDisplayLimitCommand}"
+                                                      CommandParameter="10"
+                                                      Header="{loc:Localize Menu_SkillDisplay_Top10}" />
+                                            <MenuItem Classes="dpsSettings"
+                                                      Command="{Binding SetSkillDisplayLimitCommand}"
+                                                      CommandParameter="15"
+                                                      Header="{loc:Localize Menu_SkillDisplay_Top15}" />
+                                            <MenuItem Classes="dpsSettings"
+                                                      Command="{Binding SetSkillDisplayLimitCommand}"
+                                                      CommandParameter="0"
+                                                      Header="{loc:Localize Menu_SkillDisplay_All}" />
+                                        </MenuItem>
+
+                                        <MenuItem Classes="dpsSettings"
+                                                  Command="{Binding OpenEncounterHistoryCommand}"
+                                                  Header="{loc:Localize Menu_History}" />
+                                        <MenuItem Classes="dpsSettings"
+                                                  Header="{loc:Localize Menu_Training_Personal}"
+                                                  Click="OnSoloTrainingMenuItemClick" />
+                                        <MenuItem Classes="dpsSettings"
+                                                  Command="{Binding OpenAdvancedCombatLogCommand}"
+                                                  Header="{loc:Localize Menu_AdvancedCombatLog}" />
+
+                                        <Separator />
+                                        <MenuItem Classes="dpsSettings"
+                                                  Command="{Binding ShutdownCommand}"
+                                                  Header="{loc:Localize Menu_Exit}" />
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+
+                            <Button Name="PullButton"
+                                    Classes="icon"
+                                    Width="22"
+                                    Click="OnPullButtonClick"
+                                    Content="&#xE601;"
+                                    RenderTransformOrigin="50%,50%">
+                                <Button.RenderTransform>
+                                    <RotateTransform Angle="0" />
+                                </Button.RenderTransform>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+
+                <!-- DPS rows -->
+                <Border Grid.Row="1" Background="Transparent">
+                    <controls:SortedDpsControl ItemTemplate="{StaticResource ProgressBarDataTemplate}"
+                                               ItemsSource="{Binding CurrentStatisticData.Data}"
+                                               SelectedItem="{Binding CurrentStatisticData.SelectedSlot}"
+                                               ItemClickCommand="{Binding OpenPlayerSkillBreakdownCommand}" />
+                </Border>
+
+                <!-- Indeterminate loading stripe (hidden by default, shown while data streams in). -->
+                <Border Grid.Row="2"
+                        Name="LoadingGridHost"
+                        Height="5"
+                        Background="Transparent"
+                        ClipToBounds="True">
+                    <Rectangle Name="LoadingStripe"
+                               HorizontalAlignment="Left"
+                               Width="150">
+                        <Rectangle.Fill>
+                            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                                <GradientStop Offset="0" Color="#0000D9FF" />
+                                <GradientStop Offset="0.4" Color="#FF00D9FF" />
+                                <GradientStop Offset="0.6" Color="#FFA855F7" />
+                                <GradientStop Offset="1" Color="#00A855F7" />
+                            </LinearGradientBrush>
+                        </Rectangle.Fill>
+                        <Rectangle.RenderTransform>
+                            <TranslateTransform />
+                        </Rectangle.RenderTransform>
+                    </Rectangle>
+                </Border>
+
+                <!-- Bottom bar -->
+                <Border Grid.Row="3"
+                        Name="ContentBorder"
+                        VerticalAlignment="Bottom"
+                        Height="25"
+                        Background="{Binding AppConfig.EffectiveThemeColor, Mode=OneWay, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=dark}"
+                        BorderBrush="{Binding AppConfig.EffectiveThemeColor, Mode=OneWay, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}"
+                        BorderThickness="0,1,0,0"
+                        CornerRadius="0,0,6,6"
+                        PointerPressed="OnTitleBarPointerPressed">
+                    <Grid Margin="6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Current player slot index (normal mode only). -->
+                        <TextBlock Grid.Column="0"
+                                   Classes="footerText"
+                                   HorizontalAlignment="Left"
+                                   Text="{Binding CurrentStatisticData.CurrentPlayerSlot.Index, StringFormat='[{0}]', TargetNullValue='[--]', FallbackValue='[--]'}"
+                                   IsVisible="{Binding !IsHistoryMode}" />
+
+                        <!-- Battle duration (normal mode only). -->
+                        <TextBlock Grid.Column="1"
+                                   Classes="footerText"
+                                   Margin="6,0,0,0"
+                                   HorizontalAlignment="Left"
+                                   Text="{Binding BattleDuration, StringFormat='{}{0:mm\\:ss}'}"
+                                   IsVisible="{Binding !IsHistoryMode}" />
+
+                        <!-- History mode indicator (button that returns to live). -->
+                        <Button Grid.Column="0"
+                                HorizontalAlignment="Left"
+                                Background="Transparent"
+                                BorderThickness="0"
+                                Cursor="Hand"
+                                Command="{Binding ReturnToLiveCommand}"
+                                ToolTip.Tip="Click to return to live mode"
+                                IsVisible="{Binding IsHistoryMode}">
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <TextBlock Text="[HISTORY]"
+                                               Foreground="{Binding AppConfig.EffectiveThemeColor, Mode=OneWay, Converter={StaticResource ThemeAccentConverter}, RelativeSource={RelativeSource AncestorType=Window}}"
+                                               FontWeight="Bold" />
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                        <TextBlock Grid.Column="1"
+                                   Classes="footerText"
+                                   Margin="6,0,0,0"
+                                   HorizontalAlignment="Left"
+                                   Text="{Binding HistoryModeLabel}"
+                                   Foreground="{Binding AppConfig.EffectiveThemeColor, Mode=OneWay, Converter={StaticResource ThemeAccentConverter}}"
+                                   IsVisible="{Binding IsHistoryMode}" />
+
+                        <TextBlock Grid.Column="2"
+                                   Classes="footerText"
+                                   Margin="0,0,4,0"
+                                   HorizontalAlignment="Right"
+                                   TextAlignment="Right">
+                            <TextBlock.Text>
+                                <MultiBinding Converter="{StaticResource HumanReadableNumberConverter}">
+                                    <Binding FallbackValue="--"
+                                             Path="CurrentStatisticData.CurrentPlayerSlot.Value"
+                                             TargetNullValue="--" />
+                                    <Binding Path="DataContext.AppConfig.DamageDisplayType" RelativeSource="{RelativeSource AncestorType=Window}" />
+                                </MultiBinding>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- Holiday (Christmas) decorations, shown only when EnableHolidayThemes is on. -->
+            <controls:DpsMeterChristmasDecorations ZIndex="1000"
+                                                   IsVisible="{Binding AppConfig.EnableHolidayThemes}" />
+        </Grid>
+    </Border>
+</Window>

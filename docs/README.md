@@ -32,5 +32,3 @@ This folder contains all technical documentation, implementation plans, and guid
 ---
 
 For general project information, see the main [README.md](../README.md) in the root directory.
-
-For Claude Code development instructions, see [Claude.md](../Claude.md) in the root directory.

@@ -32,7 +32,7 @@
         <Border Grid.Row="1"
                 Padding="12,8"
                 Background="#1A000000">
-            <TextBlock Text="DI host, services, views and styles ship in later phases. See CLAUDE.md."
+            <TextBlock Text="DI host, services, views and styles ship in later phases."
                        FontSize="12"
                        Opacity="0.6" />
         </Border>

@@ -375,7 +375,6 @@ FodyWeavers.xsd
 /BlueMeter.Core/Protobuf/BlueProtobuf.proto
 /AGENTS.md
 
-# Claude Code
 .claude/
 Claude.md
 .gitignore

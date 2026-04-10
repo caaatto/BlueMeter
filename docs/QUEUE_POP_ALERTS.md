@@ -225,7 +225,3 @@ If you find the CharTeam Method ID or want to improve the detection, please:
 1. Test the changes thoroughly
 2. Document the Method ID you found
 3. Submit a pull request with your findings
-
----
-
-**Generated with Claude Code** 🤖

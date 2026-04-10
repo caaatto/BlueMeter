@@ -1,0 +1,45 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:BlueMeter.Controls"
+             x:Class="BlueMeter.Controls.CollapsibleCard"
+             x:Name="Root"
+             x:CompileBindings="False"
+             d:DesignHeight="200"
+             d:DesignWidth="400"
+             mc:Ignorable="d">
+    <Grid RowDefinitions="Auto,*">
+
+        <!--  Title bar  -->
+        <Border Grid.Row="0"
+                Height="30"
+                Background="#FFFFFF"
+                BorderBrush="{DynamicResource AntBorderBrush}"
+                BorderThickness="0,0,0,2"
+                CornerRadius="5,5,0,0">
+            <Grid>
+                <TextBlock Margin="20,0,0,0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           FontFamily="avares://BlueMeter/Assets/Fonts/iconfont.ttf#iconfont"
+                           Foreground="#569CD6"
+                           Text="&#xE601;" />
+
+                <TextBlock Margin="45,0,0,0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           FontWeight="Bold"
+                           Foreground="#1E6CCC"
+                           Text="{Binding Title, ElementName=Root}" />
+            </Grid>
+        </Border>
+
+        <!--  Content  -->
+        <Border Grid.Row="1"
+                Background="#FFFFFF"
+                CornerRadius="0,0,5,5">
+            <ContentPresenter Content="{Binding CardContent, ElementName=Root}" />
+        </Border>
+    </Grid>
+</UserControl>

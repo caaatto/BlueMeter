@@ -1,0 +1,53 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="using:BlueMeter.Controls"
+             xmlns:c="using:BlueMeter.Converters"
+             x:Class="BlueMeter.Controls.MultiSelector"
+             d:DesignHeight="40"
+             d:DesignWidth="200"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <c:HalfValueConverter x:Key="HalfValueConverter" />
+    </UserControl.Resources>
+
+    <UserControl.Styles>
+        <!--  Default template for the item container: a rounded border that
+             switches background when the :active pseudo-class is set.  -->
+        <Style Selector="local|MultiSelectorItem">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Name="PART_Border"
+                            Background="Transparent"
+                            CornerRadius="{Binding Bounds.Height, RelativeSource={RelativeSource Self}, Converter={StaticResource HalfValueConverter}}">
+                        <ContentPresenter HorizontalAlignment="Stretch"
+                                          VerticalAlignment="Stretch"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="local|MultiSelectorItem:active /template/ Border#PART_Border">
+            <Setter Property="Background" Value="#FFFFFF" />
+        </Style>
+    </UserControl.Styles>
+
+    <Border Padding="2"
+            Background="#DFDFDF"
+            CornerRadius="{Binding $self.Bounds.Height, Converter={StaticResource HalfValueConverter}}">
+        <local:MultiSelectorItemsHost Name="SelectionItems">
+            <local:MultiSelectorItemsHost.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="1" />
+                </ItemsPanelTemplate>
+            </local:MultiSelectorItemsHost.ItemsPanel>
+        </local:MultiSelectorItemsHost>
+    </Border>
+</UserControl>

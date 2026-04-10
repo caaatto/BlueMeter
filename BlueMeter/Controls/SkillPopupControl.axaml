@@ -1,0 +1,93 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="BlueMeter.Controls.SkillPopupControl"
+             x:Name="Root"
+             x:CompileBindings="False"
+             d:DesignHeight="450"
+             d:DesignWidth="400"
+             Background="Transparent"
+             mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="PanelBgBrush" Color="#CC0F1720" />
+        <SolidColorBrush x:Key="AccentYellow" Color="#FFD430" />
+    </UserControl.Resources>
+
+    <Border Padding="10"
+            Background="{StaticResource PanelBgBrush}"
+            BoxShadow="0 0 8 0 #8C000000"
+            CornerRadius="8"
+            IsHitTestVisible="True">
+        <StackPanel>
+            <TextBlock Margin="0,0,0,8"
+                       FontSize="18"
+                       FontWeight="Bold"
+                       Foreground="White"
+                       Text="{Binding Title, ElementName=Root}" />
+
+            <ScrollViewer MaxHeight="360"
+                          Focusable="False"
+                          VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding ItemsSource, ElementName=Root}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Vertical" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="0,6,0,6"
+                                    Padding="6"
+                                    Background="#00000000"
+                                    CornerRadius="6">
+                                <StackPanel>
+                                    <TextBlock FontSize="14"
+                                               FontWeight="Bold"
+                                               Foreground="{StaticResource AccentYellow}"
+                                               Text="{Binding SkillName}"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Margin="0,4,0,0" Foreground="White">
+                                        <Run Text="Total Damage: " />
+                                        <Run FontWeight="Bold" Text="{Binding TotalDamage}" />
+                                    </TextBlock>
+                                    <TextBlock Margin="0,4,0,0">
+                                        <Run Foreground="White" Text="Hits: " />
+                                        <Run FontWeight="Bold"
+                                             Foreground="{StaticResource AccentYellow}"
+                                             Text="{Binding HitCount}" />
+                                        <Run Foreground="White" Text="    Crits: " />
+                                        <Run FontWeight="Bold"
+                                             Foreground="{StaticResource AccentYellow}"
+                                             Text="{Binding CritCount}" />
+                                        <Run Foreground="White" Text="    Avg Damage: " />
+                                        <Run FontWeight="Bold"
+                                             Foreground="{StaticResource AccentYellow}"
+                                             Text="{Binding AvgDamage}" />
+                                    </TextBlock>
+                                    <TextBlock Margin="0,4,0,0">
+                                        <Run Foreground="White" Text="Min Damage: " />
+                                        <Run FontWeight="Bold"
+                                             Foreground="{StaticResource AccentYellow}"
+                                             Text="{Binding MinDamage}" />
+                                        <Run Foreground="White" Text="    Max Damage: " />
+                                        <Run FontWeight="Bold"
+                                             Foreground="{StaticResource AccentYellow}"
+                                             Text="{Binding MaxDamage}" />
+                                    </TextBlock>
+                                    <TextBlock Margin="0,4,0,0">
+                                        <Run Foreground="White" Text="Highest Crit: " />
+                                        <Run FontWeight="Bold"
+                                             Foreground="{StaticResource AccentYellow}"
+                                             Text="{Binding HighestCrit}" />
+                                    </TextBlock>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+        </StackPanel>
+    </Border>
+</UserControl>

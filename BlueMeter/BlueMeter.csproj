@@ -93,4 +93,17 @@
     <AvaloniaResource Include="..\BlueMeter.Assets\Fonts\**\*.otf" Link="Assets\Fonts\%(RecursiveDir)%(FileName)%(Extension)" />
   </ItemGroup>
 
+  <!--
+    Holiday theme assets still live under BlueMeter.WPF/Assets/Themes/ (they were
+    never moved into the BlueMeter.Assets class library). Link them into this
+    assembly so the ChristmasDecorations controls can reference them via
+    avares://BlueMeter/Assets/Themes/... . When BlueMeter.WPF is deleted in
+    Phase 11, these files need to move to BlueMeter.Assets/Themes/ and this
+    block must be updated to reference the new location.
+  -->
+  <ItemGroup>
+    <AvaloniaResource Include="..\BlueMeter.WPF\Assets\Themes\**\*.png" Link="Assets\Themes\%(RecursiveDir)%(FileName)%(Extension)" />
+    <AvaloniaResource Include="..\BlueMeter.WPF\Assets\Themes\**\*.jpg" Link="Assets\Themes\%(RecursiveDir)%(FileName)%(Extension)" />
+  </ItemGroup>
+
 </Project>

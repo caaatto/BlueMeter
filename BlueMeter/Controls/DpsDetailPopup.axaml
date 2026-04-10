@@ -1,0 +1,58 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="BlueMeter.Controls.DpsDetailPopup"
+             x:Name="Root"
+             x:CompileBindings="False"
+             d:DesignHeight="450"
+             d:DesignWidth="400"
+             mc:Ignorable="d">
+    <Border Padding="10"
+            Background="#CC000000"
+            CornerRadius="8">
+        <StackPanel>
+            <TextBlock Classes="footerText"
+                       Margin="0,0,0,6"
+                       FontSize="12"
+                       FontWeight="Regular"
+                       Foreground="White"
+                       Text="{Binding Title, ElementName=Root}" />
+
+            <ItemsControl ItemsSource="{Binding SkillList, ElementName=Root}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Margin="0,8,0,0">
+                            <TextBlock Classes="footerText"
+                                       FontWeight="Bold"
+                                       Foreground="Gold"
+                                       Text="{Binding SkillName}" />
+                            <TextBlock Classes="footerText">
+                                <Run Foreground="White" Text="Total Damage: " />
+                                <Run Foreground="White" Text="{Binding TotalDamage}" />
+                            </TextBlock>
+                            <TextBlock Classes="footerText">
+                                <Run Foreground="Orange" Text="Hits: " />
+                                <Run Foreground="White" Text="{Binding HitCount}" />
+                                <Run Foreground="Orange" Text="    Crits: " />
+                                <Run Foreground="White" Text="{Binding CritCount}" />
+                                <Run Foreground="Orange" Text="    Avg Damage: " />
+                                <Run Foreground="White" Text="{Binding AvgDamage}" />
+                            </TextBlock>
+                            <TextBlock Classes="footerText">
+                                <Run Foreground="Orange" Text="Min Damage: " />
+                                <Run Foreground="White" Text="{Binding MinDamage}" />
+                                <Run Foreground="Orange" Text="    Max Damage: " />
+                                <Run Foreground="White" Text="{Binding MaxDamage}" />
+                            </TextBlock>
+                            <TextBlock Classes="footerText">
+                                <Run Foreground="Orange" Text="Highest Crit: " />
+                                <Run Foreground="White" Text="{Binding HighestCrit}" />
+                            </TextBlock>
+                        </StackPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Border>
+</UserControl>

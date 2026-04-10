@@ -1,0 +1,48 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="BlueMeter.Controls.ChristmasDecorations"
+             d:DesignHeight="600"
+             d:DesignWidth="800"
+             mc:Ignorable="d">
+
+    <Grid Name="RootGrid" ClipToBounds="False">
+        <!--  Snowflake Canvas — bound to parent size to cover entire area  -->
+        <Canvas Name="SnowCanvas"
+                Width="{Binding #RootGrid.Bounds.Width}"
+                Height="{Binding #RootGrid.Bounds.Height}"
+                ClipToBounds="False"
+                IsHitTestVisible="False"
+                ZIndex="50" />
+
+        <!--  Christmas lights at the top  -->
+        <Image Name="ChristmasLights"
+               Height="32"
+               HorizontalAlignment="Stretch"
+               VerticalAlignment="Top"
+               IsHitTestVisible="False"
+               Opacity="0.8"
+               Source="avares://BlueMeter/Assets/Themes/Christmas/Decorations/christmas_lights.png"
+               Stretch="Fill"
+               ZIndex="100" />
+
+        <!--  Bell at bottom-right (click for Christmas Easter egg animation)  -->
+        <Image Name="ChristmasBell"
+               Width="28"
+               Height="28"
+               Margin="0,0,8,8"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Bottom"
+               Cursor="Hand"
+               Opacity="0.85"
+               PointerPressed="OnBellPointerPressed"
+               RenderTransformOrigin="50%,50%"
+               Source="avares://BlueMeter/Assets/Themes/Christmas/Decorations/bell.png"
+               ZIndex="98">
+            <Image.RenderTransform>
+                <RotateTransform Angle="0" />
+            </Image.RenderTransform>
+        </Image>
+    </Grid>
+</UserControl>

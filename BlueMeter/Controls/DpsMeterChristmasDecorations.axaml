@@ -1,0 +1,34 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             x:Class="BlueMeter.Controls.DpsMeterChristmasDecorations"
+             d:DesignHeight="400"
+             d:DesignWidth="400"
+             IsHitTestVisible="False"
+             mc:Ignorable="d">
+
+    <Grid ClipToBounds="False">
+        <!--  Festive background layer (behind everything, doesn't replace user background)  -->
+        <Image Opacity="0.15"
+               Source="avares://BlueMeter/Assets/Themes/Christmas/Backgrounds/festive_background.jpg"
+               Stretch="UniformToFill"
+               ZIndex="0" />
+
+        <!--  Frost border frame — scaled out past the window bounds  -->
+        <Image Opacity="0.3"
+               RenderTransformOrigin="50%,30%"
+               Source="avares://BlueMeter/Assets/Themes/Christmas/Backgrounds/frost_border.png.png"
+               Stretch="Fill"
+               ZIndex="999">
+            <Image.RenderTransform>
+                <ScaleTransform ScaleX="1.3" ScaleY="1.5" />
+            </Image.RenderTransform>
+        </Image>
+
+        <!--  Sparkle effects canvas  -->
+        <Canvas Name="SparkleCanvas"
+                ClipToBounds="True"
+                ZIndex="50" />
+    </Grid>
+</UserControl>

@@ -1,0 +1,249 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ctrl="using:BlueMeter.Controls"
+        xmlns:converters="using:BlueMeter.Converters"
+        xmlns:vm="using:BlueMeter.ViewModels"
+        x:Class="BlueMeter.Views.ReplayWindow"
+        x:CompileBindings="False"
+        Title="{Binding EncounterTitle}"
+        Width="1400"
+        Height="800"
+        MinWidth="1000"
+        MinHeight="600"
+        Background="Transparent"
+        SystemDecorations="None"
+        TransparencyLevelHint="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        d:DataContext="{d:DesignInstance Type=vm:ReplayWindowViewModel}"
+        mc:Ignorable="d">
+
+    <Window.Resources>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    </Window.Resources>
+
+    <Window.Styles>
+        <!--  DataGrid header styling (matches EncounterHistoryView).  -->
+        <Style Selector="DataGridColumnHeader">
+            <Setter Property="Background" Value="#F5F5F5" />
+            <Setter Property="Foreground" Value="#333333" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Padding" Value="10,8" />
+            <Setter Property="BorderBrush" Value="#E5E5E5" />
+            <Setter Property="BorderThickness" Value="0,0,1,1" />
+        </Style>
+    </Window.Styles>
+
+    <Border Classes="shadowWindow" Background="#ECEBE9">
+        <Grid RowDefinitions="Auto,Auto,*,Auto,Auto">
+
+            <!--  Header  -->
+            <ctrl:Header Grid.Row="0" Title="Combat Replay" />
+
+            <!--  Playback Controls  -->
+            <Border Grid.Row="1" Padding="15" Background="#2297F4">
+                <Grid ColumnDefinitions="Auto,*,Auto">
+
+                    <!--  Left: Play/Pause/Stop + speed  -->
+                    <StackPanel Grid.Column="0" Orientation="Horizontal">
+                        <Button Padding="15,8"
+                                Background="#52C41A"
+                                BorderThickness="0"
+                                Command="{Binding PlayCommand}"
+                                Content="▶ Play"
+                                Foreground="White"
+                                IsEnabled="{Binding IsPlaying, Converter={StaticResource InverseBooleanConverter}}"
+                                Theme="{DynamicResource AntButton}" />
+                        <Button Margin="10,0,0,0"
+                                Padding="15,8"
+                                Background="#FFA500"
+                                BorderThickness="0"
+                                Command="{Binding PauseCommand}"
+                                Content="⏸ Pause"
+                                Foreground="White"
+                                IsEnabled="{Binding IsPlaying}"
+                                Theme="{DynamicResource AntButton}" />
+                        <Button Margin="10,0,0,0"
+                                Padding="15,8"
+                                Background="#FF4D4F"
+                                BorderThickness="0"
+                                Command="{Binding StopCommand}"
+                                Content="⏹ Stop"
+                                Foreground="White"
+                                Theme="{DynamicResource AntButton}" />
+
+                        <!--  Speed Control  -->
+                        <TextBlock Margin="20,0,8,0"
+                                   VerticalAlignment="Center"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   Text="Speed:" />
+                        <ComboBox Width="80"
+                                  VerticalAlignment="Center"
+                                  VerticalContentAlignment="Center"
+                                  Foreground="Black"
+                                  SelectedValue="{Binding PlaybackSpeed}"
+                                  Theme="{DynamicResource AntComboBox}">
+                            <ComboBoxItem Content="0.5x" Tag="0.5" />
+                            <ComboBoxItem Content="1x" IsSelected="True" Tag="1" />
+                            <ComboBoxItem Content="2x" Tag="2" />
+                            <ComboBoxItem Content="4x" Tag="4" />
+                            <ComboBoxItem Content="8x" Tag="8" />
+                        </ComboBox>
+                    </StackPanel>
+
+                    <!--  Center: Time Display  -->
+                    <StackPanel Grid.Column="1"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                        <TextBlock FontFamily="Consolas"
+                                   FontSize="24"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   Text="{Binding CurrentTimeText}" />
+                        <TextBlock Margin="8,0"
+                                   FontSize="20"
+                                   Foreground="White"
+                                   Text="/" />
+                        <TextBlock FontFamily="Consolas"
+                                   FontSize="18"
+                                   Foreground="White"
+                                   Text="{Binding TotalDurationText}" />
+                    </StackPanel>
+
+                    <!--  Right: Event Count  -->
+                    <TextBlock Grid.Column="2"
+                               VerticalAlignment="Center"
+                               FontSize="13"
+                               Foreground="White">
+                        <Run FontWeight="Bold" Text="{Binding FilteredEventCount, Mode=OneWay}" />
+                        <Run Text="/" />
+                        <Run Text="{Binding TotalEvents, Mode=OneWay}" />
+                        <Run Text=" events" />
+                    </TextBlock>
+                </Grid>
+            </Border>
+
+            <!--  Timeline Slider  -->
+            <Border Grid.Row="2" Padding="15,10" Background="#F5F5F5">
+                <Grid RowDefinitions="Auto,*">
+
+                    <!--  Slider  -->
+                    <Slider Grid.Row="0"
+                            Height="30"
+                            Margin="0,0,0,10"
+                            IsSnapToTickEnabled="False"
+                            Maximum="{Binding TotalDuration}"
+                            Minimum="0"
+                            TickFrequency="1000"
+                            Value="{Binding CurrentTime, Mode=TwoWay}" />
+
+                    <!--  Content Area  -->
+                    <Grid Grid.Row="1" ColumnDefinitions="250,*">
+
+                        <!--  Filters Panel  -->
+                        <Border Grid.Column="0"
+                                Padding="10"
+                                Background="White"
+                                BorderBrush="#E5E5E5"
+                                BorderThickness="0,0,1,0">
+                            <StackPanel>
+                                <TextBlock Margin="0,0,0,10"
+                                           FontSize="14"
+                                           FontWeight="Bold"
+                                           Text="Filters" />
+
+                                <CheckBox Margin="0,5" Content="Damage Events" IsChecked="{Binding FilterDamageEvents}" />
+                                <CheckBox Margin="0,5" Content="Heal Events" IsChecked="{Binding FilterHealEvents}" />
+                                <CheckBox Margin="0,5" Content="Critical Only" IsChecked="{Binding FilterCriticalOnly}" />
+
+                                <Separator Margin="0,10" />
+
+                                <CheckBox Margin="0,5" Content="Filter by Player" IsChecked="{Binding FilterPlayerOnly}" />
+                                <ComboBox Margin="0,5"
+                                          DisplayMemberBinding="{Binding PlayerName}"
+                                          IsEnabled="{Binding FilterPlayerOnly}"
+                                          ItemsSource="{Binding AvailablePlayers}"
+                                          SelectedValue="{Binding SelectedPlayerId}"
+                                          SelectedValueBinding="{Binding PlayerId}" />
+
+                                <Separator Margin="0,10" />
+
+                                <Button Margin="0,5"
+                                        Padding="10,6"
+                                        Background="#52C41A"
+                                        BorderThickness="0"
+                                        Command="{Binding ExportEventsCommand}"
+                                        Content="Export Events"
+                                        Foreground="White"
+                                        Theme="{DynamicResource AntButton}" />
+                            </StackPanel>
+                        </Border>
+
+                        <!--  Events DataGrid  -->
+                        <Border Grid.Column="1" Padding="10" Background="White">
+                            <DataGrid AutoGenerateColumns="False"
+                                      CanUserReorderColumns="False"
+                                      CanUserResizeColumns="True"
+                                      CanUserSortColumns="False"
+                                      GridLinesVisibility="Horizontal"
+                                      HeadersVisibility="Column"
+                                      HorizontalGridLinesBrush="#E5E5E5"
+                                      IsReadOnly="True"
+                                      ItemsSource="{Binding FilteredEvents}"
+                                      RowHeight="32"
+                                      SelectedItem="{Binding SelectedEvent}"
+                                      SelectionMode="Single">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Width="80" Header="Time" Binding="{Binding TimeText}" />
+                                    <DataGridTextColumn Width="80" Header="Type" Binding="{Binding EventType}" />
+                                    <DataGridTextColumn Width="150" Header="Attacker" Binding="{Binding AttackerName}" />
+                                    <DataGridTextColumn Width="150" Header="Target" Binding="{Binding TargetName}" />
+                                    <DataGridTextColumn Width="90" Header="Value" Binding="{Binding ValueText}" />
+                                    <DataGridTextColumn Width="50" Header="Crit" Binding="{Binding CriticalText}" />
+                                    <DataGridTextColumn Width="*" Header="Skill ID" Binding="{Binding SkillId}" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </Border>
+                    </Grid>
+                </Grid>
+            </Border>
+
+            <!--  Status Bar  -->
+            <Border Grid.Row="3"
+                    Padding="15,8"
+                    Background="#F5F5F5"
+                    BorderBrush="#E5E5E5"
+                    BorderThickness="0,1,0,0">
+                <Grid ColumnDefinitions="*,Auto">
+                    <TextBlock Grid.Column="0"
+                               VerticalAlignment="Center"
+                               Foreground="#666666"
+                               Text="{Binding StatusText}" />
+                    <ProgressBar Grid.Column="1"
+                                 Width="200"
+                                 Height="20"
+                                 IsIndeterminate="True"
+                                 IsVisible="{Binding IsLoading}" />
+                </Grid>
+            </Border>
+
+            <!--  Footer  -->
+            <Border Grid.Row="4"
+                    Height="50"
+                    Background="#F5F5F5"
+                    BorderBrush="#E5E5E5"
+                    BorderThickness="0,1,0,0">
+                <Grid Margin="15,0">
+                    <Button HorizontalAlignment="Right"
+                            Padding="20,8"
+                            Command="{Binding CloseCommand}"
+                            Content="Close"
+                            Theme="{DynamicResource AntButton}" />
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

@@ -11,12 +11,14 @@
             </ResourceDictionary.ThemeDictionaries>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="avares://BlueMeter/Styles/ThemeResources.axaml" />
+                <ResourceInclude Source="avares://BlueMeter/Styles/AntControls.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
 
     <Application.Styles>
         <FluentTheme />
+        <StyleInclude Source="avares://Avalonia.Controls.DataGrid/Themes/Fluent.xaml" />
         <StyleInclude Source="avares://BlueMeter/Styles/BaseStyle.axaml" />
         <StyleInclude Source="avares://BlueMeter/Styles/SeparatorStyle.axaml" />
         <StyleInclude Source="avares://BlueMeter/Styles/TestThemeStyle.axaml" />

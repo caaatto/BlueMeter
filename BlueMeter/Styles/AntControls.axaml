@@ -1,0 +1,185 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--  Ant Design palette  -->
+    <Color x:Key="AntBorderColor">#FFD9D9D9</Color>
+    <Color x:Key="AntHoverColor">#FF40A9FF</Color>
+    <Color x:Key="AntPrimaryColor">#FF1890FF</Color>
+    <Color x:Key="AntBackgroundColor">#FFFFFFFF</Color>
+    <Color x:Key="AntDisabledColor">#FFF5F5F5</Color>
+
+    <SolidColorBrush x:Key="AntBorderBrush" Color="{StaticResource AntBorderColor}" />
+    <SolidColorBrush x:Key="AntHoverBrush" Color="{StaticResource AntHoverColor}" />
+    <SolidColorBrush x:Key="AntPrimaryBrush" Color="{StaticResource AntPrimaryColor}" />
+    <SolidColorBrush x:Key="AntBackgroundBrush" Color="{StaticResource AntBackgroundColor}" />
+    <SolidColorBrush x:Key="AntDisabledBrush" Color="{StaticResource AntDisabledColor}" />
+
+    <x:Double x:Key="AntCornerRadiusValue">6</x:Double>
+    <CornerRadius x:Key="AntCornerRadius">6</CornerRadius>
+    <Thickness x:Key="AntControlPadding">6,4,6,4</Thickness>
+
+    <!--  PlainToggleButton: strips the default hover/pressed visuals entirely.  -->
+    <ControlTheme x:Key="PlainToggleButton" TargetType="ToggleButton">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <ContentPresenter Name="PART_ContentPresenter"
+                                  Background="Transparent"
+                                  Content="{TemplateBinding Content}"
+                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--  AntButton: the base outlined Ant Design button.  -->
+    <ControlTheme x:Key="AntButton" TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource AntBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AntBorderBrush}" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Padding" Value="{DynamicResource AntControlPadding}" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="PART_Border"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="1"
+                        CornerRadius="{DynamicResource AntCornerRadius}">
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Padding="{TemplateBinding Padding}"
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      RecognizesAccessKey="True" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover /template/ Border#PART_Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource AntHoverBrush}" />
+        </Style>
+
+        <Style Selector="^:pressed /template/ Border#PART_Border">
+            <Setter Property="Opacity" Value="0.9" />
+        </Style>
+
+        <Style Selector="^:focus /template/ Border#PART_Border">
+            <Setter Property="BorderBrush" Value="{DynamicResource AntPrimaryBrush}" />
+        </Style>
+
+        <Style Selector="^:disabled /template/ Border#PART_Border">
+            <Setter Property="Background" Value="{DynamicResource AntDisabledBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource AntBorderBrush}" />
+            <Setter Property="Opacity" Value="0.8" />
+        </Style>
+
+        <Style Selector="^:disabled">
+            <Setter Property="Foreground" Value="#FFAAAAAA" />
+        </Style>
+    </ControlTheme>
+
+    <!--  AntPrimaryButton: solid-filled primary action variant.  -->
+    <ControlTheme x:Key="AntPrimaryButton"
+                  BasedOn="{StaticResource AntButton}"
+                  TargetType="Button">
+        <Setter Property="Background" Value="{DynamicResource AntPrimaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AntPrimaryBrush}" />
+        <Setter Property="Foreground" Value="White" />
+
+        <Style Selector="^:pointerover /template/ Border#PART_Border">
+            <Setter Property="Background" Value="{DynamicResource AntHoverBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource AntHoverBrush}" />
+        </Style>
+
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+
+        <Style Selector="^:pressed /template/ Border#PART_Border">
+            <Setter Property="Opacity" Value="0.95" />
+        </Style>
+
+        <Style Selector="^:disabled /template/ Border#PART_Border">
+            <Setter Property="Background" Value="{DynamicResource AntDisabledBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource AntBorderBrush}" />
+        </Style>
+
+        <Style Selector="^:disabled">
+            <Setter Property="Foreground" Value="#FFAAAAAA" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Port note: AntTextBox / AntComboBox / AntSlider use palette setters only and
+        inherit the default Fluent template. Full WPF-style template replacements
+        (with the Ant rounded-border / chevron arrow / primary-blue track) can be
+        reintroduced later if the Fluent defaults prove insufficient when
+        SettingsView / ModuleSolveView are ported. Template-part selectors (e.g.
+        `^:pointerover /template/ Border#PART_BorderElement`) are already the hook
+        point for that future work.
+    -->
+
+    <!--  AntTextBox: palette-only, relies on the default Fluent TextBox template.  -->
+    <ControlTheme x:Key="AntTextBox" TargetType="TextBox"
+                  BasedOn="{StaticResource {x:Type TextBox}}">
+        <Setter Property="Background" Value="{DynamicResource AntBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AntBorderBrush}" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Padding" Value="{DynamicResource AntControlPadding}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource AntCornerRadius}" />
+
+        <Style Selector="^:pointerover /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="{DynamicResource AntHoverBrush}" />
+            <Setter Property="Background" Value="{DynamicResource AntBackgroundBrush}" />
+        </Style>
+
+        <Style Selector="^:focus /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="{DynamicResource AntPrimaryBrush}" />
+            <Setter Property="Background" Value="{DynamicResource AntBackgroundBrush}" />
+        </Style>
+
+        <Style Selector="^:disabled /template/ Border#PART_BorderElement">
+            <Setter Property="Background" Value="{DynamicResource AntDisabledBrush}" />
+        </Style>
+
+        <Style Selector="^:disabled">
+            <Setter Property="Foreground" Value="#FFAAAAAA" />
+        </Style>
+    </ControlTheme>
+
+    <!--  AntComboBox: palette-only, relies on the default Fluent ComboBox template.  -->
+    <ControlTheme x:Key="AntComboBox" TargetType="ComboBox"
+                  BasedOn="{StaticResource {x:Type ComboBox}}">
+        <Setter Property="Background" Value="{DynamicResource AntBackgroundBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource AntBorderBrush}" />
+        <Setter Property="Foreground" Value="Black" />
+        <Setter Property="Padding" Value="{DynamicResource AntControlPadding}" />
+        <Setter Property="CornerRadius" Value="{DynamicResource AntCornerRadius}" />
+
+        <Style Selector="^:pointerover /template/ Border#Background">
+            <Setter Property="BorderBrush" Value="{DynamicResource AntHoverBrush}" />
+        </Style>
+
+        <Style Selector="^:focus-within /template/ Border#Background">
+            <Setter Property="BorderBrush" Value="{DynamicResource AntPrimaryBrush}" />
+        </Style>
+
+        <Style Selector="^:disabled">
+            <Setter Property="Foreground" Value="#FFAAAAAA" />
+        </Style>
+    </ControlTheme>
+
+    <!--  AntSlider: palette-only; Fluent slider's thumb/track respond to Foreground.  -->
+    <ControlTheme x:Key="AntSlider" TargetType="Slider"
+                  BasedOn="{StaticResource {x:Type Slider}}">
+        <Setter Property="Foreground" Value="{DynamicResource AntPrimaryBrush}" />
+        <Setter Property="Background" Value="{DynamicResource AntBorderBrush}" />
+    </ControlTheme>
+
+</ResourceDictionary>

@@ -1,0 +1,57 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="using:BlueMeter.Converters"
+             xmlns:local="using:BlueMeter.Controls"
+             x:Class="BlueMeter.Controls.Header"
+             x:Name="Root"
+             x:CompileBindings="False"
+             d:DesignHeight="30"
+             d:DesignWidth="400"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:ThemeBackgroundConverter x:Key="ThemeBackgroundConverter" />
+    </UserControl.Resources>
+
+    <Border x:Name="HeaderBorder"
+            Height="30"
+            VerticalAlignment="Top"
+            BorderThickness="0,0,0,1"
+            CornerRadius="6,6,0,0"
+            BoxShadow="0 0 8 0 #1A000000"
+            PointerPressed="OnHeaderPointerPressed"
+            Background="{Binding DataContext.AppConfig.EffectiveThemeColor, Mode=OneWay, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=dark}"
+            BorderBrush="{Binding DataContext.AppConfig.EffectiveThemeColor, Mode=OneWay, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}">
+        <Grid ColumnDefinitions="*,Auto">
+            <!-- Title in the center -->
+            <TextBlock Grid.Column="0"
+                       HorizontalAlignment="Center"
+                       VerticalAlignment="Center"
+                       FontFamily="avares://BlueMeter/Assets/Fonts/SAOWelcomeTT-Regular.ttf#SAO Welcome TT, avares://BlueMeter/Assets/Fonts/AlimamaShuHeiTi-Bold.ttf#Alimama ShuHeiTi"
+                       FontSize="16"
+                       FontWeight="SemiBold"
+                       Foreground="#FFFFFF"
+                       Text="{Binding Title, ElementName=Root}" />
+
+            <!-- Minimize button on the right -->
+            <Button Grid.Column="1"
+                    Command="{Binding MinimizeToTrayCommand, ElementName=Root}"
+                    Click="OnMinimizeClick"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    Cursor="Hand"
+                    Padding="10,0"
+                    Margin="0,0,10,0"
+                    VerticalAlignment="Center"
+                    ToolTip.Tip="Minimize">
+                <TextBlock FontSize="16"
+                           Foreground="#FFFFFF"
+                           Text="−"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           FontWeight="Bold" />
+            </Button>
+        </Grid>
+    </Border>
+</UserControl>

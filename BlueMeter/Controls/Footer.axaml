@@ -1,0 +1,50 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:converters="using:BlueMeter.Converters"
+             x:Class="BlueMeter.Controls.Footer"
+             x:Name="Root"
+             x:CompileBindings="False"
+             d:DesignHeight="50"
+             d:DesignWidth="400"
+             Background="#12192B"
+             mc:Ignorable="d">
+    <UserControl.Resources>
+        <converters:ThemeBackgroundConverter x:Key="ThemeBackgroundConverter" />
+    </UserControl.Resources>
+
+    <Border BorderThickness="0,1,0,0"
+            CornerRadius="0,0,6,6"
+            BoxShadow="0 0 8 0 #1A000000"
+            Background="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=dark}"
+            BorderBrush="{Binding DataContext.AppConfig.ThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}">
+        <Grid Width="100" HorizontalAlignment="Center" ColumnDefinitions="*,*">
+            <Button x:Name="Confirm"
+                    Grid.Column="0"
+                    Click="OnConfirmClick"
+                    Command="{Binding ConfirmCommand, ElementName=Root}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Height="30"
+                    Width="30"
+                    Background="Transparent"
+                    BorderThickness="0">
+                <Image Source="avares://BlueMeter/Assets/Images/ok_normal.png" />
+            </Button>
+
+            <Button x:Name="Cancel"
+                    Grid.Column="1"
+                    Click="OnCancelClick"
+                    Command="{Binding CancelCommand, ElementName=Root}"
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Height="30"
+                    Width="30"
+                    Background="Transparent"
+                    BorderThickness="0">
+                <Image Source="avares://BlueMeter/Assets/Images/cancel_normal.png" />
+            </Button>
+        </Grid>
+    </Border>
+</UserControl>

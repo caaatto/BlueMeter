@@ -1,0 +1,265 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:oxy="using:OxyPlot.Avalonia"
+             xmlns:vm="using:BlueMeter.ViewModels"
+             x:Class="BlueMeter.Views.EnhancedSkillBreakdownView"
+             x:CompileBindings="False"
+             d:DataContext="{d:DesignInstance Type=vm:EnhancedSkillBreakdownViewModel}"
+             d:DesignHeight="800"
+             d:DesignWidth="1200"
+             Background="#1E1E1E"
+             mc:Ignorable="d">
+
+    <UserControl.Styles>
+        <Style Selector="Border.darkCard">
+            <Setter Property="Background" Value="#2D2D30" />
+            <Setter Property="BorderBrush" Value="#3F3F46" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Margin" Value="8" />
+        </Style>
+
+        <Style Selector="TextBlock.statLabel">
+            <Setter Property="Foreground" Value="#CCCCCC" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Margin" Value="0,0,0,4" />
+        </Style>
+
+        <Style Selector="TextBlock.statValue">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+        </Style>
+
+        <Style Selector="TextBlock.sectionHeader">
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+        </Style>
+
+        <Style Selector="ComboBox.dark">
+            <Setter Property="Background" Value="#3F3F46" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="#555555" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="8,6" />
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+
+        <!--  DataGrid dark styling (scoped to this view via .dark class on the grid).  -->
+        <Style Selector="DataGrid.dark">
+            <Setter Property="Background" Value="#1E1E1E" />
+            <Setter Property="BorderBrush" Value="#3F3F46" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="GridLinesVisibility" Value="Horizontal" />
+            <Setter Property="HeadersVisibility" Value="Column" />
+            <Setter Property="HorizontalGridLinesBrush" Value="#3F3F46" />
+            <Setter Property="RowBackground" Value="#2D2D30" />
+        </Style>
+        <Style Selector="DataGrid.dark DataGridRow:nth-child(2n) /template/ Rectangle#BackgroundRectangle">
+            <Setter Property="Fill" Value="#252526" />
+        </Style>
+        <Style Selector="DataGrid.dark DataGridColumnHeader">
+            <Setter Property="Background" Value="#3F3F46" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Padding" Value="8,4" />
+        </Style>
+    </UserControl.Styles>
+
+    <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                  VerticalScrollBarVisibility="Auto">
+        <Grid RowDefinitions="Auto,Auto,Auto">
+
+            <!--  Header with Player Selection  -->
+            <Border Grid.Row="0"
+                    Padding="16,12"
+                    Background="#252526"
+                    BorderBrush="#3F3F46"
+                    BorderThickness="0,0,0,1">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock VerticalAlignment="Center"
+                               FontSize="13"
+                               Foreground="#CCCCCC"
+                               Text="Player:" />
+                    <ComboBox Classes="dark"
+                              Width="200"
+                              Margin="8,0,0,0"
+                              ItemsSource="{Binding AvailablePlayers}"
+                              SelectedItem="{Binding SelectedPlayer}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Foreground="White" Text="{Binding PlayerName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                    <TextBlock Margin="16,0,0,0"
+                               VerticalAlignment="Center"
+                               FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               Text="{Binding SelectedPlayer.PlayerName, StringFormat='Skill Breakdown - {0}'}" />
+
+                    <!--  Data Source Indicator  -->
+                    <StackPanel Margin="32,0,0,0"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                        <TextBlock Margin="0,0,8,0"
+                                   VerticalAlignment="Center"
+                                   FontSize="13"
+                                   Foreground="#CCCCCC"
+                                   Text="Data Source:" />
+                        <TextBlock VerticalAlignment="Center"
+                                   FontSize="13"
+                                   FontWeight="Bold"
+                                   Foreground="#4CAF50"
+                                   Text="{Binding BsonStatusText}"
+                                   ToolTip.Tip="Historical encounters automatically load from BSON files (if available) or fallback to SQL database" />
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+
+            <!--  Summary Stats Cards  -->
+            <Grid Grid.Row="1"
+                  Margin="8"
+                  ColumnDefinitions="*,*,*,*">
+
+                <!--  Damage Card  -->
+                <Border Grid.Column="0" Classes="darkCard">
+                    <StackPanel>
+                        <TextBlock Classes="sectionHeader" Text="Damage Info" />
+                        <TextBlock Classes="statLabel" Text="Total Damage:" />
+                        <TextBlock Classes="statValue" Text="{Binding TotalDamage, StringFormat='{}{0:N0}'}" />
+                        <TextBlock Classes="statLabel" Text="DPS:" />
+                        <TextBlock Classes="statValue" Text="{Binding Dps, StringFormat='{}{0:N0}'}" />
+                        <TextBlock Classes="statLabel" Text="Hit Count:" />
+                        <TextBlock Classes="statValue" Text="{Binding TotalHits, StringFormat='{}{0:N0}'}" />
+                    </StackPanel>
+                </Border>
+
+                <!--  Crit Card  -->
+                <Border Grid.Column="1" Classes="darkCard">
+                    <StackPanel>
+                        <TextBlock Classes="sectionHeader" Text="Critical Hits" />
+                        <TextBlock Classes="statLabel" Text="Crit Rate:" />
+                        <TextBlock Classes="statValue" Text="{Binding CritRate, StringFormat='{}{0:P1}'}" />
+                        <TextBlock Classes="statLabel" Text="Crit Count:" />
+                        <TextBlock Classes="statValue" Text="{Binding CritCount, StringFormat='{}{0:N0}'}" />
+                        <TextBlock Classes="statLabel" Text="Crit Damage:" />
+                        <TextBlock Classes="statValue" Text="{Binding TotalCritDamage, StringFormat='{}{0:N0}'}" />
+                    </StackPanel>
+                </Border>
+
+                <!--  Lucky Hits Card  -->
+                <Border Grid.Column="2" Classes="darkCard">
+                    <StackPanel>
+                        <TextBlock Classes="sectionHeader" Text="Lucky Hits" />
+                        <TextBlock Classes="statLabel" Text="Lucky Rate:" />
+                        <TextBlock Classes="statValue" Text="{Binding LuckyRate, StringFormat='{}{0:P1}'}" />
+                        <TextBlock Classes="statLabel" Text="Lucky Count:" />
+                        <TextBlock Classes="statValue" Text="{Binding LuckyCount, StringFormat='{}{0:N0}'}" />
+                        <TextBlock Classes="statLabel" Text="Lucky Damage:" />
+                        <TextBlock Classes="statValue" Text="{Binding TotalLuckyDamage, StringFormat='{}{0:N0}'}" />
+                    </StackPanel>
+                </Border>
+
+                <!--  Distribution Card  -->
+                <Border Grid.Column="3" Classes="darkCard">
+                    <StackPanel>
+                        <TextBlock Classes="sectionHeader" Text="Distribution" />
+                        <TextBlock Classes="statLabel" Text="Normal Damage:" />
+                        <TextBlock Classes="statValue" Text="{Binding NormalDamage, StringFormat='{}{0:N0}'}" />
+                        <TextBlock Classes="statLabel" Text="Avg Per Hit:" />
+                        <TextBlock Classes="statValue" Text="{Binding AvgDamage, StringFormat='{}{0:N0}'}" />
+                        <TextBlock Classes="statLabel" Text="Duration:" />
+                        <TextBlock Classes="statValue" Text="{Binding Duration}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <!--  Main Content: Charts and Table  -->
+            <Grid Grid.Row="2"
+                  Margin="8"
+                  ColumnDefinitions="350,*">
+
+                <!--  Left: Charts  -->
+                <StackPanel Grid.Column="0">
+
+                    <!--  Skill Pie Chart  -->
+                    <Border Classes="darkCard">
+                        <StackPanel>
+                            <TextBlock Classes="sectionHeader" Text="Skill Distribution" />
+                            <oxy:PlotView Height="300"
+                                          Background="#1E1E1E"
+                                          Model="{Binding SkillPieChartModel}" />
+                        </StackPanel>
+                    </Border>
+
+                    <!--  Damage Type Bar Chart  -->
+                    <Border Classes="darkCard">
+                        <StackPanel>
+                            <TextBlock Classes="sectionHeader" Text="Damage Distribution" />
+                            <oxy:PlotView Height="250"
+                                          Background="#1E1E1E"
+                                          Model="{Binding DamageDistributionChartModel}" />
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+
+                <!--  Right: Detailed Skill Table  -->
+                <Border Grid.Column="1" Classes="darkCard">
+                    <Grid RowDefinitions="Auto,*">
+                        <TextBlock Grid.Row="0"
+                                   Classes="sectionHeader"
+                                   Text="Detailed Skill Breakdown" />
+
+                        <DataGrid Grid.Row="1"
+                                  Classes="dark"
+                                  AutoGenerateColumns="False"
+                                  IsReadOnly="True"
+                                  ItemsSource="{Binding SkillDetails}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Width="*"
+                                                    Binding="{Binding SkillName}"
+                                                    Header="Skill Name" />
+                                <DataGridTextColumn Width="100"
+                                                    Binding="{Binding TotalDamage, StringFormat='{}{0:N0}'}"
+                                                    Header="Total Damage" />
+                                <DataGridTextColumn Width="80"
+                                                    Binding="{Binding DPS, StringFormat='{}{0:N0}'}"
+                                                    Header="DPS" />
+                                <DataGridTextColumn Width="70"
+                                                    Binding="{Binding HitCount, StringFormat='{}{0:N0}'}"
+                                                    Header="Hits" />
+                                <DataGridTextColumn Width="80"
+                                                    Binding="{Binding CritRate, StringFormat='{}{0:P1}'}"
+                                                    Header="Crit %" />
+                                <DataGridTextColumn Width="70"
+                                                    Binding="{Binding CritCount, StringFormat='{}{0:N0}'}"
+                                                    Header="Crits" />
+                                <DataGridTextColumn Width="80"
+                                                    Binding="{Binding LuckyRate, StringFormat='{}{0:P1}'}"
+                                                    Header="Lucky %" />
+                                <DataGridTextColumn Width="70"
+                                                    Binding="{Binding LuckyCount, StringFormat='{}{0:N0}'}"
+                                                    Header="Lucky" />
+                                <DataGridTextColumn Width="90"
+                                                    Binding="{Binding AvgPerHit, StringFormat='{}{0:N0}'}"
+                                                    Header="Avg/Hit" />
+                                <DataGridTextColumn Width="80"
+                                                    Binding="{Binding Percentage, StringFormat='{}{0:P1}'}"
+                                                    Header="%" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Grid>
+    </ScrollViewer>
+</UserControl>

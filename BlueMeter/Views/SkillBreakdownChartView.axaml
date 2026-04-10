@@ -1,0 +1,100 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:oxy="using:OxyPlot.Avalonia"
+             xmlns:vm="using:BlueMeter.ViewModels"
+             x:Class="BlueMeter.Views.SkillBreakdownChartView"
+             x:CompileBindings="False"
+             d:DataContext="{d:DesignInstance Type=vm:SkillBreakdownChartViewModel}"
+             d:DesignHeight="600"
+             d:DesignWidth="800"
+             Background="#1E1E1E"
+             mc:Ignorable="d">
+
+    <UserControl.Styles>
+        <Style Selector="ComboBox.dark">
+            <Setter Property="Background" Value="#3F3F46" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="#555555" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="8,6" />
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+
+        <Style Selector="TextBlock.darkLabel">
+            <Setter Property="Foreground" Value="#CCCCCC" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+        </Style>
+
+        <Style Selector="TextBlock.status">
+            <Setter Property="Foreground" Value="#888888" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!--  Player Selection Header  -->
+        <Border Grid.Row="0"
+                Padding="16,12"
+                Background="#252526"
+                BorderBrush="#3F3F46"
+                BorderThickness="0,0,0,1">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+
+                <!--  Player Selector  -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBlock Classes="darkLabel" Text="Player:" />
+                    <ComboBox Classes="dark"
+                              Width="200"
+                              ItemsSource="{Binding AvailablePlayers}"
+                              SelectedItem="{Binding SelectedPlayer}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding PlayerName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+
+                <!--  Chart Info  -->
+                <StackPanel Grid.Column="2"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                    <TextBlock Margin="0,0,16,0"
+                               FontSize="12"
+                               Foreground="#CCCCCC">
+                        <Run Text="Top" />
+                        <Run Text="{Binding TopSkillsLimit}" />
+                        <Run Text="Skills" />
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!--  OxyPlot Chart  -->
+        <oxy:PlotView Grid.Row="1"
+                      Background="#1E1E1E"
+                      Model="{Binding PlotModel}" />
+
+        <!--  Status Bar  -->
+        <Border Grid.Row="2"
+                Padding="16,8"
+                Background="#252526"
+                BorderBrush="#3F3F46"
+                BorderThickness="0,1,0,0">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Grid.Column="0"
+                           Classes="status"
+                           Text="{Binding StatusText}" />
+                <TextBlock Grid.Column="1"
+                           Classes="status"
+                           Text="Updates every 1 second" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

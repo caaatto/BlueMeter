@@ -1,0 +1,75 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="using:BlueMeter.Controls"
+                    xmlns:conv="using:BlueMeter.Converters">
+
+    <conv:PercentToWidthConverter x:Key="PercentToWidthConverter" />
+
+    <ControlTheme x:Key="{x:Type controls:DpsIndicatorControl}" TargetType="controls:DpsIndicatorControl">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid Name="Root" Background="Transparent">
+                    <!--  track  -->
+                    <Border Name="PART_Track"
+                            Height="{TemplateBinding Height}"
+                            Background="{TemplateBinding IndicatorBackground}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            Opacity="{TemplateBinding TrackOpacity}"
+                            IsVisible="False" />
+
+                    <!--  indicator, width calculated by converter  -->
+                    <Rectangle Name="PART_Indicator"
+                               Height="{TemplateBinding Height}"
+                               HorizontalAlignment="Left"
+                               Fill="{TemplateBinding IndicatorForeground}"
+                               Opacity="{TemplateBinding TrackOpacity}"
+                               RadiusX="{Binding CornerRadius.TopLeft, RelativeSource={RelativeSource TemplatedParent}}"
+                               RadiusY="{Binding CornerRadius.TopLeft, RelativeSource={RelativeSource TemplatedParent}}">
+                        <Rectangle.Width>
+                            <MultiBinding Converter="{StaticResource PercentToWidthConverter}">
+                                <Binding Path="AnimatedPercentage" RelativeSource="{RelativeSource TemplatedParent}" />
+                                <Binding Path="Maximum" RelativeSource="{RelativeSource TemplatedParent}" />
+                                <Binding ElementName="Root" Path="Bounds.Width" />
+                            </MultiBinding>
+                        </Rectangle.Width>
+                    </Rectangle>
+
+                    <ContentPresenter Name="PART_Overlay"
+                                      HorizontalAlignment="Stretch"
+                                      VerticalAlignment="Center"
+                                      Content="{TemplateBinding OverlayContent}"
+                                      ContentTemplate="{TemplateBinding OverlayTemplate}"
+                                      IsHitTestVisible="False" />
+
+                    <!--  Popup shown on hover  -->
+                    <Popup Name="PART_Popup"
+                           IsHitTestVisible="False"
+                           IsLightDismissEnabled="False"
+                           Placement="Pointer"
+                           PlacementTarget="{Binding ElementName=Root}">
+                        <Border MaxWidth="360"
+                                Padding="6"
+                                Background="#CC202020"
+                                BorderThickness="0"
+                                CornerRadius="4"
+                                BoxShadow="0 2 10 0 #4D000000"
+                                IsHitTestVisible="False">
+                            <ContentControl Content="{Binding PopupContent, RelativeSource={RelativeSource TemplatedParent}}"
+                                            ContentTemplate="{Binding PopupTemplate, RelativeSource={RelativeSource TemplatedParent}}"
+                                            IsHitTestVisible="False" />
+                        </Border>
+                    </Popup>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <!--  Hover: reveal the track and open the popup  -->
+        <Style Selector="^:pointerover /template/ Border#PART_Track">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Popup#PART_Popup">
+            <Setter Property="IsOpen" Value="True" />
+        </Style>
+    </ControlTheme>
+
+</ResourceDictionary>

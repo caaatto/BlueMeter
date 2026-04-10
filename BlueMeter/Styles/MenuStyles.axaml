@@ -1,0 +1,197 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--  ===== Palette =====  -->
+    <SolidColorBrush x:Key="MenuBg" Color="#F2FFFFFF" />
+    <SolidColorBrush x:Key="MenuFg" Color="#000000" />
+    <SolidColorBrush x:Key="MenuHover" Color="#12000000" />
+    <SolidColorBrush x:Key="MenuPressed" Color="#1E000000" />
+    <SolidColorBrush x:Key="MenuSep" Color="#14000000" />
+
+    <!--
+        ===== ContextMenu shell: rounded + soft shadow =====
+        The WPF version had an open/close Storyboard (ScaleY 0→1, Opacity 0→1, 200ms).
+        Avalonia's Popup renders instantly; the animation is dropped — if desired later,
+        add an Animation on the inner Border's OpacityProperty + a ScaleTransform.
+        Opt-in via Theme="{DynamicResource ModernContextMenu}" on a ContextMenu.
+    -->
+    <ControlTheme x:Key="ModernContextMenu" TargetType="ContextMenu">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Padding="12" Background="Transparent">
+                    <Border Padding="6"
+                            Background="{DynamicResource MenuBg}"
+                            BoxShadow="0 0 24 0 #38000000"
+                            ClipToBounds="True"
+                            CornerRadius="6">
+                        <ItemsPresenter Name="PART_ItemsPresenter"
+                                        ItemsPanel="{TemplateBinding ItemsPanel}"
+                                        KeyboardNavigation.TabNavigation="Continue" />
+                    </Border>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        ===== MenuItem: left check / right arrow / rounded hover / optional left icon =====
+        Custom template with three columns: [icon/check] [header] [arrow].
+        Check circle and arrow circle are solid dark pills (#222) with a glyph centered.
+        Hover/pressed drive the rounded "Bg" border's background via pseudo-class selectors.
+        Icon visibility is driven by ObjectConverters.IsNotNull on the Icon property.
+        Submenu arrow visibility is driven by the :not(:empty) selector (has items).
+    -->
+    <ControlTheme x:Key="ModernMenuItem" TargetType="MenuItem">
+        <Setter Property="Foreground" Value="{DynamicResource MenuFg}" />
+        <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC" />
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="Height" Value="26" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Grid Margin="2">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="26" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="22" />
+                    </Grid.ColumnDefinitions>
+
+                    <!--  Hover/pressed background (rounded pill)  -->
+                    <Border Name="Bg"
+                            Grid.ColumnSpan="3"
+                            Background="Transparent"
+                            CornerRadius="10" />
+
+                    <!--  Check circle + glyph (only visible when IsChecked)  -->
+                    <Border Name="CheckCircle"
+                            Grid.Column="0"
+                            Width="16"
+                            Height="16"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="#222222"
+                            CornerRadius="999"
+                            IsVisible="False" />
+                    <TextBlock Name="CheckGlyph"
+                               Grid.Column="0"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontSize="6"
+                               Foreground="#FFFFFF"
+                               Text="✔"
+                               IsVisible="False" />
+
+                    <!--  Left icon (hidden when null; driven by TemplateBinding + IsNotNull)  -->
+                    <ContentPresenter Name="LeftIcon"
+                                      Grid.Column="0"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Content="{TemplateBinding Icon}"
+                                      IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+                    <!--  Header  -->
+                    <ContentPresenter Name="PART_HeaderPresenter"
+                                      Grid.Column="1"
+                                      Margin="0,0,4,0"
+                                      VerticalAlignment="Center"
+                                      Content="{TemplateBinding Header}"
+                                      ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                      RecognizesAccessKey="True" />
+
+                    <!--  Arrow circle + glyph (only visible when HasItems)  -->
+                    <Border Name="ArrowCircle"
+                            Grid.Column="2"
+                            Width="16"
+                            Height="16"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            Background="#222222"
+                            CornerRadius="999"
+                            Opacity="0.95"
+                            IsVisible="False" />
+                    <TextBlock Name="ArrowGlyph"
+                               Grid.Column="2"
+                               Margin="0,0,0,5"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontFamily="Segoe UI"
+                               FontSize="16"
+                               Foreground="#FFFFFF"
+                               Text="›"
+                               IsVisible="False" />
+
+                    <!--  Submenu popup: rounded + soft shadow. Same shell as ModernContextMenu.  -->
+                    <Popup Name="PART_Popup"
+                           HorizontalOffset="4"
+                           IsLightDismissEnabled="True"
+                           IsOpen="{TemplateBinding IsSubMenuOpen, Mode=TwoWay}"
+                           Placement="Right"
+                           VerticalOffset="-6"
+                           WindowManagerAddShadowHint="False">
+                        <Border Padding="12" Background="Transparent">
+                            <Border Padding="6"
+                                    Background="{DynamicResource MenuBg}"
+                                    BoxShadow="0 0 24 0 #38000000"
+                                    ClipToBounds="True"
+                                    CornerRadius="12">
+                                <ItemsPresenter Name="PART_ItemsPresenter"
+                                                ItemsPanel="{TemplateBinding ItemsPanel}" />
+                            </Border>
+                        </Border>
+                    </Popup>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <!--  Hover (pointer or keyboard highlight)  -->
+        <Style Selector="^:selected /template/ Border#Bg">
+            <Setter Property="Background" Value="{DynamicResource MenuHover}" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#Bg">
+            <Setter Property="Background" Value="{DynamicResource MenuHover}" />
+        </Style>
+        <Style Selector="^:pressed /template/ Border#Bg">
+            <Setter Property="Background" Value="{DynamicResource MenuPressed}" />
+        </Style>
+
+        <!--  Checked state: show check circle + glyph, hide left icon  -->
+        <Style Selector="^:checked /template/ Border#CheckCircle">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:checked /template/ TextBlock#CheckGlyph">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:checked /template/ ContentPresenter#LeftIcon">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!--  Has items: show arrow circle + glyph  -->
+        <Style Selector="^:not(:empty) /template/ Border#ArrowCircle">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:not(:empty) /template/ TextBlock#ArrowGlyph">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!--  Disabled: dim the whole item  -->
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="0.5" />
+        </Style>
+    </ControlTheme>
+
+    <!--
+        Checkable variant alias. WPF set IsCheckable=True + StaysOpenOnClick=True here;
+        Avalonia MenuItem exposes neither property (check state is driven by setting
+        IsChecked directly or in a Click handler, and MenuItem always closes on click).
+        The ControlTheme is kept as a named alias so existing consumers that reference
+        `Theme="{DynamicResource CheckableMenuItem}"` keep resolving — they'll own the
+        toggle/stay-open behavior in C# at the callsite instead.
+    -->
+    <ControlTheme x:Key="CheckableMenuItem" TargetType="MenuItem" BasedOn="{StaticResource ModernMenuItem}" />
+
+</ResourceDictionary>

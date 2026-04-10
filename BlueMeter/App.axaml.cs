@@ -5,6 +5,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
 using BlueMeter.Logging;
+using BlueMeter.Styles.Classes;
 using BlueMeter.Views;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,6 +41,10 @@ public partial class App : Application
         _logger = Host.Services.GetRequiredService<ILogger<App>>();
 
         _logger.LogInformation(LogEvents.AppStarting, "Application starting");
+
+        // Populate the per-class profession icon resources. Must run before the main
+        // window is constructed so ClassesToIconConverter can resolve the lookups.
+        ClassIconResources.Register(this);
 
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {

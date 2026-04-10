@@ -12,6 +12,12 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceInclude Source="avares://BlueMeter/Styles/ThemeResources.axaml" />
                 <ResourceInclude Source="avares://BlueMeter/Styles/AntControls.axaml" />
+                <ResourceInclude Source="avares://BlueMeter/Styles/SortedDpsControlStyle.axaml" />
+                <ResourceInclude Source="avares://BlueMeter/Styles/DpsIndicatorControlStyle.axaml" />
+                <ResourceInclude Source="avares://BlueMeter/Styles/CardControlStyle.axaml" />
+                <ResourceInclude Source="avares://BlueMeter/Styles/CardHeaderStyle.axaml" />
+                <ResourceInclude Source="avares://BlueMeter/Styles/ButtonStyle.axaml" />
+                <ResourceInclude Source="avares://BlueMeter/Styles/MenuStyles.axaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>

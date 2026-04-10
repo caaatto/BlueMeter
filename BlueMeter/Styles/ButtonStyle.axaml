@@ -1,0 +1,49 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="using:System">
+
+    <!--  Tunable "CSS variables" for the IconButton theme  -->
+    <FontFamily x:Key="IconButtonFontFamily">Segoe UI Symbol</FontFamily>
+    <x:Double x:Key="IconButtonFontSize">14</x:Double>
+
+    <!--
+        Flat icon button: no border, no focus dotted rectangle, transparent background.
+        Hover adds a soft drop shadow (BoxShadow replaces the WPF DropShadowEffect) and
+        changes the cursor to a hand. Pressed scales to 96% around the center.
+        Applied via Theme="{DynamicResource IconButton}" on consuming Button elements.
+    -->
+    <ControlTheme x:Key="IconButton" TargetType="Button">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="{x:Null}" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="FontFamily" Value="{DynamicResource IconButtonFontFamily}" />
+        <Setter Property="FontSize" Value="{DynamicResource IconButtonFontSize}" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="PART_Border" Background="{TemplateBinding Background}">
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}"
+                                      TextBlock.FontFamily="{TemplateBinding FontFamily}"
+                                      TextBlock.FontSize="{TemplateBinding FontSize}"
+                                      TextBlock.TextAlignment="Center" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:pointerover">
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="^:pointerover /template/ Border#PART_Border">
+            <Setter Property="BoxShadow" Value="0 0 4 0 #47000000" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="RenderTransform" Value="scale(0.96)" />
+        </Style>
+    </ControlTheme>
+
+</ResourceDictionary>

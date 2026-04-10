@@ -1,0 +1,37 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:controls="using:BlueMeter.Controls">
+
+    <ControlTheme x:Key="{x:Type controls:CardControl}" TargetType="controls:CardControl">
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Classes="card">
+                    <StackPanel>
+                        <!--  Header area with left decoration strip  -->
+                        <Grid Name="PART_Header"
+                              IsVisible="{TemplateBinding Header, Converter={x:Static ObjectConverters.IsNotNull}}">
+                            <Border Width="3"
+                                    HorizontalAlignment="Left"
+                                    Background="#2297F4"
+                                    Margin="-20,-10,0,-10" />
+                            <ContentPresenter Content="{TemplateBinding Header}"
+                                              ContentTemplate="{TemplateBinding HeaderTemplate}" />
+                        </Grid>
+
+                        <!--  Header/content separator  -->
+                        <Separator Name="PART_HeaderSeparator"
+                                   Classes="horizontal"
+                                   Margin="0,0,0,20"
+                                   IsVisible="{TemplateBinding Header, Converter={x:Static ObjectConverters.IsNotNull}}" />
+
+                        <!--  Content section  -->
+                        <ContentPresenter Name="PART_Content"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+</ResourceDictionary>

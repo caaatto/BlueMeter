@@ -24,6 +24,7 @@
     </PackageVersion>
     <PackageVersion Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.10" />
     <PackageVersion Include="Microsoft.Windows.SDK.Contracts" Version="10.0.26100.7175" />
+    <PackageVersion Include="OxyPlot.Avalonia" Version="2.1.0-avalonia11" />
     <PackageVersion Include="OxyPlot.Core" Version="2.2.0" />
     <PackageVersion Include="OxyPlot.Wpf" Version="2.2.0" />
     <PackageVersion Include="Serilog.Extensions.Logging.File" Version="3.0.0" />

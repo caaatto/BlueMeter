@@ -1,0 +1,212 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="using:BlueMeter.Controls"
+        xmlns:loc="using:BlueMeter.Localization"
+        x:Class="BlueMeter.Views.BossTrackerView"
+        x:CompileBindings="False"
+        Title="{loc:Localize Window_BossTracker_Title}"
+        Width="800"
+        Height="450"
+        SystemDecorations="None"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        WindowStartupLocation="CenterOwner"
+        mc:Ignorable="d">
+
+    <Window.Resources>
+        <ImageBrush x:Key="GoldPigBrush"
+                    Source="avares://BlueMeter/Assets/Images/cb_temp/gold_pig_tmp.png"
+                    Stretch="UniformToFill" />
+    </Window.Resources>
+
+    <Window.Styles>
+        <Style Selector="Border.bossIcon">
+            <Setter Property="Width" Value="50" />
+            <Setter Property="Height" Value="50" />
+            <Setter Property="BorderBrush" Value="#FFF" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="Margin" Value="0,0,10,10" />
+            <Setter Property="Background" Value="{StaticResource GoldPigBrush}" />
+        </Style>
+        <Style Selector="Border.bossIcon.active">
+            <Setter Property="BorderBrush" Value="#FFD700" />
+            <Setter Property="BorderThickness" Value="4" />
+        </Style>
+
+        <Style Selector="Border.serverLine">
+            <Setter Property="Width" Value="50" />
+            <Setter Property="Height" Value="50" />
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="Margin" Value="0,0,10,10" />
+        </Style>
+        <Style Selector="Border.serverLine.dead">
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                    <GradientStop Color="#FFD6D6" Offset="0" />
+                    <GradientStop Color="#FF7A79" Offset="0.45" />
+                    <GradientStop Color="#FF3B40" Offset="1" />
+                </LinearGradientBrush>
+            </Setter>
+        </Style>
+        <Style Selector="Border.serverLine.alive">
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                    <GradientStop Color="#BBDFFF" Offset="0" />
+                    <GradientStop Color="#6FAEFF" Offset="0.5" />
+                    <GradientStop Color="#2C73FF" Offset="1" />
+                </LinearGradientBrush>
+            </Setter>
+        </Style>
+        <Style Selector="Border.serverLine.inFight">
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                    <GradientStop Color="#FFE6CC" Offset="0" />
+                    <GradientStop Color="#FFB86B" Offset="0.5" />
+                    <GradientStop Color="#FF8A3D" Offset="1" />
+                </LinearGradientBrush>
+            </Setter>
+        </Style>
+        <Style Selector="Border.serverLine.na">
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,100%">
+                    <GradientStop Color="#F2F3F6" Offset="0" />
+                    <GradientStop Color="#D8DDE4" Offset="0.5" />
+                    <GradientStop Color="#B3BBC7" Offset="1" />
+                </LinearGradientBrush>
+            </Setter>
+        </Style>
+
+        <Style Selector="TextBlock.serverText">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Margin" Value="0,8,0,0" />
+        </Style>
+        <Style Selector="TextBlock.serverText.dead">
+            <Setter Property="Foreground" Value="#FFF" />
+        </Style>
+        <Style Selector="TextBlock.serverText.alive">
+            <Setter Property="Foreground" Value="#FFFFFF" />
+        </Style>
+        <Style Selector="TextBlock.serverText.inFight">
+            <Setter Property="Foreground" Value="#FFFFFF" />
+        </Style>
+        <Style Selector="TextBlock.serverText.na">
+            <Setter Property="Foreground" Value="#4D5663" />
+        </Style>
+
+        <Style Selector="Border.bossStateBadge">
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Padding" Value="6,0" />
+            <Setter Property="Margin" Value="0,0,0,5" />
+        </Style>
+        <Style Selector="Border.bossStateBadge.dead">
+            <Setter Property="Background" Value="#FFE6E6" />
+        </Style>
+        <Style Selector="Border.bossStateBadge.alive">
+            <Setter Property="Background" Value="#E3F1FF" />
+        </Style>
+        <Style Selector="Border.bossStateBadge.inFight">
+            <Setter Property="Background" Value="#FFECD9" />
+        </Style>
+        <Style Selector="Border.bossStateBadge.na">
+            <Setter Property="Background" Value="#F1F3F7" />
+        </Style>
+
+        <Style Selector="TextBlock.bossStateText">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style Selector="TextBlock.bossStateText.dead">
+            <Setter Property="Foreground" Value="#FF3B40" />
+        </Style>
+        <Style Selector="TextBlock.bossStateText.alive">
+            <Setter Property="Foreground" Value="#1F5FCC" />
+        </Style>
+        <Style Selector="TextBlock.bossStateText.inFight">
+            <Setter Property="Foreground" Value="#E06A1B" />
+        </Style>
+        <Style Selector="TextBlock.bossStateText.na">
+            <Setter Property="Foreground" Value="#4D5663" />
+        </Style>
+    </Window.Styles>
+
+    <Border Background="#ECEBE9" Classes="shadowWindow">
+        <Grid RowDefinitions="Auto,*,Auto">
+
+            <controls:Header Grid.Row="0" Title="Boss Status Tracker" />
+
+            <Grid Grid.Row="1" ColumnDefinitions="130,5,*">
+
+                <Border Grid.Column="0" Padding="10,10,0,0">
+                    <WrapPanel HorizontalAlignment="Left">
+                        <Border Classes="bossIcon active" />
+                        <Border Classes="bossIcon" />
+                        <Border Classes="bossIcon" />
+                        <Border Classes="bossIcon" />
+                        <Border Classes="bossIcon" />
+                        <Border Classes="bossIcon" />
+                        <Border Classes="bossIcon" />
+                    </WrapPanel>
+                </Border>
+
+                <GridSplitter Grid.Column="1" />
+
+                <Border Grid.Column="2"
+                        Padding="10,10,0,0"
+                        Margin="10"
+                        CornerRadius="10"
+                        Background="#FFF">
+                    <WrapPanel>
+
+                        <Border Classes="serverLine dead">
+                            <Grid>
+                                <TextBlock Classes="serverText dead" Text="001" />
+                                <Border Classes="bossStateBadge dead">
+                                    <TextBlock Classes="bossStateText dead" Text="死亡" />
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <Border Classes="serverLine alive">
+                            <Grid>
+                                <TextBlock Classes="serverText alive" Text="002" />
+                                <Border Classes="bossStateBadge alive">
+                                    <TextBlock Classes="bossStateText alive" Text="存活" />
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <Border Classes="serverLine inFight">
+                            <Grid>
+                                <TextBlock Classes="serverText inFight" Text="003" />
+                                <Border Classes="bossStateBadge inFight">
+                                    <TextBlock Classes="bossStateText inFight" Text="89.8%" />
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                        <Border Classes="serverLine na">
+                            <Grid>
+                                <TextBlock Classes="serverText na" Text="004" />
+                                <Border Classes="bossStateBadge na">
+                                    <TextBlock Classes="bossStateText na" Text="N/A" />
+                                </Border>
+                            </Grid>
+                        </Border>
+
+                    </WrapPanel>
+                </Border>
+
+            </Grid>
+
+            <controls:Footer Grid.Row="2" Height="50" />
+
+        </Grid>
+    </Border>
+</Window>

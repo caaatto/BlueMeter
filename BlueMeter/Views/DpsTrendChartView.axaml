@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:oxy="using:OxyPlot.Avalonia"
+             xmlns:vm="using:BlueMeter.ViewModels"
+             x:Class="BlueMeter.Views.DpsTrendChartView"
+             x:CompileBindings="False"
+             d:DataContext="{d:DesignInstance Type=vm:DpsTrendChartViewModel}"
+             d:DesignHeight="450"
+             d:DesignWidth="800"
+             Background="#1E1E1E"
+             mc:Ignorable="d">
+
+    <Grid RowDefinitions="*,Auto">
+
+        <!--  OxyPlot Chart  -->
+        <oxy:PlotView Grid.Row="0"
+                      Model="{Binding PlotModel}"
+                      Background="#1E1E1E" />
+
+        <!--  Info/Status Bar  -->
+        <Border Grid.Row="1"
+                Padding="12,8"
+                Background="#252526"
+                BorderBrush="#3F3F46"
+                BorderThickness="0,1,0,0">
+            <TextBlock FontSize="11"
+                       Foreground="#888888"
+                       Text="Real-time DPS tracking &#8226; Updates every 500ms &#8226; Data collected every 200ms" />
+        </Border>
+    </Grid>
+</UserControl>

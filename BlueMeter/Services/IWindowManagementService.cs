@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using BlueMeter.ViewModels;
 
 namespace BlueMeter.Services;
@@ -52,4 +53,12 @@ public interface IWindowManagementService
 
     /// <summary>Show the encounter history window for the supplied view model.</summary>
     void ShowEncounterHistory(EncounterHistoryViewModel viewModel);
+
+    /// <summary>
+    /// Return the DPS statistics window instance. Used as the HWND host for the
+    /// Win32 global hotkey message pump and as the target for mouse-through /
+    /// topmost toggles triggered by hotkeys. Ensures the window exists (lazily
+    /// creating it via DI) but does not show it.
+    /// </summary>
+    Window GetDpsStatisticsWindow();
 }

@@ -70,6 +70,8 @@ public class WindowManagementService(IServiceProvider provider, ILogger<WindowMa
 
     public void ShowDpsStatistics() => ShowOrActivate(GetDpsStatisticsView());
 
+    public Window GetDpsStatisticsWindow() => GetDpsStatisticsView();
+
     public void ShowSettings()
     {
         // SettingsView has not been ported yet (deferred Phase 10 final batch).

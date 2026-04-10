@@ -1,0 +1,495 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ctrl="using:BlueMeter.Controls"
+        xmlns:loc="using:BlueMeter.Localization"
+        xmlns:vm="using:BlueMeter.ViewModels"
+        x:Class="BlueMeter.Views.SkillBreakdownView"
+        x:CompileBindings="False"
+        Title="{loc:Localize Window_SkillBreakdown_Title}"
+        Width="800"
+        Height="450"
+        MinWidth="800"
+        MinHeight="450"
+        Background="Transparent"
+        SystemDecorations="None"
+        TransparencyLevelHint="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        Topmost="{Binding AppConfig.TopmostEnabled, Mode=OneWay}"
+        d:DataContext="{d:DesignInstance Type=vm:SkillBreakdownViewModel}"
+        mc:Ignorable="d">
+
+    <Window.Styles>
+        <!--  Segmented ToggleButton selector (pill shape, checked = white bg + shadow).  -->
+        <Style Selector="ToggleButton.tabSelector">
+            <Setter Property="MinWidth" Value="80" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="Margin" Value="4,4,0,4" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="#777777" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Name="bd"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="16">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="ToggleButton.tabSelector:pointerover /template/ Border#bd">
+            <Setter Property="Background" Value="#F8F8F8" />
+        </Style>
+        <Style Selector="ToggleButton.tabSelector:checked /template/ Border#bd">
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#FFFFFF" />
+            <Setter Property="BoxShadow" Value="0 0 4 0 #4D000000" />
+        </Style>
+        <Style Selector="ToggleButton.tabSelector:checked">
+            <Setter Property="Foreground" Value="#000000" />
+        </Style>
+
+        <!--  TabControl without the built-in header strip (driven by the external selector).  -->
+        <Style Selector="TabControl.noHeader">
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Padding="{TemplateBinding Padding}" Background="{TemplateBinding Background}">
+                        <ContentPresenter Name="PART_SelectedContentHost"
+                                          Margin="8"
+                                          Content="{TemplateBinding SelectedContent}"
+                                          ContentTemplate="{TemplateBinding SelectedContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+    </Window.Styles>
+
+    <Window.Resources>
+        <!--  Summary tab template: three collapsible stat cards + side panel with damage/distribution info + per-skill list.  -->
+        <DataTemplate x:Key="SummaryTemplate">
+            <Grid ColumnDefinitions="Auto,5,*">
+
+                <Grid Grid.Column="0" RowDefinitions="Auto,Auto,Auto">
+                    <ctrl:CollapsibleCard Grid.Row="0"
+                                          Margin="10,10,10,0"
+                                          IsExpanded="True"
+                                          Title="{loc:Localize SkillBreakdown_Card_RealtimeChart}">
+                        <TextBlock HorizontalAlignment="Center"
+                                   Text="{loc:Localize SkillBreakdown_Placeholder_LineChart}" />
+                    </ctrl:CollapsibleCard>
+
+                    <ctrl:CollapsibleCard Grid.Row="1"
+                                          Margin="10,10,10,0"
+                                          IsExpanded="True"
+                                          Title="{loc:Localize SkillBreakdown_Card_ShareChart}">
+                        <TextBlock HorizontalAlignment="Center"
+                                   Text="{loc:Localize SkillBreakdown_Placeholder_PieChart}" />
+                    </ctrl:CollapsibleCard>
+
+                    <ctrl:CollapsibleCard Grid.Row="2"
+                                          Margin="10,10,10,0"
+                                          IsExpanded="True"
+                                          Title="{loc:Localize SkillBreakdown_Card_DamageDistribution}">
+                        <TextBlock HorizontalAlignment="Center"
+                                   Text="{loc:Localize SkillBreakdown_Placeholder_BarChart}" />
+                    </ctrl:CollapsibleCard>
+                </Grid>
+
+                <GridSplitter Grid.Column="1" />
+
+                <Grid Grid.Column="2" RowDefinitions="Auto,Auto">
+
+                    <Grid Grid.Row="0" ColumnDefinitions="*,*">
+
+                        <!--  Damage Info card  -->
+                        <Border Grid.Column="0"
+                                Margin="10"
+                                Padding="10"
+                                Background="#2297F4"
+                                BoxShadow="0 0 5 0 #80000000"
+                                CornerRadius="5">
+                            <Grid RowDefinitions="Auto,Auto">
+                                <TextBlock Grid.Row="0"
+                                           Margin="0,0,0,10"
+                                           HorizontalAlignment="Center"
+                                           Foreground="#FFFFFF"
+                                           Text="{loc:Localize SkillBreakdown_Section_DamageInfo}" />
+
+                                <Grid Grid.Row="1" ColumnDefinitions="*,Auto,*">
+
+                                    <Grid Grid.Column="0" RowDefinitions="Auto,Auto,Auto">
+                                        <Grid Grid.Row="0"
+                                              Margin="0,0,0,10"
+                                              ColumnDefinitions="Auto,*">
+                                            <TextBlock Grid.Column="0"
+                                                       HorizontalAlignment="Left"
+                                                       Foreground="#FFFFFF"
+                                                       Text="Total Damage:" />
+                                            <TextBlock Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="#FFFFFF"
+                                                       Text="{Binding TotalDamage}" />
+                                        </Grid>
+                                        <Grid Grid.Row="1"
+                                              Margin="0,0,0,10"
+                                              ColumnDefinitions="Auto,*">
+                                            <TextBlock Grid.Column="0"
+                                                       HorizontalAlignment="Left"
+                                                       Foreground="#FFFFFF"
+                                                       Text="DPS:" />
+                                            <TextBlock Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="#FFFFFF"
+                                                       Text="{Binding Dps}" />
+                                        </Grid>
+                                        <Grid Grid.Row="2" ColumnDefinitions="Auto,*">
+                                            <TextBlock Grid.Column="0"
+                                                       HorizontalAlignment="Left"
+                                                       Foreground="#FFFFFF"
+                                                       Text="Hit Count:" />
+                                            <TextBlock Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="#FFFFFF"
+                                                       Text="{Binding TotalHits}" />
+                                        </Grid>
+                                    </Grid>
+
+                                    <Border Grid.Column="1"
+                                            Width="1"
+                                            Margin="10,0,10,0"
+                                            Background="#FFFFFF" />
+
+                                    <Grid Grid.Column="2" RowDefinitions="Auto,Auto,Auto">
+                                        <Grid Grid.Row="0"
+                                              Margin="0,0,0,10"
+                                              ColumnDefinitions="Auto,*">
+                                            <TextBlock Grid.Column="0"
+                                                       HorizontalAlignment="Left"
+                                                       Foreground="#FFFFFF"
+                                                       Text="Crit Rate:" />
+                                            <TextBlock Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="#FFFFFF"
+                                                       Text="{Binding CritRate}" />
+                                        </Grid>
+                                        <Grid Grid.Row="1"
+                                              Margin="0,0,0,10"
+                                              ColumnDefinitions="Auto,*">
+                                            <TextBlock Grid.Column="0"
+                                                       HorizontalAlignment="Left"
+                                                       Foreground="#FFFFFF"
+                                                       Text="Crit Count:" />
+                                            <TextBlock Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="#FFFFFF"
+                                                       Text="{Binding CritCount}" />
+                                        </Grid>
+                                        <Grid Grid.Row="2" ColumnDefinitions="Auto,*">
+                                            <TextBlock Grid.Column="0"
+                                                       HorizontalAlignment="Left"
+                                                       Foreground="#FFFFFF"
+                                                       Text="Duration:" />
+                                            <TextBlock Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="#FFFFFF"
+                                                       Text="{Binding FormattedDuration}" />
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!--  Damage Distribution card  -->
+                        <Border Grid.Column="1"
+                                Margin="10"
+                                Padding="10"
+                                Background="#2297F4"
+                                BoxShadow="0 0 5 0 #80000000"
+                                CornerRadius="5">
+                            <Grid RowDefinitions="Auto,Auto">
+                                <TextBlock Grid.Row="0"
+                                           Margin="0,0,0,10"
+                                           HorizontalAlignment="Center"
+                                           Foreground="#FFFFFF"
+                                           Text="{loc:Localize SkillBreakdown_Section_DamageDistribution}" />
+
+                                <Grid Grid.Row="1" ColumnDefinitions="*,Auto,*">
+
+                                    <Grid Grid.Column="0" RowDefinitions="Auto,Auto,Auto">
+                                        <Grid Grid.Row="0"
+                                              Margin="0,0,0,10"
+                                              ColumnDefinitions="Auto,*">
+                                            <TextBlock Grid.Column="0"
+                                                       HorizontalAlignment="Left"
+                                                       Foreground="#FFFFFF"
+                                                       Text="Normal Damage:" />
+                                            <TextBlock Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="#FFFFFF"
+                                                       Text="{Binding TotalNormalDamage}" />
+                                        </Grid>
+                                        <Grid Grid.Row="1"
+                                              Margin="0,0,0,10"
+                                              ColumnDefinitions="Auto,*">
+                                            <TextBlock Grid.Column="0"
+                                                       HorizontalAlignment="Left"
+                                                       Foreground="#FFFFFF"
+                                                       Text="Crit Damage:" />
+                                            <TextBlock Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="#FFFFFF"
+                                                       Text="{Binding TotalCritDamage}" />
+                                        </Grid>
+                                        <Grid Grid.Row="2" ColumnDefinitions="Auto,*">
+                                            <TextBlock Grid.Column="0"
+                                                       HorizontalAlignment="Left"
+                                                       Foreground="#FFFFFF"
+                                                       Text="Normal Hits:" />
+                                            <TextBlock Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="#FFFFFF"
+                                                       Text="{Binding TotalHits}" />
+                                        </Grid>
+                                    </Grid>
+
+                                    <Border Grid.Column="1"
+                                            Width="1"
+                                            Margin="10,0,10,0"
+                                            Background="#FFFFFF" />
+
+                                    <Grid Grid.Column="2" RowDefinitions="Auto,Auto,Auto">
+                                        <Grid Grid.Row="0"
+                                              Margin="0,0,0,10"
+                                              ColumnDefinitions="Auto,*">
+                                            <TextBlock Grid.Column="0"
+                                                       HorizontalAlignment="Left"
+                                                       Foreground="#FFFFFF"
+                                                       Text="Max Damage:" />
+                                            <TextBlock Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="#FFFFFF"
+                                                       Text="{Binding PlayerData.SkillList[0].MaxDamage, FallbackValue='0'}" />
+                                        </Grid>
+                                        <Grid Grid.Row="1"
+                                              Margin="0,0,0,10"
+                                              ColumnDefinitions="Auto,*">
+                                            <TextBlock Grid.Column="0"
+                                                       HorizontalAlignment="Left"
+                                                       Foreground="#FFFFFF"
+                                                       Text="Min Damage:" />
+                                            <TextBlock Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="#FFFFFF"
+                                                       Text="{Binding PlayerData.SkillList[0].MinDamage, FallbackValue='0'}" />
+                                        </Grid>
+                                        <Grid Grid.Row="2" ColumnDefinitions="Auto,*">
+                                            <TextBlock Grid.Column="0"
+                                                       HorizontalAlignment="Left"
+                                                       Foreground="#FFFFFF"
+                                                       Text="Highest Crit:" />
+                                            <TextBlock Grid.Column="1"
+                                                       HorizontalAlignment="Right"
+                                                       Foreground="#FFFFFF"
+                                                       Text="{Binding PlayerData.SkillList[0].HighestCrit, FallbackValue='0'}" />
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <ScrollViewer Grid.Row="1"
+                                  MaxHeight="300"
+                                  VerticalScrollBarVisibility="Auto">
+                        <ItemsControl Margin="10" ItemsSource="{Binding PlayerData.SkillList}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="0,8,0,8"
+                                            Padding="12"
+                                            Background="#CC0F1720"
+                                            CornerRadius="6">
+                                        <StackPanel>
+                                            <TextBlock FontSize="16"
+                                                       FontWeight="Bold"
+                                                       Foreground="#FFD430"
+                                                       Text="{Binding SkillName}" />
+                                            <TextBlock Margin="0,6,0,0" Foreground="White">
+                                                <Run Text="Total Damage: " />
+                                                <Run FontWeight="Bold" Text="{Binding TotalDamage}" />
+                                            </TextBlock>
+                                            <TextBlock Margin="0,4,0,0" Foreground="White">
+                                                <Run Text="Hits: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding HitCount}" />
+                                                <Run Text="    Crits: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding CritCount}" />
+                                                <Run Text="    Avg: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding AvgDamage}" />
+                                            </TextBlock>
+                                            <TextBlock Margin="0,4,0,0" Foreground="White">
+                                                <Run Text="Min Damage: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding MinDamage}" />
+                                                <Run Text="    Max Damage: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding MaxDamage}" />
+                                            </TextBlock>
+                                            <TextBlock Margin="0,4,0,0" Foreground="White">
+                                                <Run Text="Highest Crit: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding HighestCrit}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </Grid>
+        </DataTemplate>
+    </Window.Resources>
+
+    <Border Classes="shadowWindow" Background="#ECEBE9">
+        <Grid RowDefinitions="Auto,Auto,*,Auto">
+
+            <ctrl:Header Grid.Row="0"
+                         Title="{loc:Localize SkillBreakdown_Header_Title}" />
+
+            <Grid Grid.Row="1"
+                  Height="60"
+                  Background="#FFFFFF"
+                  ColumnDefinitions="Auto,Auto,Auto,Auto,Auto,*,Auto">
+
+                <TextBlock Grid.Column="0"
+                           Margin="30,0,0,0"
+                           HorizontalAlignment="Left"
+                           VerticalAlignment="Center"
+                           FontSize="16"
+                           FontWeight="Bold"
+                           Text="{Binding PlayerData.Player.Name, FallbackValue='No Player Selected'}" />
+                <TextBlock Grid.Column="1"
+                           Margin="20,0,0,0"
+                           VerticalAlignment="Center"
+                           Text="{Binding PlayerData.Player.Uid, StringFormat='UID: {0}', FallbackValue='UID: --'}" />
+                <TextBlock Grid.Column="2"
+                           Margin="20,0,0,0"
+                           VerticalAlignment="Center"
+                           Text="{Binding PlayerData.Player.PowerLevel, StringFormat='Power: {0}', FallbackValue='Power: --'}" />
+                <TextBlock Grid.Column="3"
+                           Margin="20,0,0,0"
+                           VerticalAlignment="Center"
+                           Text="{Binding PlayerData.Player.Class, StringFormat='Class: {0}', FallbackValue='Class: --'}" />
+                <TextBlock Grid.Column="4"
+                           Margin="20,0,0,0"
+                           VerticalAlignment="Center"
+                           Text="{Binding PlayerData.Player.Spec, StringFormat='Spec: {0}', FallbackValue='Spec: --'}" />
+
+                <!--  Segmented tab selector (checked button drives MainTabControl.SelectedIndex).  -->
+                <Border Grid.Column="6"
+                        Margin="10"
+                        Padding="0,0,4,0"
+                        Background="#EEEEEE"
+                        CornerRadius="20">
+                    <StackPanel Name="TabControlIndexChanger"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                        <ToggleButton Classes="tabSelector"
+                                      Click="TabSelector_Click"
+                                      Content="{loc:Localize SkillBreakdown_Tab_Output}"
+                                      Tag="0" />
+                        <ToggleButton Classes="tabSelector"
+                                      Click="TabSelector_Click"
+                                      Content="{loc:Localize SkillBreakdown_Tab_Healing}"
+                                      Tag="1" />
+                        <ToggleButton Classes="tabSelector"
+                                      Click="TabSelector_Click"
+                                      Content="{loc:Localize SkillBreakdown_Tab_Tanking}"
+                                      Tag="2" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <TabControl Grid.Row="2"
+                        Name="MainTabControl"
+                        Classes="noHeader"
+                        SelectedIndex="0">
+                <TabItem Name="TabItem_Summary"
+                         Header="{loc:Localize SkillBreakdown_Tab_Summary}">
+                    <ScrollViewer>
+                        <ContentPresenter ContentTemplate="{StaticResource SummaryTemplate}" />
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Name="TabItem_Details"
+                         Header="{loc:Localize SkillBreakdown_Tab_Details}">
+                    <ScrollViewer Background="#ECEBE9" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl Margin="20" ItemsSource="{Binding PlayerData.SkillList}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Margin="0,8,0,8"
+                                            Padding="12"
+                                            Background="#CC0F1720"
+                                            CornerRadius="6">
+                                        <StackPanel>
+                                            <TextBlock FontSize="16"
+                                                       FontWeight="Bold"
+                                                       Foreground="#FFD430"
+                                                       Text="{Binding SkillName}" />
+                                            <TextBlock Margin="0,6,0,0" Foreground="White">
+                                                <Run Text="Total Damage: " />
+                                                <Run FontWeight="Bold" Text="{Binding TotalDamage}" />
+                                            </TextBlock>
+                                            <TextBlock Margin="0,4,0,0" Foreground="White">
+                                                <Run Text="Hits: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding HitCount}" />
+                                                <Run Text="    Crits: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding CritCount}" />
+                                                <Run Text="    Avg: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding AvgDamage}" />
+                                            </TextBlock>
+                                            <TextBlock Margin="0,4,0,0" Foreground="White">
+                                                <Run Text="Min Damage: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding MinDamage}" />
+                                                <Run Text="    Max Damage: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding MaxDamage}" />
+                                            </TextBlock>
+                                            <TextBlock Margin="0,4,0,0" Foreground="White">
+                                                <Run Text="Highest Crit: " />
+                                                <Run FontWeight="Bold" Foreground="#FFD430" Text="{Binding HighestCrit}" />
+                                            </TextBlock>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Name="TabItem_Graph"
+                         Header="{loc:Localize SkillBreakdown_Tab_Graph}">
+                    <Grid Background="DarkOliveGreen">
+                        <TextBlock Margin="8"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   FontSize="100"
+                                   Foreground="White"
+                                   Text="{loc:Localize SkillBreakdown_Placeholder_Graph}" />
+                    </Grid>
+                </TabItem>
+            </TabControl>
+
+            <ctrl:Footer Grid.Row="3"
+                         Height="50"
+                         CancelClick="Footer_CancelClick"
+                         CancelCommand="{Binding CancelCommand}"
+                         ConfirmClick="Footer_ConfirmClick"
+                         ConfirmCommand="{Binding ConfirmCommand}" />
+        </Grid>
+    </Border>
+</Window>

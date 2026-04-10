@@ -1,0 +1,248 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:vm="using:BlueMeter.ViewModels"
+        xmlns:views="using:BlueMeter.Views"
+        x:Class="BlueMeter.Views.ChartsWindow"
+        x:CompileBindings="False"
+        Title="Advanced Combat Log - Charts (BETA)"
+        Width="1200"
+        Height="800"
+        MinWidth="800"
+        MinHeight="600"
+        d:DataContext="{d:DesignInstance Type=vm:ChartsWindowViewModel}"
+        Background="#1E1E1E"
+        Foreground="White"
+        WindowStartupLocation="CenterScreen"
+        mc:Ignorable="d">
+
+    <Window.Styles>
+
+        <!--  TabControl dark styling  -->
+        <Style Selector="TabControl.dark">
+            <Setter Property="Background" Value="#252526" />
+            <Setter Property="BorderBrush" Value="#3F3F46" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+
+        <!--  TabItem dark styling  -->
+        <Style Selector="TabItem.dark">
+            <Setter Property="Background" Value="#2D2D30" />
+            <Setter Property="Foreground" Value="#CCCCCC" />
+            <Setter Property="BorderBrush" Value="#3F3F46" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Padding" Value="16,8" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Name="bd"
+                            Padding="{TemplateBinding Padding}"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="1,1,1,0"
+                            CornerRadius="4,4,0,0">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Header}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="TabItem.dark:pointerover /template/ Border#bd">
+            <Setter Property="Background" Value="#3E3E42" />
+        </Style>
+        <Style Selector="TabItem.dark:selected /template/ Border#bd">
+            <Setter Property="Background" Value="#007ACC" />
+        </Style>
+        <Style Selector="TabItem.dark:selected">
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+
+        <!--  Button dark styling  -->
+        <Style Selector="Button.dark">
+            <Setter Property="Background" Value="#3F3F46" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="#555555" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Name="border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="3">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Padding="{TemplateBinding Padding}"
+                                          Content="{TemplateBinding Content}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button.dark:pointerover /template/ Border#border">
+            <Setter Property="Background" Value="#007ACC" />
+        </Style>
+        <Style Selector="Button.dark:pressed /template/ Border#border">
+            <Setter Property="Background" Value="#005A9E" />
+        </Style>
+
+        <!--  ComboBox dark styling  -->
+        <Style Selector="ComboBox.dark">
+            <Setter Property="Background" Value="#3F3F46" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="BorderBrush" Value="#555555" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="8,6" />
+            <Setter Property="FontSize" Value="13" />
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+
+        <!--  Header with Title and Controls  -->
+        <Border Grid.Row="0"
+                Padding="20,12"
+                Background="#252526"
+                BorderBrush="#3F3F46"
+                BorderThickness="0,0,0,1">
+            <Grid ColumnDefinitions="Auto,*,Auto,Auto">
+
+                <!--  Title  -->
+                <StackPanel Grid.Column="0" Orientation="Horizontal">
+                    <TextBlock FontSize="18"
+                               FontWeight="Bold"
+                               Foreground="White"
+                               Text="Advanced Combat Log" />
+                    <TextBlock Margin="12,0,0,0"
+                               VerticalAlignment="Center"
+                               FontSize="12"
+                               Foreground="#888888"
+                               Text="Real-time DPS/HPS Analytics" />
+                </StackPanel>
+
+                <!--  Combat Selector  -->
+                <StackPanel Grid.Column="2"
+                            Margin="16,0"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                    <TextBlock Margin="0,0,8,0"
+                               VerticalAlignment="Center"
+                               FontSize="13"
+                               Foreground="#CCCCCC"
+                               Text="Combat:" />
+                    <ComboBox Classes="dark"
+                              Width="280"
+                              ItemsSource="{Binding AvailableCombats}"
+                              SelectedItem="{Binding SelectedCombat}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding DisplayName}" />
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+
+                <!--  Controls  -->
+                <StackPanel Grid.Column="3" Orientation="Horizontal">
+                    <Button Classes="dark"
+                            Command="{Binding RefreshCommand}"
+                            Content="Refresh" />
+                    <Button Classes="dark"
+                            Margin="8,0,0,0"
+                            Command="{Binding ToggleAutoRefreshCommand}">
+                        <TextBlock>
+                            <Run Text="Auto:" />
+                            <Run Text="{Binding AutoRefresh, Mode=OneWay}" />
+                        </TextBlock>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!--  Main Content: Tab Control  -->
+        <TabControl Grid.Row="1"
+                    Classes="dark"
+                    Margin="10"
+                    SelectedIndex="{Binding SelectedTabIndex}">
+
+            <!--  DPS Trend Tab  -->
+            <TabItem Classes="dark" Header="DPS Trend">
+                <ContentControl Name="DpsTrendChartContainer" />
+            </TabItem>
+
+            <!--  Detailed Breakdown Tab (FULL STATS with Lucky Hits!)  -->
+            <TabItem Classes="dark" Header="Detailed Breakdown">
+                <ContentControl Name="EnhancedSkillBreakdownContainer" />
+            </TabItem>
+
+            <!--  Player Comparison Tab  -->
+            <TabItem Classes="dark" Header="Player Comparison">
+                <Grid Background="#1E1E1E">
+                    <TextBlock HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontSize="16"
+                               Foreground="#888888"
+                               Text="Player Comparison Chart - Coming Soon in Phase 6" />
+                </Grid>
+            </TabItem>
+
+            <!--  Test Tab (Debug)  -->
+            <TabItem Classes="dark" Header="Test">
+                <Grid Background="#1E1E1E" Margin="20">
+                    <StackPanel>
+                        <TextBlock FontSize="14"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   Text="Chart Data Service Status:" />
+                        <TextBlock Margin="0,8,0,0"
+                                   FontSize="12"
+                                   Foreground="#CCCCCC">
+                            <Run Text="Service Running:" />
+                            <Run FontWeight="Bold" Text="OK" />
+                        </TextBlock>
+                        <TextBlock Margin="0,4,0,0"
+                                   FontSize="12"
+                                   Foreground="#CCCCCC">
+                            <Run Text="Sampling Interval:" />
+                            <Run FontWeight="Bold" Text="200ms (5 samples/sec)" />
+                        </TextBlock>
+                        <TextBlock Margin="0,4,0,0"
+                                   FontSize="12"
+                                   Foreground="#CCCCCC">
+                            <Run Text="Max History Points:" />
+                            <Run FontWeight="Bold" Text="500 per player" />
+                        </TextBlock>
+                        <TextBlock Margin="0,16,0,0"
+                                   FontSize="12"
+                                   Foreground="#888888"
+                                   Text="Phase 2 Complete: Data layer ready" />
+                        <TextBlock Margin="0,4,0,0"
+                                   FontSize="12"
+                                   Foreground="#888888"
+                                   Text="Phase 3: UI created" />
+                        <TextBlock Margin="0,4,0,0"
+                                   FontSize="12"
+                                   Foreground="#888888"
+                                   Text="Next: Phase 4 - DPS Trend Chart implementation" />
+                    </StackPanel>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <!--  Footer / Status Bar  -->
+        <Border Grid.Row="2"
+                Padding="12,8"
+                Background="#252526"
+                BorderBrush="#3F3F46"
+                BorderThickness="0,1,0,0">
+            <Grid>
+                <TextBlock FontSize="11"
+                           Foreground="#888888"
+                           Text="Real-time combat analytics powered by OxyPlot" />
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

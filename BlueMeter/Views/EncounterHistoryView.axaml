@@ -1,0 +1,225 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ctrl="using:BlueMeter.Controls"
+        xmlns:converters="using:BlueMeter.Converters"
+        xmlns:loc="using:BlueMeter.Localization"
+        xmlns:vm="using:BlueMeter.ViewModels"
+        x:Class="BlueMeter.Views.EncounterHistoryView"
+        x:CompileBindings="False"
+        Title="Encounter History"
+        Width="1050"
+        Height="600"
+        MinWidth="850"
+        MinHeight="400"
+        Background="Transparent"
+        SystemDecorations="None"
+        TransparencyLevelHint="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        d:DataContext="{d:DesignInstance Type=vm:EncounterHistoryViewModel}"
+        mc:Ignorable="d">
+
+    <Window.Resources>
+        <converters:BoolToActiveStatusConverter x:Key="BoolToActiveStatusConverter" />
+        <converters:NullToBoolConverter x:Key="NullToBoolConverter" />
+    </Window.Resources>
+
+    <Window.Styles>
+        <!--  Inline toolbar action buttons (teal / danger).  -->
+        <Style Selector="Button.teal">
+            <Setter Property="Background" Value="#17A2B8" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Padding" Value="15,5" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Name="PART_Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button.teal:pointerover /template/ Border#PART_Border">
+            <Setter Property="Background" Value="#138496" />
+        </Style>
+        <Style Selector="Button.teal:pressed /template/ Border#PART_Border">
+            <Setter Property="Background" Value="#0F7284" />
+        </Style>
+
+        <Style Selector="Button.danger">
+            <Setter Property="Background" Value="#DC3545" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Padding" Value="15,5" />
+            <Setter Property="Template">
+                <ControlTemplate>
+                    <Border Name="PART_Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button.danger:pointerover /template/ Border#PART_Border">
+            <Setter Property="Background" Value="#C82333" />
+        </Style>
+        <Style Selector="Button.danger:pressed /template/ Border#PART_Border">
+            <Setter Property="Background" Value="#BD2130" />
+        </Style>
+
+        <!--  DataGrid header/cell/row styling  -->
+        <Style Selector="DataGridColumnHeader">
+            <Setter Property="Background" Value="#F5F5F5" />
+            <Setter Property="Foreground" Value="#333333" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Padding" Value="10,8" />
+            <Setter Property="BorderBrush" Value="#E5E5E5" />
+            <Setter Property="BorderThickness" Value="0,0,1,1" />
+        </Style>
+        <Style Selector="DataGridCell">
+            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+        <Style Selector="DataGridCell:selected">
+            <Setter Property="Background" Value="#E3F2FD" />
+            <Setter Property="Foreground" Value="#000000" />
+        </Style>
+        <Style Selector="DataGridRow:pointerover /template/ Rectangle#BackgroundRectangle">
+            <Setter Property="Fill" Value="#F0F0F0" />
+        </Style>
+    </Window.Styles>
+
+    <Border Classes="shadowWindow" Background="#ECEBE9">
+        <Grid RowDefinitions="Auto,*,Auto">
+
+            <!--  Header  -->
+            <ctrl:Header Grid.Row="0" Title="Encounter History" />
+
+            <!--  Content  -->
+            <Border Grid.Row="1"
+                    Margin="10"
+                    Background="White"
+                    BorderBrush="#E5E5E5"
+                    BorderThickness="2"
+                    CornerRadius="5">
+                <Grid RowDefinitions="Auto,*,Auto">
+
+                    <!--  Toolbar  -->
+                    <Border Grid.Row="0" Padding="10" Background="#2297F4">
+                        <Grid ColumnDefinitions="Auto,*,Auto,10,Auto,10,Auto">
+
+                            <TextBlock Grid.Column="0"
+                                       VerticalAlignment="Center"
+                                       FontSize="14"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       Text="Recent Encounters" />
+
+                            <Button Grid.Column="2"
+                                    Classes="teal"
+                                    Command="{Binding ManageAdvancedLogsCommand}"
+                                    Content="Manage Advanced Logs" />
+
+                            <Button Grid.Column="4"
+                                    Classes="danger"
+                                    Command="{Binding DeleteAllHistoryCommand}"
+                                    Content="Delete All" />
+
+                            <Button Grid.Column="6"
+                                    Padding="15,5"
+                                    Command="{Binding RefreshCommand}"
+                                    Content="Refresh"
+                                    Theme="{DynamicResource AntButton}" />
+                        </Grid>
+                    </Border>
+
+                    <!--  Encounter List  -->
+                    <DataGrid Grid.Row="1"
+                              Name="EncounterDataGrid"
+                              AutoGenerateColumns="False"
+                              CanUserReorderColumns="False"
+                              CanUserResizeColumns="True"
+                              CanUserSortColumns="False"
+                              GridLinesVisibility="Horizontal"
+                              HeadersVisibility="Column"
+                              HorizontalGridLinesBrush="#E5E5E5"
+                              IsReadOnly="True"
+                              ItemsSource="{Binding Encounters}"
+                              RowHeight="35"
+                              SelectedItem="{Binding SelectedEncounter}"
+                              SelectionMode="Single">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Width="140" Header="Start Time" Binding="{Binding FormattedStartTime}" />
+                            <DataGridTextColumn Width="130" Header="Target/Boss" Binding="{Binding BossName}" />
+                            <DataGridTextColumn Width="70" Header="Duration" Binding="{Binding FormattedDuration}" />
+                            <DataGridTextColumn Width="65" Header="Players" Binding="{Binding PlayerCount}" />
+                            <DataGridTextColumn Width="110" Header="Total Damage" Binding="{Binding FormattedTotalDamage}" />
+                            <DataGridTextColumn Width="110" Header="Total Healing" Binding="{Binding FormattedTotalHealing}" />
+                            <DataGridTextColumn Width="110" Header="Advanced Log" Binding="{Binding BsonLogStatus}" />
+                            <DataGridTextColumn Width="75" Header="Status" Binding="{Binding IsActive, Converter={StaticResource BoolToActiveStatusConverter}}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+
+                    <!--  Status Bar  -->
+                    <Border Grid.Row="2"
+                            Padding="10,5"
+                            Background="#F5F5F5"
+                            BorderBrush="#E5E5E5"
+                            BorderThickness="0,1,0,0">
+                        <Grid>
+                            <TextBlock VerticalAlignment="Center"
+                                       Foreground="#666666"
+                                       Text="{Binding StatusMessage}" />
+                            <ProgressBar Width="200"
+                                         Height="20"
+                                         HorizontalAlignment="Right"
+                                         IsIndeterminate="True"
+                                         IsVisible="{Binding IsLoading}" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!--  Footer  -->
+            <Border Grid.Row="2"
+                    Height="50"
+                    Background="#F5F5F5"
+                    BorderBrush="#E5E5E5"
+                    BorderThickness="0,1,0,0">
+                <Grid Margin="10" ColumnDefinitions="*,Auto,10,Auto">
+                    <Button Grid.Column="1"
+                            Padding="20,8"
+                            Command="{Binding LoadSelectedEncounterCommand}"
+                            Content="Load Selected"
+                            IsEnabled="{Binding SelectedEncounter, Converter={StaticResource NullToBoolConverter}}"
+                            Theme="{DynamicResource AntPrimaryButton}" />
+                    <Button Grid.Column="3"
+                            Padding="20,8"
+                            Command="{Binding CloseCommand}"
+                            Content="Close"
+                            Theme="{DynamicResource AntButton}" />
+                </Grid>
+            </Border>
+        </Grid>
+    </Border>
+</Window>

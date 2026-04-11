@@ -217,9 +217,10 @@ public partial class App : Application
                 // ----- Built-in plugins (Phase 11) -----
                 // PluginManager constructor injects IEnumerable<IPlugin>, so each
                 // plugin only needs to be registered against IPlugin to appear in
-                // the main view's plugin list. DpsPlugin / ModuleSolverPlugin land
-                // in subsequent batches.
+                // the main view's plugin list. DpsPlugin lands in a subsequent
+                // batch.
                 services.AddSingleton<IPlugin, WorldBossPlugin>();
+                services.AddSingleton<IPlugin, ModuleSolverPlugin>();
 
                 // ----- Localization -----
                 services.AddSingleton(new LocalizationConfiguration

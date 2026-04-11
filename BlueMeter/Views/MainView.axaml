@@ -1,0 +1,637 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ctrl="using:BlueMeter.Controls"
+        xmlns:converters="using:BlueMeter.Converters"
+        xmlns:checklist="using:BlueMeter.Views.Checklist"
+        xmlns:loc="using:BlueMeter.Localization"
+        xmlns:vm="using:BlueMeter.ViewModels"
+        x:Class="BlueMeter.Views.MainView"
+        x:CompileBindings="False"
+        Title="{Binding AppConfig, Converter={StaticResource HolidayTitleConverter}}"
+        Width="1000"
+        Height="650"
+        MinWidth="830"
+        MinHeight="520"
+        d:DesignHeight="650"
+        d:DesignWidth="1000"
+        mc:Ignorable="d"
+        Background="Transparent"
+        CanResize="True"
+        ExtendClientAreaToDecorationsHint="True"
+        SystemDecorations="None"
+        TransparencyLevelHint="Transparent"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.Resources>
+        <converters:ThemeColorConverter x:Key="ThemeColorConverter" />
+        <converters:BackgroundImageConverter x:Key="BackgroundImageConverter" />
+        <converters:ThemeColorOverlayConverter x:Key="ThemeColorOverlayConverter" />
+        <converters:ThemeBackgroundConverter x:Key="ThemeBackgroundConverter" />
+        <converters:ThemeAccentConverter x:Key="ThemeAccentConverter" />
+        <converters:ThemeForegroundConverter x:Key="ThemeForegroundConverter" />
+        <converters:ThemeToAppNameConverter x:Key="ThemeToAppNameConverter" />
+        <converters:HolidayTitleConverter x:Key="HolidayTitleConverter" />
+        <converters:BackgroundOnlyModeOpacityConverter x:Key="BackgroundOnlyModeOpacityConverter" />
+        <converters:IsEnabledToOpacityConverter x:Key="IsEnabledToOpacityConverter" />
+        <converters:MenuCollapseConverter x:Key="MenuCollapseConverter" />
+        <converters:ComplementaryColorGradientConverter x:Key="ComplementaryColorGradientConverter" />
+    </Window.Resources>
+
+    <Window.Styles>
+        <!--
+            MainView class selectors. These replace the ~30 keyed Style resources
+            from the WPF MainView.xaml. Consumers attach Classes="..." instead of
+            Style="{StaticResource ...}". Theme-driven brushes bind through
+            AppConfig.EffectiveThemeColor with the ported theme converters.
+        -->
+
+        <!-- Outer card containers (plugin list / plugin detail). -->
+        <Style Selector="Border.pluginListContainer">
+            <Setter Property="Background" Value="{Binding DataContext.AppConfig.EffectiveThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=light}" />
+            <Setter Property="BorderBrush" Value="{Binding DataContext.AppConfig.EffectiveThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="BoxShadow" Value="0 0 10 0 #33000000" />
+        </Style>
+
+        <Style Selector="Border.pluginDetailContainer">
+            <Setter Property="Background" Value="{Binding DataContext.AppConfig.EffectiveThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=light}" />
+            <Setter Property="BorderBrush" Value="{Binding DataContext.AppConfig.EffectiveThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="ClipToBounds" Value="True" />
+            <Setter Property="BoxShadow" Value="0 0 10 0 #33000000" />
+        </Style>
+
+        <!-- Section header strips inside the plugin list / detail. -->
+        <Style Selector="Border.pluginListHeader">
+            <Setter Property="Background" Value="{Binding DataContext.AppConfig.EffectiveThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=dark}" />
+            <Setter Property="BorderBrush" Value="{Binding DataContext.AppConfig.EffectiveThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="Padding" Value="12,8" />
+        </Style>
+
+        <Style Selector="TextBlock.pluginListHeaderText">
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="TextBlock.pluginListTip">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="#AAAAAA" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Padding" Value="8,4" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+
+        <!-- Search field around the plugin list. -->
+        <Style Selector="Border.pluginSearch">
+            <Setter Property="Background" Value="{Binding DataContext.AppConfig.EffectiveThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=medium}" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="BorderBrush" Value="{Binding DataContext.AppConfig.EffectiveThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeBackgroundConverter}, ConverterParameter=dark}" />
+            <Setter Property="Padding" Value="6" />
+        </Style>
+
+        <Style Selector="TextBlock.iconFont">
+            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts/iconfont.ttf#iconfont" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <!-- Plugin list ListBox + items. -->
+        <Style Selector="ListBox.pluginList">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="6" />
+        </Style>
+
+        <Style Selector="ListBox.pluginList ListBoxItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0,0,0,6" />
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+
+        <Style Selector="ListBox.pluginList ListBoxItem /template/ ContentPresenter">
+            <Setter Property="CornerRadius" Value="6" />
+        </Style>
+
+        <Style Selector="Border.pluginItem">
+            <Setter Property="Background" Value="#15FFFFFF" />
+            <Setter Property="BorderBrush" Value="#22FFFFFF" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+
+        <Style Selector="ListBox.pluginList ListBoxItem:pointerover Border.pluginItem">
+            <Setter Property="Background" Value="#25FFFFFF" />
+            <Setter Property="BoxShadow" Value="0 0 8 0 #4D000000" />
+        </Style>
+
+        <Style Selector="ListBox.pluginList ListBoxItem:selected Border.pluginItem">
+            <Setter Property="Background" Value="#33FFFFFF" />
+            <Setter Property="BorderBrush" Value="{Binding DataContext.AppConfig.EffectiveThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ThemeAccentConverter}}" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="BoxShadow" Value="0 0 15 0 #80000000" />
+        </Style>
+
+        <Style Selector="TextBlock.pluginItemName">
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+        </Style>
+
+        <Style Selector="TextBlock.pluginItemDescription">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="#CCFFFFFF" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,2,0,0" />
+        </Style>
+
+        <Style Selector="Border.pluginAutoStart">
+            <Setter Property="Background" Value="#22FFFFFF" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Padding" Value="4,1" />
+        </Style>
+
+        <Style Selector="TextBlock.pluginAutoStartText">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+        </Style>
+
+        <Style Selector="Border.pluginRunningState">
+            <Setter Property="Background" Value="#3300FF00" />
+            <Setter Property="BorderBrush" Value="#5500FF00" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="3" />
+            <Setter Property="Padding" Value="4,1" />
+            <Setter Property="Margin" Value="0,2,0,0" />
+        </Style>
+
+        <Style Selector="TextBlock.pluginRunningStateText">
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="Foreground" Value="#A0FFA0" />
+        </Style>
+
+        <!-- Menu collapse / debug toggle templates. -->
+        <Style Selector="Button.iconButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Padding" Value="6" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="Button.iconButton:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#22FFFFFF" />
+            <Setter Property="CornerRadius" Value="4" />
+        </Style>
+
+        <Style Selector="ToggleButton.debugTab">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+
+        <Style Selector="ToggleButton.debugTab /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="CornerRadius" Value="4" />
+        </Style>
+
+        <Style Selector="ToggleButton.debugTab:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#22FFFFFF" />
+        </Style>
+
+        <Style Selector="ToggleButton.debugTab:checked /template/ ContentPresenter#PART_ContentPresenter">
+            <Setter Property="Background" Value="#33FFFFFF" />
+        </Style>
+
+        <!-- Plugin detail section. -->
+        <Style Selector="TextBlock.pluginDetailName">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+        </Style>
+
+        <Style Selector="TextBlock.pluginDetailLabel">
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Foreground" Value="#AAFFFFFF" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+        </Style>
+
+        <Style Selector="TextBlock.pluginDetailValue">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style Selector="Button.pluginRunButton">
+            <Setter Property="Background" Value="{Binding DataContext.AppConfig.EffectiveThemeColor, RelativeSource={RelativeSource AncestorType=Window}, Converter={StaticResource ComplementaryColorGradientConverter}}" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="20,8" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        </Style>
+
+        <Style Selector="Button.pluginRunButton:pointerover">
+            <Setter Property="RenderTransform" Value="scale(1.05)" />
+        </Style>
+
+        <Style Selector="Button.pluginSettingsButton">
+            <Setter Property="Background" Value="#22FFFFFF" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#33FFFFFF" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="14,8" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="CornerRadius" Value="6" />
+        </Style>
+
+        <Style Selector="Button.pluginSettingsButton:pointerover">
+            <Setter Property="Background" Value="#33FFFFFF" />
+        </Style>
+
+        <Style Selector="Button.checklistOpenButton">
+            <Setter Property="Background" Value="#332297F4" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#552297F4" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="14,8" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="CornerRadius" Value="6" />
+            <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+        </Style>
+
+        <Style Selector="Button.checklistOpenButton:pointerover">
+            <Setter Property="Background" Value="#552297F4" />
+            <Setter Property="RenderTransform" Value="scale(1.02)" />
+        </Style>
+
+        <!-- Debug content. -->
+        <Style Selector="Button.debugAction">
+            <Setter Property="Background" Value="#22FFFFFF" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#33FFFFFF" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="Margin" Value="0,0,0,6" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="CornerRadius" Value="4" />
+        </Style>
+
+        <Style Selector="Button.debugAction:pointerover">
+            <Setter Property="Background" Value="#33FFFFFF" />
+        </Style>
+    </Window.Styles>
+
+    <!--
+        Outer shell:
+          MainGrid > MainSnowCanvas (Z=500, holiday-only)
+                   > Border Classes="shadowWindow" (the rounded card)
+                       > Inner content grid with 3 layered Borders (background image,
+                         theme overlay, content) plus the Header/UpdateBanner/Body/Footer
+                         row stack.
+                   > ChristmasDecorations (Z=1000, holiday-only)
+                   > Santa hat Image (Z=1001, holiday-only)
+    -->
+    <Grid x:Name="MainGrid" ClipToBounds="False">
+
+        <!-- Snow canvas — only visible when holiday themes are enabled. -->
+        <Canvas x:Name="MainSnowCanvas"
+                ZIndex="500"
+                IsHitTestVisible="False"
+                IsVisible="{Binding AppConfig.EnableHolidayThemes}" />
+
+        <!-- Rounded shadow card. -->
+        <Border Classes="shadowWindow" Background="#0A0E1A">
+            <Grid>
+
+                <!-- Layer 0: optional background image (only when BackgroundOnlyMode=true). -->
+                <Border ZIndex="0"
+                        IsVisible="{Binding AppConfig.BackgroundOnlyMode}"
+                        Background="{Binding AppConfig.BackgroundImagePath, Converter={StaticResource BackgroundImageConverter}}"
+                        CornerRadius="6" />
+
+                <!-- Layer 1: theme color overlay. -->
+                <Border ZIndex="1"
+                        Background="{Binding AppConfig.EffectiveThemeColor, Converter={StaticResource ThemeColorOverlayConverter}, ConverterParameter=0.2}"
+                        CornerRadius="6" />
+
+                <!-- Layer 2: main content. -->
+                <Grid ZIndex="2"
+                      RowDefinitions="Auto,Auto,*,Auto">
+
+                    <!-- Row 0: header (drag handle + title + minimize). -->
+                    <ctrl:Header Grid.Row="0"
+                                 Title="{Binding HeaderTitle}"
+                                 MinimizeToTrayCommand="{Binding MinimizeToTrayCommand}" />
+
+                    <!-- Row 1: update available banner. -->
+                    <Border Grid.Row="1"
+                            Background="#FFA500"
+                            Padding="10,5"
+                            Cursor="Hand"
+                            Tapped="OnUpdateBannerTapped"
+                            IsVisible="{Binding IsUpdateAvailable}">
+                        <TextBlock HorizontalAlignment="Center"
+                                   FontSize="12"
+                                   FontWeight="SemiBold"
+                                   Foreground="#FFFFFF"
+                                   Text="{Binding LatestVersion, StringFormat='New Update available v{0} - Click to download'}" />
+                    </Border>
+
+                    <!-- Row 2: main body. -->
+                    <Grid Grid.Row="2"
+                          Margin="10"
+                          ColumnDefinitions="Auto,10,*">
+
+                        <!-- Column 0: plugin list. -->
+                        <Border Grid.Column="0"
+                                Classes="pluginListContainer"
+                                Width="{Binding IsMenuCollapsed, Converter={StaticResource MenuCollapseConverter}}">
+
+                            <Grid RowDefinitions="Auto,Auto,Auto,*">
+
+                                <!-- Menu toggle. -->
+                                <Border Grid.Row="0" Classes="pluginListHeader">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <TextBlock Grid.Column="0"
+                                                   Classes="pluginListHeaderText"
+                                                   Text="{loc:Localize MainView_Plugin_Title}"
+                                                   IsVisible="{Binding !IsMenuCollapsed}" />
+                                        <Button Grid.Column="1"
+                                                Classes="iconButton"
+                                                Command="{Binding ToggleMenuCommand}"
+                                                ToolTip.Tip="Toggle menu">
+                                            <TextBlock Classes="iconFont"
+                                                       Text="&#xe62d;" />
+                                        </Button>
+                                    </Grid>
+                                </Border>
+
+                                <!-- Search box (hidden when collapsed). -->
+                                <Border Grid.Row="1"
+                                        Classes="pluginSearch"
+                                        IsVisible="{Binding !IsMenuCollapsed}">
+                                    <Grid ColumnDefinitions="Auto,*">
+                                        <TextBlock Grid.Column="0"
+                                                   Classes="iconFont"
+                                                   Margin="4,0,6,0"
+                                                   Text="&#xe602;" />
+                                        <TextBox Grid.Column="1"
+                                                 x:Name="SearchBox"
+                                                 Background="Transparent"
+                                                 BorderThickness="0"
+                                                 Foreground="#FFFFFF"
+                                                 Watermark="{loc:Localize MainView_Plugin_Search_PlaceHolder}" />
+                                    </Grid>
+                                </Border>
+
+                                <!-- Section title under search. -->
+                                <Border Grid.Row="2"
+                                        Padding="10,4"
+                                        IsVisible="{Binding !IsMenuCollapsed}">
+                                    <TextBlock FontSize="11"
+                                               Foreground="#AAFFFFFF"
+                                               Text="{loc:Localize MainView_Plugin_Section_Installed}" />
+                                </Border>
+
+                                <!-- Plugin list + tip + debug toggle. -->
+                                <Grid Grid.Row="3" RowDefinitions="*,Auto,Auto">
+                                    <ListBox Grid.Row="0"
+                                             Classes="pluginList"
+                                             ItemsSource="{Binding Plugins}"
+                                             SelectedItem="{Binding SelectedPlugin, Mode=TwoWay}">
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <Border Classes="pluginItem">
+                                                    <Grid ColumnDefinitions="*,Auto">
+                                                        <StackPanel Grid.Column="0"
+                                                                    Orientation="Vertical">
+                                                            <TextBlock Classes="pluginItemName"
+                                                                       Text="{Binding Name}" />
+                                                            <TextBlock Classes="pluginItemDescription"
+                                                                       Text="{Binding Description}"
+                                                                       IsVisible="{Binding !$parent[Window].DataContext.IsMenuCollapsed}" />
+                                                        </StackPanel>
+                                                        <StackPanel Grid.Column="1"
+                                                                    Orientation="Vertical"
+                                                                    HorizontalAlignment="Right"
+                                                                    VerticalAlignment="Center">
+                                                            <Border Classes="pluginAutoStart"
+                                                                    IsVisible="{Binding State.IsAutoStart}">
+                                                                <TextBlock Classes="pluginAutoStartText"
+                                                                           Text="{loc:Localize MainView_Plugin_AutoStart_Short}" />
+                                                            </Border>
+                                                            <Border Classes="pluginRunningState"
+                                                                    IsVisible="{Binding State.IsRunning}">
+                                                                <TextBlock Classes="pluginRunningStateText"
+                                                                           Text="{loc:Localize MainView_Plugin_Running_Short}" />
+                                                            </Border>
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+
+                                    <!-- Debug toggle (DEBUG-only). -->
+                                    <ToggleButton Grid.Row="1"
+                                                  Classes="debugTab"
+                                                  Margin="6,4"
+                                                  IsChecked="{Binding IsDebugTabActive, Mode=TwoWay}"
+                                                  IsVisible="{Binding $parent[Window].IsDebugContentVisible}">
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock FontSize="13"
+                                                       FontWeight="SemiBold"
+                                                       Foreground="#FFFFFF"
+                                                       Text="Debug Tab" />
+                                            <TextBlock FontSize="11"
+                                                       Foreground="#CCFFFFFF"
+                                                       Text="Humm... It's just for debug..."
+                                                       IsVisible="{Binding !$parent[Window].DataContext.IsMenuCollapsed}" />
+                                        </StackPanel>
+                                    </ToggleButton>
+
+                                    <!-- Tip text at the very bottom. -->
+                                    <TextBlock Grid.Row="2"
+                                               Classes="pluginListTip"
+                                               Text="{loc:Localize MainView_Plugin_ThirdPartySdkTips}"
+                                               IsVisible="{Binding !IsMenuCollapsed}" />
+                                </Grid>
+                            </Grid>
+                        </Border>
+
+                        <!-- Column 2: plugin detail (or checklist / debug). -->
+                        <Grid Grid.Column="2">
+
+                            <!-- Plugin detail view (active when SelectedPlugin != null). -->
+                            <Border Classes="pluginDetailContainer"
+                                    IsVisible="{Binding SelectedPlugin, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                <Grid Margin="20" RowDefinitions="Auto,*"
+                                      DataContext="{Binding SelectedPlugin}">
+                                    <!-- Title row -->
+                                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                                        <StackPanel Grid.Column="0" Orientation="Vertical">
+                                            <TextBlock Classes="pluginDetailName"
+                                                       Text="{Binding Name}" />
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="1"
+                                                    Orientation="Horizontal"
+                                                    VerticalAlignment="Center">
+                                            <!-- AutoStart switch + label -->
+                                            <StackPanel Orientation="Horizontal"
+                                                        VerticalAlignment="Center"
+                                                        Margin="0,0,12,0">
+                                                <TextBlock Classes="pluginDetailLabel"
+                                                           VerticalAlignment="Center"
+                                                           Text="{loc:Localize MainView_Plugin_AutoStart}" />
+                                                <CheckBox IsChecked="{Binding State.IsAutoStart, Mode=TwoWay}"
+                                                          Command="{Binding ToggleAutoStartCommand}"
+                                                          VerticalAlignment="Center" />
+                                            </StackPanel>
+
+                                            <Button Classes="pluginSettingsButton"
+                                                    Command="{Binding OpenSettingsCommand}"
+                                                    Content="{loc:Localize MainView_Plugin_Settings}"
+                                                    Margin="0,0,8,0" />
+
+                                            <Button Classes="pluginRunButton"
+                                                    Command="{Binding RunCommand}"
+                                                    Content="{loc:Localize MainView_Plugin_Run}" />
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <!-- Detail row -->
+                                    <ScrollViewer Grid.Row="1"
+                                                  Margin="0,16,0,0"
+                                                  HorizontalScrollBarVisibility="Disabled"
+                                                  VerticalScrollBarVisibility="Auto">
+                                        <StackPanel Orientation="Vertical">
+                                            <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto" Margin="0,0,0,12">
+                                                <TextBlock Grid.Row="0" Grid.Column="0"
+                                                           Classes="pluginDetailLabel"
+                                                           Text="{loc:Localize MainView_Plugin_Label_Author}" />
+                                                <TextBlock Grid.Row="0" Grid.Column="1"
+                                                           Classes="pluginDetailValue"
+                                                           Text="{loc:Localize Author_OfficialTeam}" />
+
+                                                <TextBlock Grid.Row="1" Grid.Column="0"
+                                                           Classes="pluginDetailLabel"
+                                                           Margin="0,8,8,0"
+                                                           Text="{loc:Localize Label_Intro}" />
+                                                <TextBlock Grid.Row="1" Grid.Column="1"
+                                                           Classes="pluginDetailValue"
+                                                           Margin="0,8,0,0"
+                                                           Text="{Binding Description}" />
+                                            </Grid>
+
+                                            <Button Classes="checklistOpenButton"
+                                                    HorizontalAlignment="Left"
+                                                    Command="{Binding $parent[Window].DataContext.CallChecklistWindowCommand}"
+                                                    Content="Open Daily/Weekly Checklist" />
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Border>
+
+                            <!-- Embedded checklist view. -->
+                            <Border Classes="pluginDetailContainer"
+                                    IsVisible="{Binding IsChecklistActive}">
+                                <checklist:ChecklistView DataContext="{Binding ChecklistViewModel}" />
+                            </Border>
+
+                            <!-- Debug content. -->
+                            <Border Classes="pluginDetailContainer"
+                                    IsVisible="{Binding IsDebugTabActive}">
+                                <Grid Margin="20" RowDefinitions="Auto,*">
+                                    <Border Grid.Row="0" Classes="pluginListHeader" CornerRadius="4" Margin="0,0,0,12">
+                                        <TextBlock Classes="pluginListHeaderText"
+                                                   Text="Debug" />
+                                    </Border>
+
+                                    <ScrollViewer Grid.Row="1"
+                                                  HorizontalScrollBarVisibility="Disabled"
+                                                  VerticalScrollBarVisibility="Auto">
+                                        <StackPanel Orientation="Vertical">
+                                            <ComboBox ItemsSource="{Binding AvailableThemes}"
+                                                      SelectedItem="{Binding Theme, Mode=TwoWay}"
+                                                      Margin="0,0,0,12"
+                                                      HorizontalAlignment="Left"
+                                                      MinWidth="150" />
+
+                                            <Button Classes="debugAction"
+                                                    Command="{Binding Debug.CallDebugWindowCommand}"
+                                                    Content="Open Debug Window" />
+                                            <Button Classes="debugAction"
+                                                    Command="{Binding CallSkillBreakdownViewCommand}"
+                                                    Content="Open Skill Breakdown" />
+                                            <Button Classes="debugAction"
+                                                    Command="{Binding CallDamageReferenceViewCommand}"
+                                                    Content="Open Damage Reference" />
+                                            <Button Classes="debugAction"
+                                                    Command="{Binding CallSettingsViewCommand}"
+                                                    Content="Open Settings" />
+                                            <Button Classes="debugAction"
+                                                    Command="{Binding CallAboutViewCommand}"
+                                                    Content="Open About" />
+
+                                            <TextBlock FontSize="11"
+                                                       Foreground="#AAFFFFFF"
+                                                       Margin="0,12,0,0"
+                                                       Text="Debug shortcuts only — non-debug builds hide this panel." />
+                                        </StackPanel>
+                                    </ScrollViewer>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </Grid>
+
+                    <!-- Row 3: footer. -->
+                    <ctrl:Footer Grid.Row="3"
+                                 Height="50"
+                                 Background="Transparent"
+                                 CancelCommand="{Binding ShutdownCommand}"
+                                 ConfirmClick="OnFooterConfirmClick" />
+                </Grid>
+            </Grid>
+        </Border>
+
+        <!-- Holiday: Christmas decorations on top of everything. -->
+        <ctrl:ChristmasDecorations Margin="0"
+                                   ZIndex="1000"
+                                   IsVisible="{Binding AppConfig.EnableHolidayThemes}" />
+
+        <!-- Holiday: Santa hat tilted in the corner. -->
+        <Image Width="65"
+               Height="65"
+               Margin="0,20,12,0"
+               HorizontalAlignment="Right"
+               VerticalAlignment="Top"
+               Opacity="0.95"
+               ZIndex="1001"
+               RenderTransformOrigin="50%,50%"
+               RenderTransform="rotate(15)"
+               IsVisible="{Binding AppConfig.EnableHolidayThemes}"
+               Source="avares://BlueMeter/Assets/Themes/Christmas/Decorations/santa_hat.png" />
+    </Grid>
+</Window>

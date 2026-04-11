@@ -6,6 +6,7 @@ using Avalonia.Controls.ApplicationLifetimes;
 using BlueMeter.Logging;
 using BlueMeter.ViewModels;
 using BlueMeter.Views;
+using BlueMeter.Views.Checklist;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -19,9 +20,7 @@ namespace BlueMeter.Services;
 /// class keeps the same lazy singleton pattern under the hood but surfaces it through
 /// discrete Show/Minimize methods so view models stay UI-agnostic.
 ///
-/// Unported views (SettingsView, ModuleSolveView, ChecklistWindow, MainView) are
-/// currently stubbed with a warning log. Those methods become real once Phase 10
-/// final-batch view ports land.
+/// All Phase 10 view ports are now wired through the lazy-singleton pattern below.
 /// </summary>
 public class WindowManagementService(IServiceProvider provider, ILogger<WindowManagementService> logger) : IWindowManagementService
 {
@@ -31,6 +30,9 @@ public class WindowManagementService(IServiceProvider provider, ILogger<WindowMa
     private BossTrackerView? _bossTrackerView;
     private ChartsWindow? _chartsWindow;
     private SkillBreakdownView? _skillBreakdownView;
+    private SettingsView? _settingsView;
+    private ModuleSolveView? _moduleSolveView;
+    private ChecklistWindow? _checklistWindow;
 
     /// <summary>
     /// The app's main window, obtained via the classic desktop lifetime. May be null
@@ -60,6 +62,15 @@ public class WindowManagementService(IServiceProvider provider, ILogger<WindowMa
     private SkillBreakdownView GetSkillBreakdownView() =>
         GetOrCreate(() => _skillBreakdownView, v => _skillBreakdownView = v);
 
+    private SettingsView GetSettingsView() =>
+        GetOrCreate(() => _settingsView, v => _settingsView = v);
+
+    private ModuleSolveView GetModuleSolveView() =>
+        GetOrCreate(() => _moduleSolveView, v => _moduleSolveView = v);
+
+    private ChecklistWindow GetChecklistWindow() =>
+        GetOrCreate(() => _checklistWindow, v => _checklistWindow = v);
+
     // ===== IWindowManagementService =====
 
     public void MinimizeDpsStatisticsWindow()
@@ -72,34 +83,26 @@ public class WindowManagementService(IServiceProvider provider, ILogger<WindowMa
 
     public Window GetDpsStatisticsWindow() => GetDpsStatisticsView();
 
-    public void ShowSettings()
-    {
-        // SettingsView has not been ported yet (deferred Phase 10 final batch).
-        logger.LogWarning("ShowSettings called but SettingsView is not yet ported");
-    }
+    public void ShowSettings() => ShowOrActivate(GetSettingsView());
 
     public void ShowSettingsAndHighlightUidField()
     {
-        // Same deferred view; once SettingsView lands, this should show it and
-        // invoke a helper to scroll/highlight the ManualPlayerUid field.
-        logger.LogWarning("ShowSettingsAndHighlightUidField called but SettingsView is not yet ported");
+        var view = GetSettingsView();
+        ShowOrActivate(view);
+        view.ShowAndHighlightUidField();
     }
 
     public void ShowAbout() => ShowOrActivate(GetAboutView());
 
     public void ShowDamageReference() => ShowOrActivate(GetDamageReferenceView());
 
-    public void ShowModuleSolve()
-    {
-        logger.LogWarning("ShowModuleSolve called but ModuleSolveView is not yet ported");
-    }
+    public void ShowSkillBreakdown() => ShowOrActivate(GetSkillBreakdownView());
+
+    public void ShowModuleSolve() => ShowOrActivate(GetModuleSolveView());
 
     public void ShowBossTracker() => ShowOrActivate(GetBossTrackerView());
 
-    public void ShowChecklist()
-    {
-        logger.LogWarning("ShowChecklist called but ChecklistWindow is not yet ported");
-    }
+    public void ShowChecklist() => ShowOrActivate(GetChecklistWindow());
 
     public void ShowCharts() => ShowOrActivate(GetChartsWindow());
 

@@ -214,13 +214,15 @@ public partial class App : Application
                 services.AddSingleton<IQueuePopUIDetector, QueuePopUIDetector>();
                 services.AddSingleton<IApplicationStartup, ApplicationStartup>();
 
-                // ----- Built-in plugins (Phase 11) -----
+                // ----- Built-in plugins -----
                 // PluginManager constructor injects IEnumerable<IPlugin>, so each
                 // plugin only needs to be registered against IPlugin to appear in
-                // the main view's plugin list. DpsPlugin lands in a subsequent
-                // batch.
-                services.AddSingleton<IPlugin, WorldBossPlugin>();
+                // the main view's plugin list. Order here matches the WPF main
+                // window display order: DPS meter first, then module solver,
+                // then world boss tracker.
+                services.AddSingleton<IPlugin, DpsPlugin>();
                 services.AddSingleton<IPlugin, ModuleSolverPlugin>();
+                services.AddSingleton<IPlugin, WorldBossPlugin>();
 
                 // ----- Localization -----
                 services.AddSingleton(new LocalizationConfiguration

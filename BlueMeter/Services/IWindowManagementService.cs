@@ -33,6 +33,9 @@ public interface IWindowManagementService
     /// <summary>Show the damage reference window.</summary>
     void ShowDamageReference();
 
+    /// <summary>Show the skill breakdown window.</summary>
+    void ShowSkillBreakdown();
+
     /// <summary>Show the module solver window.</summary>
     void ShowModuleSolve();
 

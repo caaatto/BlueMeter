@@ -1,0 +1,639 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:behaviors="using:BlueMeter.Behaviors"
+        xmlns:controls="using:BlueMeter.Controls"
+        xmlns:converters="using:BlueMeter.Converters"
+        xmlns:i="using:Avalonia.Xaml.Interactivity"
+        xmlns:loc="using:BlueMeter.Localization"
+        xmlns:models="using:BlueMeter.Models"
+        xmlns:vm="using:BlueMeter.ViewModels"
+        x:Class="BlueMeter.Views.SettingsView"
+        x:CompileBindings="False"
+        Title="{loc:Localize Window_Settings_Title}"
+        Width="780"
+        Height="690"
+        MinWidth="660"
+        MinHeight="540"
+        d:DesignHeight="690"
+        d:DesignWidth="780"
+        mc:Ignorable="d"
+        Background="Transparent"
+        CanResize="True"
+        ExtendClientAreaToDecorationsHint="True"
+        SystemDecorations="None"
+        TransparencyLevelHint="Transparent"
+        WindowStartupLocation="CenterOwner">
+
+    <Window.Resources>
+        <converters:BackgroundImageConverter x:Key="BackgroundImageConverter" />
+        <converters:ThemeColorConverter x:Key="ThemeColorConverter" />
+        <converters:ThemeColorOverlayConverter x:Key="ThemeColorOverlayConverter" />
+        <converters:PanelColorModeConverter x:Key="PanelColorModeConverter" />
+        <converters:KeyBindingToStringConverter x:Key="KeyBindingToStringConverter" />
+        <converters:ShowOverlayToColorConverter x:Key="ShowOverlayToColorConverter" />
+    </Window.Resources>
+
+    <Window.Styles>
+        <!--
+            SettingsView class selectors. Keeps the view self-contained — the
+            styles here mirror the WPF keyed styles (SettingSectionListBorder,
+            SettingSectionListTitle, SectionBorder, SectionStackPanel,
+            SectionFieldBorder, FieldName, SuffixText, ThemeButton, etc.) with
+            class-selector equivalents. Consumers attach Classes="..." instead
+            of Style="{StaticResource ...}".
+        -->
+
+        <!-- Sidebar (section list) container. -->
+        <Style Selector="Border.settingSectionList">
+            <Setter Property="Background" Value="#F7F7F7" />
+            <Setter Property="BorderBrush" Value="#E5E5E5" />
+            <Setter Property="BorderThickness" Value="0,0,1,0" />
+            <Setter Property="CornerRadius" Value="0,0,0,6" />
+        </Style>
+
+        <!-- Sidebar header strip (above the nav list). -->
+        <Style Selector="Border.settingSectionListHeader">
+            <Setter Property="Background" Value="#2297F4" />
+            <Setter Property="CornerRadius" Value="0,0,0,0" />
+            <Setter Property="Padding" Value="12,8" />
+        </Style>
+        <Style Selector="TextBlock.settingSectionListTitle">
+            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <!-- Detail list container (right-side scroll host). -->
+        <Style Selector="Border.settingDetailList">
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="CornerRadius" Value="0,0,6,0" />
+        </Style>
+
+        <!-- Nav sidebar buttons. -->
+        <Style Selector="Button.navItem">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Padding" Value="16,10" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="bb"
+                            Background="{TemplateBinding Background}"
+                            BorderThickness="0,0,0,1"
+                            BorderBrush="#ECECEC"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+        <Style Selector="Button.navItem:pointerover /template/ Border#bb">
+            <Setter Property="Background" Value="#EEEEEE" />
+        </Style>
+
+        <!-- Section title + divider (within the right-hand scroll list). -->
+        <Style Selector="Border.titleStrip">
+            <Setter Property="Width" Value="3" />
+            <Setter Property="Height" Value="24" />
+            <Setter Property="Background" Value="#2297F4" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="TextBlock.sectionTitle">
+            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC" />
+            <Setter Property="FontSize" Value="18" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="#222222" />
+            <Setter Property="Margin" Value="8,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="TextBlock.sectionSubtitle">
+            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="#888888" />
+            <Setter Property="Margin" Value="12,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+        </Style>
+
+        <Style Selector="Border.section">
+            <Setter Property="Margin" Value="0,0,0,14" />
+            <Setter Property="Padding" Value="20,10,20,16" />
+            <Setter Property="BorderThickness" Value="0,0,0,1" />
+            <Setter Property="BorderBrush" Value="#EEEEEE" />
+        </Style>
+        <Style Selector="StackPanel.sectionContent">
+            <Setter Property="Margin" Value="15,8,0,0" />
+        </Style>
+
+        <!-- Field row: label + editor. -->
+        <Style Selector="Border.sectionField">
+            <Setter Property="Padding" Value="0,6" />
+        </Style>
+        <Style Selector="TextBlock.fieldName">
+            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Foreground" Value="#333333" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Width" Value="180" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+        <Style Selector="TextBlock.suffixText">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="#777777" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="8,0,0,0" />
+        </Style>
+        <Style Selector="TextBlock.hintText">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Foreground" Value="#888888" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+            <Setter Property="Margin" Value="0,6,0,0" />
+        </Style>
+
+        <!-- Theme colour swatch buttons (colour picker grid). -->
+        <Style Selector="Button.themeButton">
+            <Setter Property="Width" Value="30" />
+            <Setter Property="Height" Value="30" />
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="BorderBrush" Value="#CCCCCC" />
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+        <Style Selector="Button.themeButton:pointerover">
+            <Setter Property="BorderBrush" Value="#666666" />
+        </Style>
+        <Style Selector="Button.themeButton.active">
+            <Setter Property="BorderBrush" Value="#222222" />
+            <Setter Property="BorderThickness" Value="2" />
+        </Style>
+
+        <!-- Hotkey overlay text (shown on top of TextBox when focused). -->
+        <Style Selector="TextBlock.hotkeyOverlay">
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="Foreground" Value="#888888" />
+            <Setter Property="FontStyle" Value="Italic" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="IsHitTestVisible" Value="False" />
+            <Setter Property="Padding" Value="8,0" />
+        </Style>
+
+        <!-- UID input highlight border (flashes red when ShowAndHighlightUidField runs). -->
+        <Style Selector="Border#UidInputBorder">
+            <Setter Property="BorderBrush" Value="#CCCCCC" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="CornerRadius" Value="4" />
+        </Style>
+    </Window.Styles>
+
+    <!--
+        Shadow frame → inner card. The outer Border.shadowWindow comes from
+        BaseStyle.axaml (Phase 8) and provides the drop-shadow + rounded
+        corners. The inner grid holds Header / content / Footer.
+    -->
+    <Border Classes="shadowWindow"
+            Background="{Binding AppConfig.EffectiveThemeColor, Mode=OneWay, Converter={StaticResource ThemeColorConverter}, FallbackValue=#ECEBE9}"
+            ClipToBounds="True">
+        <Grid>
+            <!-- Optional background image layer. -->
+            <Border CornerRadius="6"
+                    ZIndex="0"
+                    IsVisible="{Binding AppConfig.BackgroundOnlyMode}"
+                    Background="{Binding AppConfig.BackgroundImagePath, Converter={StaticResource BackgroundImageConverter}}" />
+
+            <!-- Theme colour overlay on top of the background image. -->
+            <Border CornerRadius="6"
+                    ZIndex="1"
+                    IsVisible="{Binding AppConfig.BackgroundOnlyMode}"
+                    Background="{Binding AppConfig.EffectiveThemeColor, Mode=OneWay, Converter={StaticResource ThemeColorOverlayConverter}, ConverterParameter=0.2}" />
+
+            <Grid ZIndex="2" RowDefinitions="Auto,*,Auto">
+                <!-- Window header (drag-to-move, minimize button). -->
+                <controls:Header Grid.Row="0" Title="{loc:Localize Window_Settings_Title}" />
+
+                <!-- Content: sidebar + detail scroller. -->
+                <Grid Grid.Row="1" ColumnDefinitions="180,*" Margin="10,4,10,4">
+                    <!-- Sidebar -->
+                    <Border Grid.Column="0" Classes="settingSectionList">
+                        <Grid RowDefinitions="Auto,*">
+                            <Border Grid.Row="0" Classes="settingSectionListHeader">
+                                <TextBlock Classes="settingSectionListTitle" Text="{loc:Localize Window_Settings_Title}" />
+                            </Border>
+                            <StackPanel Grid.Row="1" Orientation="Vertical">
+                                <Button Classes="navItem" Click="Nav_Language_Click">
+                                    <TextBlock Text="{loc:Localize Settings_Section_Language_Title}" />
+                                </Button>
+                                <Button Classes="navItem" Click="Nav_Basic_Click">
+                                    <TextBlock Text="{loc:Localize Settings_Section_Basic_Title}" />
+                                </Button>
+                                <Button Classes="navItem" Click="Nav_Alerts_Click">
+                                    <TextBlock Text="Alerts (Beta)" />
+                                </Button>
+                                <Button Classes="navItem" Click="Nav_Shortcut_Click">
+                                    <TextBlock Text="{loc:Localize Settings_Section_Shortcut_Title}" />
+                                </Button>
+                                <Button Classes="navItem" Click="Nav_Combat_Click">
+                                    <TextBlock Text="{loc:Localize Settings_Section_Combat_Title}" />
+                                </Button>
+                                <Button Classes="navItem" Click="Nav_Theme_Click">
+                                    <TextBlock Text="{loc:Localize Settings_Section_Theme_Title}" />
+                                </Button>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <!-- Detail list -->
+                    <Border Grid.Column="1" Classes="settingDetailList">
+                        <ScrollViewer x:Name="ContentScrollViewer"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                            <StackPanel Margin="20,16,20,16">
+
+                                <!--  Language section  -->
+                                <controls:CardHeader x:Name="SectionLanguage"
+                                                     Title="{loc:Localize Settings_Section_Language_Title}" />
+                                <Border Classes="section">
+                                    <StackPanel Classes="sectionContent">
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="{loc:Localize Settings_Section_Language_Description}" />
+                                                <ComboBox Width="220"
+                                                          Theme="{DynamicResource AntComboBox}"
+                                                          ItemsSource="{Binding AvailableLanguages}"
+                                                          SelectedItem="{Binding SelectedLanguage}"
+                                                          Foreground="Black">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Display}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+
+                                <!--  Basic section  -->
+                                <controls:CardHeader x:Name="SectionBasic"
+                                                     Title="{loc:Localize Settings_Section_Basic_Title}"
+                                                     Subtitle="{loc:Localize Settings_Section_Basic_Sub}" />
+                                <Border Classes="section">
+                                    <StackPanel Classes="sectionContent">
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="{loc:Localize Settings_NetworkAdapter_Label}" />
+                                                <ComboBox Width="260"
+                                                          Theme="{DynamicResource AntComboBox}"
+                                                          ItemsSource="{Binding AvailableNetworkAdapters}"
+                                                          SelectedItem="{Binding AppConfig.PreferredNetworkAdapter}"
+                                                          DisplayMemberBinding="{Binding Description}"
+                                                          Foreground="Black" />
+                                                <Button Margin="10,0,0,0"
+                                                        Theme="{DynamicResource AntPrimaryButton}"
+                                                        Command="{Binding NetworkAdapterAutoSelectCommand}"
+                                                        Content="{loc:Localize Settings_NetworkAdapterAutoSelect_Button}" />
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+
+                                <!--  Alerts (Beta) section  -->
+                                <controls:CardHeader x:Name="SectionAlerts" Title="Alerts (Beta)" />
+                                <Border Classes="section">
+                                    <StackPanel Classes="sectionContent">
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="Enable Queue Pop Sound" />
+                                                <CheckBox IsChecked="{Binding AppConfig.QueuePopSoundEnabled}" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="Sound Selection" />
+                                                <ComboBox Width="220"
+                                                          Theme="{DynamicResource AntComboBox}"
+                                                          ItemsSource="{Binding AvailableQueuePopSounds}"
+                                                          SelectedItem="{Binding AppConfig.QueuePopSound}"
+                                                          IsEnabled="{Binding AppConfig.QueuePopSoundEnabled}"
+                                                          Foreground="Black" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="Volume" />
+                                                <Slider Width="220"
+                                                        Theme="{DynamicResource AntSlider}"
+                                                        Minimum="0"
+                                                        Maximum="100"
+                                                        TickFrequency="10"
+                                                        IsSnapToTickEnabled="True"
+                                                        Value="{Binding AppConfig.QueuePopSoundVolume}"
+                                                        IsEnabled="{Binding AppConfig.QueuePopSoundEnabled}" />
+                                                <TextBlock Classes="suffixText" Text="{Binding AppConfig.QueuePopSoundVolume, StringFormat='{}{0:F0}%'}" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="Test Sound" />
+                                                <Button Theme="{DynamicResource AntButton}"
+                                                        Command="{Binding TestQueuePopSoundCommand}"
+                                                        Content="Play Test Sound" />
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+
+                                <!--  Shortcut section  -->
+                                <controls:CardHeader x:Name="SectionShortcut"
+                                                     Title="{loc:Localize Settings_Section_Shortcut_Title}"
+                                                     Subtitle="{loc:Localize Settings_Section_Shortcut_Sub}" />
+                                <Border Classes="section">
+                                    <StackPanel Classes="sectionContent">
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName"
+                                                           Text="{loc:Localize Settings_Shortcut_EnableGlobalHotkeys}"
+                                                           ToolTip.Tip="{loc:Localize Settings_Shortcut_EnableGlobalHotkeys_Tooltip}" />
+                                                <CheckBox IsChecked="{Binding AppConfig.GlobalHotkeysEnabled}" />
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName"
+                                                           Text="{loc:Localize Settings_Shortcut_MouseThrough}"
+                                                           ToolTip.Tip="{loc:Localize Settings_Shortcut_MouseThrough_Tooltip}" />
+                                                <Grid Width="220" Height="30">
+                                                    <TextBox x:Name="MouseThroughTextBox"
+                                                             IsEnabled="{Binding AppConfig.GlobalHotkeysEnabled}"
+                                                             IsReadOnly="True"
+                                                             Theme="{DynamicResource AntTextBox}"
+                                                             Text="{Binding AppConfig.MouseThroughShortcut, Mode=OneWay, Converter={StaticResource KeyBindingToStringConverter}}"
+                                                             Foreground="{Binding #MouseThroughTextBox.(behaviors:HotkeyOverlayBehavior.ShowOverlay), Converter={StaticResource ShowOverlayToColorConverter}}">
+                                                        <i:Interaction.Behaviors>
+                                                            <behaviors:HotkeyOverlayBehavior />
+                                                            <behaviors:KeyDownCommandBehavior Command="{Binding HandleMouseThroughShortcutCommand}" />
+                                                        </i:Interaction.Behaviors>
+                                                    </TextBox>
+                                                    <TextBlock Classes="hotkeyOverlay"
+                                                               Text="Enter Hot Key"
+                                                               IsVisible="{Binding #MouseThroughTextBox.(behaviors:HotkeyOverlayBehavior.ShowOverlay)}" />
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName"
+                                                           Text="{loc:Localize Settings_Shortcut_ClearData}"
+                                                           ToolTip.Tip="{loc:Localize Settings_Shortcut_ClearData_Tooltip}" />
+                                                <Grid Width="220" Height="30">
+                                                    <TextBox x:Name="ClearDataTextBox"
+                                                             IsEnabled="{Binding AppConfig.GlobalHotkeysEnabled}"
+                                                             IsReadOnly="True"
+                                                             Theme="{DynamicResource AntTextBox}"
+                                                             Text="{Binding AppConfig.ClearDataShortcut, Mode=OneWay, Converter={StaticResource KeyBindingToStringConverter}}"
+                                                             Foreground="{Binding #ClearDataTextBox.(behaviors:HotkeyOverlayBehavior.ShowOverlay), Converter={StaticResource ShowOverlayToColorConverter}}">
+                                                        <i:Interaction.Behaviors>
+                                                            <behaviors:HotkeyOverlayBehavior />
+                                                            <behaviors:KeyDownCommandBehavior Command="{Binding HandleClearDataShortcutCommand}" />
+                                                        </i:Interaction.Behaviors>
+                                                    </TextBox>
+                                                    <TextBlock Classes="hotkeyOverlay"
+                                                               Text="Enter Hot Key"
+                                                               IsVisible="{Binding #ClearDataTextBox.(behaviors:HotkeyOverlayBehavior.ShowOverlay)}" />
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName"
+                                                           Text="{loc:Localize Settings_Shortcut_TopMost}"
+                                                           ToolTip.Tip="{loc:Localize Settings_Shortcut_TopMost_Tooltip}" />
+                                                <Grid Width="220" Height="30">
+                                                    <TextBox x:Name="TopMostTextBox"
+                                                             IsEnabled="{Binding AppConfig.GlobalHotkeysEnabled}"
+                                                             IsReadOnly="True"
+                                                             Theme="{DynamicResource AntTextBox}"
+                                                             Text="{Binding AppConfig.TopmostShortcut, Mode=OneWay, Converter={StaticResource KeyBindingToStringConverter}}"
+                                                             Foreground="{Binding #TopMostTextBox.(behaviors:HotkeyOverlayBehavior.ShowOverlay), Converter={StaticResource ShowOverlayToColorConverter}}">
+                                                        <i:Interaction.Behaviors>
+                                                            <behaviors:HotkeyOverlayBehavior />
+                                                            <behaviors:KeyDownCommandBehavior Command="{Binding HandleTopMostShortcutCommand}" />
+                                                        </i:Interaction.Behaviors>
+                                                    </TextBox>
+                                                    <TextBlock Classes="hotkeyOverlay"
+                                                               Text="Enter Hot Key"
+                                                               IsVisible="{Binding #TopMostTextBox.(behaviors:HotkeyOverlayBehavior.ShowOverlay)}" />
+                                                </Grid>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <TextBlock Classes="hintText"
+                                                   Text="Tip: Focus a field and press the desired key combination. Press Delete to clear a shortcut. Global hotkeys must include at least one modifier (Ctrl, Alt or Shift)." />
+                                    </StackPanel>
+                                </Border>
+
+                                <!--  Combat section  -->
+                                <controls:CardHeader x:Name="SectionCombat"
+                                                     Title="{loc:Localize Settings_Section_Combat_Title}"
+                                                     Subtitle="{loc:Localize Settings_Section_Combat_Sub}" />
+                                <Border Classes="section">
+                                    <StackPanel Classes="sectionContent">
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="Manual Player UID" />
+                                                <Border x:Name="UidInputBorder" Width="220">
+                                                    <TextBox x:Name="UidTextBox"
+                                                             Theme="{DynamicResource AntTextBox}"
+                                                             Text="{Binding AppConfig.ManualPlayerUid}" />
+                                                </Border>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="{loc:Localize Settings_Display_NumberMode}" />
+                                                <ComboBox Width="220"
+                                                          Theme="{DynamicResource AntComboBox}"
+                                                          ItemsSource="{Binding AvailableNumberDisplayModes}"
+                                                          SelectedItem="{Binding SelectedNumberDisplayMode}"
+                                                          Foreground="Black">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Display}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="{loc:Localize Settings_Display_Opacity}" />
+                                                <Slider Width="220"
+                                                        Theme="{DynamicResource AntSlider}"
+                                                        Minimum="5"
+                                                        Maximum="95"
+                                                        Value="{Binding AppConfig.Opacity}" />
+                                                <TextBlock Classes="suffixText" Text="{Binding AppConfig.Opacity, StringFormat='{}{0:F0}%'}" />
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+
+                                <!--  Performance section  -->
+                                <controls:CardHeader Title="Performance" />
+                                <Border Classes="section">
+                                    <StackPanel Classes="sectionContent">
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="DPS Refresh Rate" />
+                                                <ComboBox Width="220"
+                                                          Theme="{DynamicResource AntComboBox}"
+                                                          SelectedItem="{Binding AppConfig.DpsRefreshRate}"
+                                                          Foreground="Black">
+                                                    <models:DpsRefreshRate>Minimal</models:DpsRefreshRate>
+                                                    <models:DpsRefreshRate>Low</models:DpsRefreshRate>
+                                                    <models:DpsRefreshRate>Medium</models:DpsRefreshRate>
+                                                    <models:DpsRefreshRate>High</models:DpsRefreshRate>
+                                                </ComboBox>
+                                            </StackPanel>
+                                        </Border>
+                                        <TextBlock Classes="hintText"
+                                                   Text="Tip: Lower refresh rates reduce CPU usage. Higher rates give smoother UI updates at the cost of performance." />
+                                    </StackPanel>
+                                </Border>
+
+                                <!--  Advanced Combat Logging (Beta)  -->
+                                <controls:CardHeader Title="Advanced Combat Logging (Beta)" />
+                                <Border Classes="section">
+                                    <StackPanel Classes="sectionContent">
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="Enable Advanced Logging" />
+                                                <CheckBox IsChecked="{Binding AppConfig.EnableAdvancedCombatLogging}" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="Max Stored Encounters" />
+                                                <ComboBox Width="220"
+                                                          Theme="{DynamicResource AntComboBox}"
+                                                          SelectedItem="{Binding AppConfig.MaxStoredEncounters}"
+                                                          IsEnabled="{Binding AppConfig.EnableAdvancedCombatLogging}"
+                                                          Foreground="Black">
+                                                    <x:Int32>5</x:Int32>
+                                                    <x:Int32>10</x:Int32>
+                                                    <x:Int32>20</x:Int32>
+                                                    <x:Int32>50</x:Int32>
+                                                </ComboBox>
+                                            </StackPanel>
+                                        </Border>
+                                        <TextBlock Classes="hintText"
+                                                   Text="Tip: Advanced combat logs capture per-skill timing and are used for the replay / encounter history features." />
+                                    </StackPanel>
+                                </Border>
+
+                                <!--  Theme section  -->
+                                <controls:CardHeader x:Name="SectionTheme"
+                                                     Title="{loc:Localize Settings_Section_Theme_Title}"
+                                                     Subtitle="{loc:Localize Settings_Section_Theme_Description}" />
+                                <Border Classes="section">
+                                    <StackPanel Classes="sectionContent">
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="Enable Holiday Themes" />
+                                                <CheckBox IsChecked="{Binding AppConfig.EnableHolidayThemes}" />
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Vertical">
+                                                <TextBlock Classes="fieldName"
+                                                           Text="{loc:Localize Settings_Theme_WindowColor}"
+                                                           Width="NaN"
+                                                           HorizontalAlignment="Left" />
+                                                <WrapPanel x:Name="ThemeButtonsPanel"
+                                                           Orientation="Horizontal"
+                                                           Margin="0,8,0,0" />
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="{loc:Localize Settings_Theme_BackgroundImage}" />
+                                                <Button Theme="{DynamicResource AntButton}"
+                                                        Click="SelectBackgroundImage_Click"
+                                                        Content="{loc:Localize Settings_Theme_SelectImage}" />
+                                                <TextBlock Classes="suffixText"
+                                                           Text="{Binding AppConfig.BackgroundImagePath}"
+                                                           MaxWidth="220"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="Background Only Mode" />
+                                                <CheckBox IsChecked="{Binding AppConfig.BackgroundOnlyMode}" />
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="{loc:Localize Settings_Theme_ShowBackgroundInDpsMeter}" />
+                                                <CheckBox IsChecked="{Binding AppConfig.ShowBackgroundInDpsMeter}" />
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="{loc:Localize Settings_Theme_SaveDpsWindowPosition}" />
+                                                <CheckBox IsChecked="{Binding AppConfig.SaveDpsWindowPosition}" />
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Border Classes="sectionField">
+                                            <StackPanel Orientation="Horizontal">
+                                                <TextBlock Classes="fieldName" Text="Panel Color Mode" />
+                                                <ComboBox Width="220"
+                                                          Theme="{DynamicResource AntComboBox}"
+                                                          ItemsSource="{Binding AvailablePanelColorModes}"
+                                                          SelectedItem="{Binding SelectedPanelColorMode}"
+                                                          Foreground="Black">
+                                                    <ComboBox.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <TextBlock Text="{Binding Display}" />
+                                                        </DataTemplate>
+                                                    </ComboBox.ItemTemplate>
+                                                </ComboBox>
+                                            </StackPanel>
+                                        </Border>
+                                    </StackPanel>
+                                </Border>
+
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Border>
+                </Grid>
+
+                <!-- Footer -->
+                <controls:Footer Grid.Row="2"
+                                 Height="50"
+                                 ConfirmCommand="{Binding ConfirmCommand}"
+                                 CancelCommand="{Binding CancelCommand}" />
+            </Grid>
+        </Grid>
+    </Border>
+</Window>

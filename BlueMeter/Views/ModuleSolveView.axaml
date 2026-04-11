@@ -1,0 +1,628 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ctrl="using:BlueMeter.Controls"
+        xmlns:converters="using:BlueMeter.Converters"
+        xmlns:loc="using:BlueMeter.Localization"
+        x:Class="BlueMeter.Views.ModuleSolveView"
+        x:CompileBindings="False"
+        Title="{loc:Localize Window_ModuleSolve_Title}"
+        Width="800"
+        Height="775"
+        MinWidth="800"
+        MinHeight="775"
+        SystemDecorations="None"
+        Background="Transparent"
+        TransparencyLevelHint="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        CanResize="True">
+
+    <Window.Styles>
+        <!-- Group box border -->
+        <Style Selector="Border.groupBox">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="BorderBrush" Value="{DynamicResource AntBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="10,5,10,10" />
+            <Setter Property="Margin" Value="5,12,5,5" />
+            <Setter Property="CornerRadius" Value="3" />
+        </Style>
+
+        <Style Selector="Border.groupBox.stretched">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+        </Style>
+
+        <Style Selector="TextBlock.groupBoxTitle">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Background" Value="#EEE" />
+            <Setter Property="Padding" Value="6,3,6,3" />
+            <Setter Property="Margin" Value="0,-17,0,0" />
+        </Style>
+
+        <Style Selector="Grid.propertyFieldLine">
+            <Setter Property="Margin" Value="0,10,0,0" />
+        </Style>
+
+        <Style Selector="Grid.targetPropertyFieldLeft">
+            <Setter Property="Margin" Value="0,0,10,0" />
+        </Style>
+
+        <Style Selector="TextBlock.fieldTitle">
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+
+        <Style Selector="Border.filterBorder">
+            <Setter Property="Padding" Value="10,0,10,0" />
+            <Setter Property="Margin" Value="0,0,0,10" />
+        </Style>
+
+        <Style Selector="Button.analyzeButton">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Margin" Value="10,0,10,0" />
+            <Setter Property="VerticalContentAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+
+        <Style Selector="Border.analyzeButtonBorder">
+            <Setter Property="CornerRadius" Value="5" />
+            <Setter Property="Background" Value="#1677FF" />
+        </Style>
+
+        <Style Selector="TextBlock.analyzeButtonText">
+            <Setter Property="Padding" Value="0,10,0,10" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Foreground" Value="#FFF" />
+        </Style>
+
+        <Style Selector="TextBlock.usingTip">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="Padding" Value="0,10,0,10" />
+        </Style>
+    </Window.Styles>
+
+    <Border Background="#ECEBE9" Classes="shadowWindow">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ctrl:Header Title="{loc:Localize ModuleSolve_Header_Title}" Grid.Row="0" />
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <!-- Target Properties -->
+                    <Border Grid.Row="0" Classes="groupBox">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0"
+                                       Classes="groupBoxTitle"
+                                       Text="{loc:Localize ModuleSolve_TargetProperties_Title}" />
+
+                            <Grid Grid.Row="1" Classes="propertyFieldLine">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Grid.Column="0" Classes="targetPropertyFieldLeft">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Classes="fieldTitle"
+                                               Text="{loc:Localize ModuleSolve_Property1_Label}" />
+
+                                    <ComboBox x:Name="Property_1"
+                                              Grid.Column="1"
+                                              MinWidth="100"
+                                              Theme="{DynamicResource AntComboBox}"
+                                              ItemsSource="{Binding AvailableAttributes}"
+                                              SelectedItem="{Binding SelectedTargetAttribute1}" />
+                                </Grid>
+
+                                <Grid Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Classes="fieldTitle"
+                                               Text="{loc:Localize ModuleSolve_ExpectedLevel_Label}" />
+
+                                    <TextBox x:Name="WishLevel_1"
+                                             Grid.Column="1"
+                                             MinWidth="60"
+                                             Theme="{DynamicResource AntTextBox}" />
+                                </Grid>
+                            </Grid>
+
+                            <Grid Grid.Row="2" Classes="propertyFieldLine">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Grid.Column="0" Classes="targetPropertyFieldLeft">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Classes="fieldTitle"
+                                               Text="{loc:Localize ModuleSolve_Property2_Label}" />
+
+                                    <ComboBox x:Name="Property_2"
+                                              Grid.Column="1"
+                                              MinWidth="100"
+                                              Theme="{DynamicResource AntComboBox}"
+                                              ItemsSource="{Binding AvailableAttributes}"
+                                              SelectedItem="{Binding SelectedTargetAttribute2}" />
+                                </Grid>
+
+                                <Grid Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Classes="fieldTitle"
+                                               Text="{loc:Localize ModuleSolve_ExpectedLevel_Label}" />
+
+                                    <TextBox x:Name="WishLevel_2"
+                                             Grid.Column="1"
+                                             MinWidth="60"
+                                             Theme="{DynamicResource AntTextBox}" />
+                                </Grid>
+                            </Grid>
+
+                            <Grid Grid.Row="3" Classes="propertyFieldLine">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Grid.Column="0" Classes="targetPropertyFieldLeft">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Classes="fieldTitle"
+                                               Text="{loc:Localize ModuleSolve_Property3_Label}" />
+
+                                    <ComboBox x:Name="Property_3"
+                                              Grid.Column="1"
+                                              MinWidth="100"
+                                              Theme="{DynamicResource AntComboBox}"
+                                              ItemsSource="{Binding AvailableAttributes}"
+                                              SelectedItem="{Binding SelectedTargetAttribute3}" />
+                                </Grid>
+
+                                <Grid Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Classes="fieldTitle"
+                                               Text="{loc:Localize ModuleSolve_ExpectedLevel_Label}" />
+
+                                    <TextBox x:Name="WishLevel_3"
+                                             Grid.Column="1"
+                                             MinWidth="60"
+                                             Theme="{DynamicResource AntTextBox}" />
+                                </Grid>
+                            </Grid>
+
+                            <Grid Grid.Row="4" Classes="propertyFieldLine">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Grid.Column="0" Classes="targetPropertyFieldLeft">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Classes="fieldTitle"
+                                               Text="{loc:Localize ModuleSolve_Property4_Label}" />
+
+                                    <ComboBox x:Name="Property_4"
+                                              Grid.Column="1"
+                                              MinWidth="100"
+                                              Theme="{DynamicResource AntComboBox}"
+                                              ItemsSource="{Binding AvailableAttributes}"
+                                              SelectedItem="{Binding SelectedTargetAttribute4}" />
+                                </Grid>
+
+                                <Grid Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Classes="fieldTitle"
+                                               Text="{loc:Localize ModuleSolve_ExpectedLevel_Label}" />
+
+                                    <TextBox x:Name="WishLevel_4"
+                                             Grid.Column="1"
+                                             MinWidth="60"
+                                             Theme="{DynamicResource AntTextBox}" />
+                                </Grid>
+                            </Grid>
+
+                            <Grid Grid.Row="5" Classes="propertyFieldLine">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Grid.Column="0" Classes="targetPropertyFieldLeft">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Classes="fieldTitle"
+                                               Text="{loc:Localize ModuleSolve_Property5_Label}" />
+
+                                    <ComboBox x:Name="Property_5"
+                                              Grid.Column="1"
+                                              MinWidth="100"
+                                              Theme="{DynamicResource AntComboBox}"
+                                              ItemsSource="{Binding AvailableAttributes}"
+                                              SelectedItem="{Binding SelectedTargetAttribute5}" />
+                                </Grid>
+
+                                <Grid Grid.Column="1">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Classes="fieldTitle"
+                                               Text="{loc:Localize ModuleSolve_ExpectedLevel_Label}" />
+
+                                    <TextBox x:Name="WishLevel_5"
+                                             Grid.Column="1"
+                                             MinWidth="60"
+                                             Theme="{DynamicResource AntTextBox}" />
+                                </Grid>
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                    <!-- Exclude Properties -->
+                    <Border Grid.Row="1" Classes="groupBox stretched">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0"
+                                       Classes="groupBoxTitle"
+                                       Text="{loc:Localize ModuleSolve_ExcludeProperties_Title}" />
+
+                            <Grid Grid.Row="1" Classes="propertyFieldLine">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0"
+                                           Classes="fieldTitle"
+                                           Text="{loc:Localize ModuleSolve_Property1_Label}" />
+
+                                <ComboBox x:Name="ExcludeProperty_1"
+                                          Grid.Column="1"
+                                          Theme="{DynamicResource AntComboBox}"
+                                          ItemsSource="{Binding AvailableAttributes}"
+                                          SelectedItem="{Binding SelectedExcludeAttribute1}" />
+                            </Grid>
+
+                            <Grid Grid.Row="2" Classes="propertyFieldLine">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0"
+                                           Classes="fieldTitle"
+                                           Text="{loc:Localize ModuleSolve_Property2_Label}" />
+
+                                <ComboBox x:Name="ExcludeProperty_2"
+                                          Grid.Column="1"
+                                          Theme="{DynamicResource AntComboBox}"
+                                          ItemsSource="{Binding AvailableAttributes}"
+                                          SelectedItem="{Binding SelectedExcludeAttribute2}" />
+                            </Grid>
+
+                            <Grid Grid.Row="3" Classes="propertyFieldLine">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0"
+                                           Classes="fieldTitle"
+                                           Text="{loc:Localize ModuleSolve_Property3_Label}" />
+
+                                <ComboBox x:Name="ExcludeProperty_3"
+                                          Grid.Column="1"
+                                          Theme="{DynamicResource AntComboBox}"
+                                          ItemsSource="{Binding AvailableAttributes}"
+                                          SelectedItem="{Binding SelectedExcludeAttribute3}" />
+                            </Grid>
+
+                            <Grid Grid.Row="4" Classes="propertyFieldLine">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0"
+                                           Classes="fieldTitle"
+                                           Text="{loc:Localize ModuleSolve_Property4_Label}" />
+
+                                <ComboBox x:Name="ExcludeProperty_4"
+                                          Grid.Column="1"
+                                          Theme="{DynamicResource AntComboBox}"
+                                          ItemsSource="{Binding AvailableAttributes}"
+                                          SelectedItem="{Binding SelectedExcludeAttribute4}" />
+                            </Grid>
+
+                            <Grid Grid.Row="5" Classes="propertyFieldLine">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0"
+                                           Classes="fieldTitle"
+                                           Text="{loc:Localize ModuleSolve_Property5_Label}" />
+
+                                <ComboBox x:Name="ExcludeProperty_5"
+                                          Grid.Column="1"
+                                          Theme="{DynamicResource AntComboBox}"
+                                          ItemsSource="{Binding AvailableAttributes}"
+                                          SelectedItem="{Binding SelectedExcludeAttribute5}" />
+                            </Grid>
+                        </Grid>
+                    </Border>
+
+                    <!-- Capture controls + filter options -->
+                    <Border Grid.Row="3" Classes="filterBorder">
+                        <StackPanel>
+                            <!-- Network Device Selection -->
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="Auto" />
+                                </Grid.ColumnDefinitions>
+
+                                <TextBlock Grid.Column="0"
+                                           Classes="fieldTitle"
+                                           Text="Network Device:"
+                                           Margin="0,0,5,0" />
+
+                                <ComboBox Grid.Column="1"
+                                          Theme="{DynamicResource AntComboBox}"
+                                          ItemsSource="{Binding NetworkDevices}"
+                                          SelectedItem="{Binding SelectedNetworkDevice}"
+                                          DisplayMemberBinding="{Binding Description}" />
+
+                                <Button Grid.Column="2"
+                                        Command="{Binding RefreshNetworkDevicesCommand}"
+                                        Content="Refresh"
+                                        Margin="5,0,0,0"
+                                        Padding="8,4"
+                                        ToolTip.Tip="Refresh network devices" />
+                            </Grid>
+
+                            <!-- Packet Capture Controls -->
+                            <TextBlock Text="Packet Capture (Auto)"
+                                       FontWeight="Bold"
+                                       Margin="0,0,0,5" />
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="0"
+                                        Command="{Binding StartCaptureCommand}"
+                                        Content="Start Capture"
+                                        Margin="0,0,5,0"
+                                        Padding="8,4"
+                                        IsEnabled="{Binding !IsCapturing}" />
+
+                                <Button Grid.Column="1"
+                                        Command="{Binding StopCaptureCommand}"
+                                        Content="Stop Capture"
+                                        Margin="5,0,0,0"
+                                        Padding="8,4"
+                                        IsEnabled="{Binding IsCapturing}" />
+                            </Grid>
+
+                            <!-- OCR Capture Controls -->
+                            <TextBlock Text="OCR Capture (Manual)"
+                                       FontWeight="Bold"
+                                       Margin="0,5,0,5" />
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="0"
+                                        Command="{Binding StartOcrCaptureCommand}"
+                                        Content="Start OCR"
+                                        Margin="0,0,5,0"
+                                        Padding="8,4"
+                                        Background="#4CAF50"
+                                        Foreground="White"
+                                        IsEnabled="{Binding !IsOcrCapturing}" />
+
+                                <Button Grid.Column="1"
+                                        Command="{Binding StopOcrCaptureCommand}"
+                                        Content="Stop OCR"
+                                        Margin="5,0,0,0"
+                                        Padding="8,4"
+                                        Background="#F44336"
+                                        Foreground="White"
+                                        IsEnabled="{Binding IsOcrCapturing}" />
+                            </Grid>
+
+                            <!-- Data Management Buttons -->
+                            <Grid Margin="0,0,0,10">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Button Grid.Column="0"
+                                        Command="{Binding SaveModulesCommand}"
+                                        Content="Save Data"
+                                        Margin="0,0,5,0"
+                                        Padding="8,4"
+                                        IsEnabled="{Binding HasModules}" />
+
+                                <Button Grid.Column="1"
+                                        Command="{Binding LoadModulesCommand}"
+                                        Content="Load Data"
+                                        Margin="5,0,5,0"
+                                        Padding="8,4" />
+
+                                <Button Grid.Column="2"
+                                        Command="{Binding OpenDataFolderCommand}"
+                                        Content="Open Folder"
+                                        Margin="5,0,0,0"
+                                        Padding="8,4" />
+                            </Grid>
+
+                            <!-- Filter Options -->
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Grid.Column="0" Margin="0,0,5,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Classes="fieldTitle"
+                                               Text="{loc:Localize ModuleSolve_ModuleType_Label}" />
+
+                                    <ComboBox x:Name="ModuleType"
+                                              Grid.Column="1"
+                                              Theme="{DynamicResource AntComboBox}"
+                                              SelectedIndex="{Binding ModuleTypeIndex}">
+                                        <ComboBoxItem Content="{loc:Localize ModuleSolve_ModuleType_All}" IsSelected="True" />
+                                        <ComboBoxItem Content="{loc:Localize ModuleSolve_ModuleType_Offense}" />
+                                        <ComboBoxItem Content="{loc:Localize ModuleSolve_ModuleType_Defense}" />
+                                        <ComboBoxItem Content="{loc:Localize ModuleSolve_ModuleType_Support}" />
+                                    </ComboBox>
+                                </Grid>
+
+                                <Grid Grid.Column="1" Margin="5,0,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <TextBlock Grid.Column="0"
+                                               Classes="fieldTitle"
+                                               Text="{loc:Localize ModuleSolve_Sort_Label}" />
+
+                                    <ComboBox x:Name="SortType"
+                                              Grid.Column="1"
+                                              Theme="{DynamicResource AntComboBox}"
+                                              SelectedIndex="{Binding SortTypeIndex}">
+                                        <ComboBoxItem Content="{loc:Localize ModuleSolve_Sort_Attribute}" IsSelected="True" />
+                                        <ComboBoxItem Content="{loc:Localize ModuleSolve_Sort_Level}" />
+                                    </ComboBox>
+                                </Grid>
+                            </Grid>
+                        </StackPanel>
+                    </Border>
+
+                    <Button Grid.Row="4"
+                            Command="{Binding AnalyzeModulesCommand}"
+                            Classes="analyzeButton">
+                        <Button.Content>
+                            <Border Classes="analyzeButtonBorder">
+                                <TextBlock Classes="analyzeButtonText"
+                                           Text="{loc:Localize ModuleSolve_Analyze_Button}" />
+                            </Border>
+                        </Button.Content>
+                    </Button>
+                </Grid>
+
+                <Grid Grid.Column="1" />
+            </Grid>
+
+            <TextBlock Grid.Row="2"
+                       Classes="usingTip"
+                       Text="{Binding StatusMessage}" />
+
+            <ctrl:Footer Grid.Row="3"
+                         Height="50"
+                         CancelClick="Footer_CancelClick"
+                         ConfirmClick="Footer_ConfirmClick" />
+        </Grid>
+    </Border>
+</Window>

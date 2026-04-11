@@ -32,7 +32,6 @@
         <converters:ThemeAccentConverter x:Key="ThemeAccentConverter" />
         <converters:ThemeForegroundConverter x:Key="ThemeForegroundConverter" />
         <converters:ThemeToAppNameConverter x:Key="ThemeToAppNameConverter" />
-        <converters:HolidayTitleConverter x:Key="HolidayTitleConverter" />
         <converters:BackgroundOnlyModeOpacityConverter x:Key="BackgroundOnlyModeOpacityConverter" />
         <converters:IsEnabledToOpacityConverter x:Key="IsEnabledToOpacityConverter" />
         <converters:MenuCollapseConverter x:Key="MenuCollapseConverter" />
@@ -314,11 +313,11 @@
     -->
     <Grid x:Name="MainGrid" ClipToBounds="False">
 
-        <!-- Snow canvas — only visible when holiday themes are enabled. -->
+        <!-- Snow canvas — only visible when a holiday theme is active. -->
         <Canvas x:Name="MainSnowCanvas"
                 ZIndex="500"
                 IsHitTestVisible="False"
-                IsVisible="{Binding AppConfig.EnableHolidayThemes}" />
+                IsVisible="{Binding AppConfig.IsHolidayDecorationVisible}" />
 
         <!-- Rounded shadow card. -->
         <Border Classes="shadowWindow" Background="#0A0E1A">
@@ -375,7 +374,7 @@
                                     <Grid ColumnDefinitions="*,Auto">
                                         <TextBlock Grid.Column="0"
                                                    Classes="pluginListHeaderText"
-                                                   Text="{loc:Localize MainView_Plugin_Title}"
+                                                   Text="{loc:Localize MainView_PluginList_Title}"
                                                    IsVisible="{Binding !IsMenuCollapsed}" />
                                         <Button Grid.Column="1"
                                                 Classes="iconButton"
@@ -439,12 +438,12 @@
                                                             <Border Classes="pluginAutoStart"
                                                                     IsVisible="{Binding State.IsAutoStart}">
                                                                 <TextBlock Classes="pluginAutoStartText"
-                                                                           Text="{loc:Localize MainView_Plugin_AutoStart_Short}" />
+                                                                           Text="{loc:Localize MainView_Plugin_AutoStart}" />
                                                             </Border>
                                                             <Border Classes="pluginRunningState"
                                                                     IsVisible="{Binding State.IsRunning}">
                                                                 <TextBlock Classes="pluginRunningStateText"
-                                                                           Text="{loc:Localize MainView_Plugin_Running_Short}" />
+                                                                           Text="{loc:Localize MainView_Plugin_State_Running}" />
                                                             </Border>
                                                         </StackPanel>
                                                     </Grid>
@@ -533,12 +532,12 @@
                                                            Text="{loc:Localize MainView_Plugin_Label_Author}" />
                                                 <TextBlock Grid.Row="0" Grid.Column="1"
                                                            Classes="pluginDetailValue"
-                                                           Text="{loc:Localize Author_OfficialTeam}" />
+                                                           Text="{loc:Localize MainView_Plugin_Author_OfficialTeam}" />
 
                                                 <TextBlock Grid.Row="1" Grid.Column="0"
                                                            Classes="pluginDetailLabel"
                                                            Margin="0,8,8,0"
-                                                           Text="{loc:Localize Label_Intro}" />
+                                                           Text="{loc:Localize MainView_Plugin_Label_Intro}" />
                                                 <TextBlock Grid.Row="1" Grid.Column="1"
                                                            Classes="pluginDetailValue"
                                                            Margin="0,8,0,0"
@@ -619,7 +618,7 @@
         <!-- Holiday: Christmas decorations on top of everything. -->
         <ctrl:ChristmasDecorations Margin="0"
                                    ZIndex="1000"
-                                   IsVisible="{Binding AppConfig.EnableHolidayThemes}" />
+                                   IsVisible="{Binding AppConfig.IsHolidayDecorationVisible}" />
 
         <!-- Holiday: Santa hat tilted in the corner. -->
         <Image Width="65"
@@ -630,8 +629,8 @@
                Opacity="0.95"
                ZIndex="1001"
                RenderTransformOrigin="50%,50%"
-               RenderTransform="rotate(15)"
-               IsVisible="{Binding AppConfig.EnableHolidayThemes}"
+               RenderTransform="rotate(15deg)"
+               IsVisible="{Binding AppConfig.IsHolidayDecorationVisible}"
                Source="avares://BlueMeter/Assets/Themes/Christmas/Decorations/santa_hat.png" />
     </Grid>
 </Window>

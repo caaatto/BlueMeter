@@ -354,6 +354,15 @@ public partial class SettingsView : Window
         if (!string.IsNullOrEmpty(path))
         {
             _vm.AppConfig.BackgroundImagePath = path;
+
+            // Picking an image here used to leave `ShowBackgroundInDpsMeter` untouched
+            // (that flag lives on a separate, unlabeled checkbox further down the
+            // Theme section). Users reported the custom image "not working" after
+            // going through the picker flow — they didn't realise they also had to
+            // flip the toggle. Flip it here so the picker acts as a single-click
+            // "apply this image to the DPS meter" affordance. Users who want the
+            // image off can still uncheck the toggle explicitly.
+            _vm.AppConfig.ShowBackgroundInDpsMeter = true;
         }
     }
 

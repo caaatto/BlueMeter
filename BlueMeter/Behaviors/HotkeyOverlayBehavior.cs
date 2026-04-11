@@ -1,8 +1,7 @@
-using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Xaml.Interactivity;
+using BlueMeter.Controls;
 using BlueMeter.ViewModels;
 
 namespace BlueMeter.Behaviors;
@@ -15,39 +14,23 @@ namespace BlueMeter.Behaviors;
 /// (e.g. Ctrl+F6) without it firing the existing hotkey first.
 ///
 /// Port notes:
-///   - <c>System.Windows.Controls.TextBox</c> → <c>Avalonia.Controls.TextBox</c>.
-///   - <c>DependencyProperty.Register</c> → <c>AvaloniaProperty.Register&lt;TOwner, T&gt;</c>.
+///   - <c>System.Windows.Controls.TextBox</c> → <see cref="HotkeyTextBox"/>
+///     (a trivial Avalonia <c>TextBox</c> subclass that exposes a regular
+///     <see cref="HotkeyTextBox.ShowOverlay"/> styled property). WPF bound to
+///     an attached property here, but Avalonia's runtime binding parser can't
+///     resolve the xmlns prefix in a <c>#Name.(prefix:Type.Prop)</c> path when
+///     the enclosing window opts out of compiled bindings, so we keep the
+///     flag on a regular dependency property instead.
 ///   - WPF's tunneling <c>PreviewKeyDown</c> becomes
 ///     <c>AddHandler(InputElement.KeyDownEvent, …, RoutingStrategies.Tunnel)</c>
 ///     so we still see the key before <see cref="KeyDownCommandBehavior"/> on
 ///     the same TextBox consumes it.
 ///   - <c>GotFocus</c> uses Avalonia's <c>GotFocusEventArgs</c>; <c>LostFocus</c>
 ///     stays on plain <c>RoutedEventArgs</c>.
-///   - <see cref="ShowOverlayProperty"/> is an **attached** property hosted on
-///     the AssociatedObject (the TextBox) rather than on the behavior itself.
-///     Avalonia XAML cannot assign <c>x:Name</c> to a <see cref="Behavior{T}"/>,
-///     so bindings from sibling controls (e.g. the overlay TextBlock) reference
-///     the TextBox by name and use the attached-property path
-///     <c>(behaviors:HotkeyOverlayBehavior.ShowOverlay)</c>.
 /// </summary>
-public class HotkeyOverlayBehavior : Behavior<TextBox>
+public class HotkeyOverlayBehavior : Behavior<HotkeyTextBox>
 {
     private bool _stoppedHotkeysForEditing;
-
-    public static readonly AttachedProperty<bool> ShowOverlayProperty =
-        AvaloniaProperty.RegisterAttached<HotkeyOverlayBehavior, TextBox, bool>("ShowOverlay");
-
-    public static bool GetShowOverlay(TextBox element) => element.GetValue(ShowOverlayProperty);
-
-    public static void SetShowOverlay(TextBox element, bool value) => element.SetValue(ShowOverlayProperty, value);
-
-    private void SetOverlay(bool value)
-    {
-        if (AssociatedObject is not null)
-        {
-            SetShowOverlay(AssociatedObject, value);
-        }
-    }
 
     protected override void OnAttached()
     {
@@ -76,12 +59,17 @@ public class HotkeyOverlayBehavior : Behavior<TextBox>
 
     private void OnGotFocus(object? sender, GotFocusEventArgs e)
     {
-        SetOverlay(true);
+        if (AssociatedObject is null)
+        {
+            return;
+        }
+
+        AssociatedObject.ShowOverlay = true;
 
         // Temporarily stop global hotkeys when the user clicks into a hotkey field
         // so they can set a currently-registered hotkey (e.g., Ctrl+F6) without it
         // firing the existing binding.
-        if (AssociatedObject?.DataContext is SettingsViewModel viewModel
+        if (AssociatedObject.DataContext is SettingsViewModel viewModel
             && viewModel.AppConfig.GlobalHotkeysEnabled)
         {
             viewModel.GlobalHotkeyService.Stop();
@@ -92,18 +80,26 @@ public class HotkeyOverlayBehavior : Behavior<TextBox>
     private void OnPreviewKeyDown(object? sender, KeyEventArgs e)
     {
         // Hide the overlay as soon as the user starts typing.
-        SetOverlay(false);
+        if (AssociatedObject is not null)
+        {
+            AssociatedObject.ShowOverlay = false;
+        }
     }
 
     private void OnLostFocus(object? sender, RoutedEventArgs e)
     {
-        SetOverlay(false);
+        if (AssociatedObject is null)
+        {
+            return;
+        }
+
+        AssociatedObject.ShowOverlay = false;
 
         // Restart global hotkeys when leaving the field — but only if the toggle
         // is still enabled (the user may have flipped it off mid-edit).
         if (_stoppedHotkeysForEditing)
         {
-            if (AssociatedObject?.DataContext is SettingsViewModel viewModel
+            if (AssociatedObject.DataContext is SettingsViewModel viewModel
                 && viewModel.AppConfig.GlobalHotkeysEnabled)
             {
                 viewModel.GlobalHotkeyService.Start();

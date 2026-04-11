@@ -232,7 +232,7 @@
     <value>Combat Settings</value>
   </data>
   <data name="Settings_Section_Combat_Sub" xml:space="preserve">
-    <value></value>
+    <value>[Clear data after combat] only resets current-encounter data, not totals.</value>
   </data>
   <data name="Settings_NetworkAdapter_Label" xml:space="preserve">
     <value>Capture Adapter</value>
@@ -481,7 +481,7 @@
     <value>DPS Toolkit</value>
   </data>
   <data name="MainView_Plugin_DpsTool_Description" xml:space="preserve">
-    <value>Provides DPS statistics and skill breakdown tools</value>
+    <value>DPS stats and skill breakdowns</value>
   </data>
   <data name="MainView_Plugin_Label_Author" xml:space="preserve">
     <value>Author:</value>
@@ -879,6 +879,12 @@
   </data>
   <data name="MainView_Plugin_Settings" xml:space="preserve">
     <value>Settings</value>
+  </data>
+  <data name="MainView_Plugin_Section_Installed" xml:space="preserve">
+    <value>Installed</value>
+  </data>
+  <data name="MainView_Plugin_Run" xml:space="preserve">
+    <value>Run</value>
   </data>
   <data name="Settings_Section_Theme_Title" xml:space="preserve">
     <value>Theme Settings</value>

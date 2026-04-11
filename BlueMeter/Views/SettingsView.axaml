@@ -24,7 +24,18 @@
         ExtendClientAreaToDecorationsHint="True"
         SystemDecorations="None"
         TransparencyLevelHint="Transparent"
-        WindowStartupLocation="CenterOwner">
+        WindowStartupLocation="CenterOwner"
+        RequestedThemeVariant="Light"><!--
+            The settings chrome is painted in hardcoded light greys (#F7F7F7
+            sidebar, #FFFFFF detail pane, #333333 field labels). Avalonia's
+            Application RequestedThemeVariant is "Dark", which sets the
+            FluentTheme TextBlock default foreground to near-white — plain
+            <TextBlock/> children inside the sidebar's navItem buttons ended up
+            white-on-light-grey and invisible. Scoping *this* window to the
+            Light variant keeps the Fluent text/foreground resources dark so
+            untyped TextBlocks read correctly on the light chrome without
+            touching every label by hand.
+        -->
 
     <Window.Resources>
         <converters:BackgroundImageConverter x:Key="BackgroundImageConverter" />
@@ -60,7 +71,7 @@
             <Setter Property="Padding" Value="12,8" />
         </Style>
         <Style Selector="TextBlock.settingSectionListTitle">
-            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC" />
+            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts#HarmonyOS Sans SC" />
             <Setter Property="FontSize" Value="14" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Foreground" Value="#FFFFFF" />
@@ -108,7 +119,7 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style Selector="TextBlock.sectionTitle">
-            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC" />
+            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts#HarmonyOS Sans SC" />
             <Setter Property="FontSize" Value="18" />
             <Setter Property="FontWeight" Value="SemiBold" />
             <Setter Property="Foreground" Value="#222222" />
@@ -116,7 +127,7 @@
             <Setter Property="VerticalAlignment" Value="Center" />
         </Style>
         <Style Selector="TextBlock.sectionSubtitle">
-            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC" />
+            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts#HarmonyOS Sans SC" />
             <Setter Property="FontSize" Value="12" />
             <Setter Property="Foreground" Value="#888888" />
             <Setter Property="Margin" Value="12,0,0,0" />
@@ -138,7 +149,7 @@
             <Setter Property="Padding" Value="0,6" />
         </Style>
         <Style Selector="TextBlock.fieldName">
-            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC" />
+            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts#HarmonyOS Sans SC" />
             <Setter Property="FontSize" Value="13" />
             <Setter Property="Foreground" Value="#333333" />
             <Setter Property="VerticalAlignment" Value="Center" />
@@ -375,20 +386,20 @@
                                                            Text="{loc:Localize Settings_Shortcut_MouseThrough}"
                                                            ToolTip.Tip="{loc:Localize Settings_Shortcut_MouseThrough_Tooltip}" />
                                                 <Grid Width="220" Height="30">
-                                                    <TextBox x:Name="MouseThroughTextBox"
+                                                    <controls:HotkeyTextBox x:Name="MouseThroughTextBox"
                                                              IsEnabled="{Binding AppConfig.GlobalHotkeysEnabled}"
                                                              IsReadOnly="True"
                                                              Theme="{DynamicResource AntTextBox}"
                                                              Text="{Binding AppConfig.MouseThroughShortcut, Mode=OneWay, Converter={StaticResource KeyBindingToStringConverter}}"
-                                                             Foreground="{Binding #MouseThroughTextBox.(behaviors:HotkeyOverlayBehavior.ShowOverlay), Converter={StaticResource ShowOverlayToColorConverter}}">
+                                                             Foreground="{Binding #MouseThroughTextBox.ShowOverlay, Converter={StaticResource ShowOverlayToColorConverter}}">
                                                         <i:Interaction.Behaviors>
                                                             <behaviors:HotkeyOverlayBehavior />
                                                             <behaviors:KeyDownCommandBehavior Command="{Binding HandleMouseThroughShortcutCommand}" />
                                                         </i:Interaction.Behaviors>
-                                                    </TextBox>
+                                                    </controls:HotkeyTextBox>
                                                     <TextBlock Classes="hotkeyOverlay"
                                                                Text="Enter Hot Key"
-                                                               IsVisible="{Binding #MouseThroughTextBox.(behaviors:HotkeyOverlayBehavior.ShowOverlay)}" />
+                                                               IsVisible="{Binding #MouseThroughTextBox.ShowOverlay}" />
                                                 </Grid>
                                             </StackPanel>
                                         </Border>
@@ -399,20 +410,20 @@
                                                            Text="{loc:Localize Settings_Shortcut_ClearData}"
                                                            ToolTip.Tip="{loc:Localize Settings_Shortcut_ClearData_Tooltip}" />
                                                 <Grid Width="220" Height="30">
-                                                    <TextBox x:Name="ClearDataTextBox"
+                                                    <controls:HotkeyTextBox x:Name="ClearDataTextBox"
                                                              IsEnabled="{Binding AppConfig.GlobalHotkeysEnabled}"
                                                              IsReadOnly="True"
                                                              Theme="{DynamicResource AntTextBox}"
                                                              Text="{Binding AppConfig.ClearDataShortcut, Mode=OneWay, Converter={StaticResource KeyBindingToStringConverter}}"
-                                                             Foreground="{Binding #ClearDataTextBox.(behaviors:HotkeyOverlayBehavior.ShowOverlay), Converter={StaticResource ShowOverlayToColorConverter}}">
+                                                             Foreground="{Binding #ClearDataTextBox.ShowOverlay, Converter={StaticResource ShowOverlayToColorConverter}}">
                                                         <i:Interaction.Behaviors>
                                                             <behaviors:HotkeyOverlayBehavior />
                                                             <behaviors:KeyDownCommandBehavior Command="{Binding HandleClearDataShortcutCommand}" />
                                                         </i:Interaction.Behaviors>
-                                                    </TextBox>
+                                                    </controls:HotkeyTextBox>
                                                     <TextBlock Classes="hotkeyOverlay"
                                                                Text="Enter Hot Key"
-                                                               IsVisible="{Binding #ClearDataTextBox.(behaviors:HotkeyOverlayBehavior.ShowOverlay)}" />
+                                                               IsVisible="{Binding #ClearDataTextBox.ShowOverlay}" />
                                                 </Grid>
                                             </StackPanel>
                                         </Border>
@@ -423,20 +434,20 @@
                                                            Text="{loc:Localize Settings_Shortcut_TopMost}"
                                                            ToolTip.Tip="{loc:Localize Settings_Shortcut_TopMost_Tooltip}" />
                                                 <Grid Width="220" Height="30">
-                                                    <TextBox x:Name="TopMostTextBox"
+                                                    <controls:HotkeyTextBox x:Name="TopMostTextBox"
                                                              IsEnabled="{Binding AppConfig.GlobalHotkeysEnabled}"
                                                              IsReadOnly="True"
                                                              Theme="{DynamicResource AntTextBox}"
                                                              Text="{Binding AppConfig.TopmostShortcut, Mode=OneWay, Converter={StaticResource KeyBindingToStringConverter}}"
-                                                             Foreground="{Binding #TopMostTextBox.(behaviors:HotkeyOverlayBehavior.ShowOverlay), Converter={StaticResource ShowOverlayToColorConverter}}">
+                                                             Foreground="{Binding #TopMostTextBox.ShowOverlay, Converter={StaticResource ShowOverlayToColorConverter}}">
                                                         <i:Interaction.Behaviors>
                                                             <behaviors:HotkeyOverlayBehavior />
                                                             <behaviors:KeyDownCommandBehavior Command="{Binding HandleTopMostShortcutCommand}" />
                                                         </i:Interaction.Behaviors>
-                                                    </TextBox>
+                                                    </controls:HotkeyTextBox>
                                                     <TextBlock Classes="hotkeyOverlay"
                                                                Text="Enter Hot Key"
-                                                               IsVisible="{Binding #TopMostTextBox.(behaviors:HotkeyOverlayBehavior.ShowOverlay)}" />
+                                                               IsVisible="{Binding #TopMostTextBox.ShowOverlay}" />
                                                 </Grid>
                                             </StackPanel>
                                         </Border>

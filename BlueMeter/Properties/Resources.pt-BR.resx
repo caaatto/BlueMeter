@@ -472,7 +472,7 @@
     <value>Kit de Ferramentas DPS</value>
   </data>
   <data name="MainView_Plugin_DpsTool_Description" xml:space="preserve">
-    <value>Fornece estatísticas de DPS e ferramentas de detalhamento de habilidades</value>
+    <value>Estatísticas de DPS e habilidades</value>
   </data>
   <data name="MainView_Plugin_Label_Author" xml:space="preserve">
     <value>Autor:</value>

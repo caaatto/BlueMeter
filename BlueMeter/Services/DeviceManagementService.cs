@@ -21,7 +21,59 @@ public class DeviceManagementService(
 
     public async Task<List<(string name, string description)>> GetNetworkAdaptersAsync()
     {
-        return await Task.FromResult(captureDeviceList.Select(device => (device.Name, device.Description)).ToList());
+        // Npcap's `device.Description` is unreliable on Windows — for virtual / loopback
+        // adapters it is often just "Microsoft" (or the vendor name) with no distinguishing
+        // suffix, which made the settings dropdown show the same label many times over. Build
+        // a friendly display string by cross-referencing the Npcap device name (which embeds
+        // the adapter GUID as `\Device\NPF_{GUID}`) with `NetworkInterface.GetAllNetworkInterfaces()`
+        // and using its `Name` ("Ethernet", "Wi-Fi", ...) plus `Description`.
+        var interfacesById = new Dictionary<string, NetworkInterface>(StringComparer.OrdinalIgnoreCase);
+        try
+        {
+            foreach (var ni in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                interfacesById[ni.Id] = ni;
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogDebug(ex, "Failed to enumerate NetworkInterfaces for friendly-name mapping");
+        }
+
+        var result = new List<(string name, string description)>(captureDeviceList.Count);
+        foreach (var device in captureDeviceList)
+        {
+            result.Add((device.Name, BuildFriendlyDescription(device.Name, device.Description, interfacesById)));
+        }
+
+        return await Task.FromResult(result);
+    }
+
+    private static string BuildFriendlyDescription(
+        string pcapName,
+        string pcapDescription,
+        IReadOnlyDictionary<string, NetworkInterface> interfacesById)
+    {
+        // `\Device\NPF_{11111111-2222-3333-4444-555555555555}` -> `{11111111-...}`
+        var guid = ExtractAdapterGuid(pcapName);
+        if (guid != null && interfacesById.TryGetValue(guid, out var ni))
+        {
+            // "Ethernet — Intel(R) I225-V" is more useful than a bare "Microsoft".
+            return string.IsNullOrWhiteSpace(ni.Description) || string.Equals(ni.Name, ni.Description, StringComparison.OrdinalIgnoreCase)
+                ? ni.Name
+                : $"{ni.Name} — {ni.Description}";
+        }
+
+        return string.IsNullOrWhiteSpace(pcapDescription) ? pcapName : pcapDescription;
+    }
+
+    private static string? ExtractAdapterGuid(string pcapName)
+    {
+        if (string.IsNullOrEmpty(pcapName)) return null;
+        var open = pcapName.IndexOf('{');
+        var close = pcapName.IndexOf('}', open + 1);
+        if (open < 0 || close <= open) return null;
+        return pcapName.Substring(open, close - open + 1);
     }
 
     /// <summary>
@@ -52,23 +104,22 @@ public class DeviceManagementService(
 
             if (ni == null) return Task.FromResult<NetworkAdapterInfo?>(null);
 
-            // Find best matching capture device by description/name
-            int bestIndex = -1, bestScore = -1;
-            for (var i = 0; i < captureDeviceList.Count; i++)
-            {
-                var score = 0;
-                if (captureDeviceList[i].Description.Contains(ni.Name, StringComparison.OrdinalIgnoreCase)) score += 2;
-                if (captureDeviceList[i].Description
-                    .Contains(ni.Description, StringComparison.OrdinalIgnoreCase)) score += 3;
-                if (score <= bestScore) continue;
-                bestScore = score;
-                bestIndex = i;
-            }
+            // Prefer GUID-based matching: Npcap device names embed the adapter GUID
+            // (`\Device\NPF_{GUID}`) and NetworkInterface.Id is that same GUID, so
+            // cross-referencing is exact. The old "Description contains ni.Name"
+            // fallback was unreliable because Npcap's description is often just
+            // "Microsoft" with no adapter-specific suffix.
+            ILiveDevice? matched = captureDeviceList
+                .FirstOrDefault(d => string.Equals(ExtractAdapterGuid(d.Name), ni.Id, StringComparison.OrdinalIgnoreCase));
 
-            if (bestIndex >= 0)
+            if (matched != null)
             {
-                var d = captureDeviceList[bestIndex];
-                return Task.FromResult<NetworkAdapterInfo?>(new NetworkAdapterInfo(d.Name, d.Description));
+                // Reuse the same friendly-name mapping as GetNetworkAdaptersAsync so the
+                // returned record round-trips through record equality on SettingsView's
+                // SelectedItem binding.
+                var interfacesById = new Dictionary<string, NetworkInterface>(StringComparer.OrdinalIgnoreCase) { [ni.Id] = ni };
+                return Task.FromResult<NetworkAdapterInfo?>(
+                    new NetworkAdapterInfo(matched.Name, BuildFriendlyDescription(matched.Name, matched.Description, interfacesById)));
             }
         }
         catch (Exception ex)

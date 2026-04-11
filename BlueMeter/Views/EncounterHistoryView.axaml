@@ -18,7 +18,8 @@
         TransparencyLevelHint="Transparent"
         ExtendClientAreaToDecorationsHint="True"
         d:DataContext="{d:DesignInstance Type=vm:EncounterHistoryViewModel}"
-        mc:Ignorable="d">
+        mc:Ignorable="d"
+        RequestedThemeVariant="Light"><!-- Light chrome: DataGrid rows, toolbar text, and status bar are all styled against light backgrounds, so scope the theme variant locally instead of inheriting the Application's Dark default. -->
 
     <Window.Resources>
         <converters:BoolToActiveStatusConverter x:Key="BoolToActiveStatusConverter" />
@@ -200,13 +201,17 @@
                 </Grid>
             </Border>
 
-            <!--  Footer  -->
+            <!--
+                Footer — let it auto-size to its button content. The old
+                Height="50" + Margin="10" gave buttons a 30px inner slot,
+                which clipped the Ant button chrome and swallowed the
+                "Close" glyph on the bottom row.
+            -->
             <Border Grid.Row="2"
-                    Height="50"
                     Background="#F5F5F5"
                     BorderBrush="#E5E5E5"
                     BorderThickness="0,1,0,0">
-                <Grid Margin="10" ColumnDefinitions="*,Auto,10,Auto">
+                <Grid Margin="10,8" ColumnDefinitions="*,Auto,10,Auto">
                     <Button Grid.Column="1"
                             Padding="20,8"
                             Command="{Binding LoadSelectedEncounterCommand}"

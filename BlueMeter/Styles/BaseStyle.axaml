@@ -36,9 +36,16 @@
         <Setter Property="Background" Value="#ECECEC" />
     </Style>
 
-    <!--  Default TextBlock font — HarmonyOS Sans SC  -->
+    <!--
+        Default TextBlock font — HarmonyOS Sans SC. Uses Avalonia's folder
+        URI (no file name, just folder + family) so the font manager picks
+        up every weight in the directory. Pointing at a single -Regular.ttf
+        file registers only that one face, and any FontWeight="Bold" /
+        "SemiBold" TextBlock then falls into SkiaSharp's synthetic glyph
+        path, which reliably AVs in sk_stream_read during measure/arrange.
+    -->
     <Style Selector="TextBlock">
-        <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC" />
+        <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts#HarmonyOS Sans SC" />
     </Style>
 
     <!--  Card border (white background, rounded)  -->

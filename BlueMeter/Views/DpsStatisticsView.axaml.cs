@@ -154,7 +154,7 @@ public partial class DpsStatisticsView : Window
         Task heightTask = heightAnim.RunAsync(this);
 
         Task rotateTask = Task.CompletedTask;
-        if (_pullButtonRotate is not null)
+        if (_pullButton is not null && _pullButtonRotate is not null)
         {
             var rotateAnim = new Animation
             {
@@ -175,7 +175,12 @@ public partial class DpsStatisticsView : Window
                     }
                 }
             };
-            rotateTask = rotateAnim.RunAsync(_pullButtonRotate);
+            // RunAsync target must be the owning Visual, not the RotateTransform.
+            // Avalonia's TransformAnimator walks from the Visual's RenderTransform
+            // down to the matching Transform subclass — passing the transform
+            // directly crashes inside TransformAnimator.Apply with
+            // "Unable to cast object of type 'RotateTransform' to type 'Visual'".
+            rotateTask = rotateAnim.RunAsync(_pullButton);
         }
 
         await Task.WhenAll(heightTask, rotateTask);

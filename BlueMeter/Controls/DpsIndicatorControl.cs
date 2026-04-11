@@ -1,7 +1,5 @@
 using System.Diagnostics;
 using Avalonia;
-using Avalonia.Animation;
-using Avalonia.Animation.Easings;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Input;
@@ -12,16 +10,13 @@ namespace BlueMeter.Controls;
 
 public class DpsIndicatorControl : TemplatedControl
 {
-    // Percentage value in range 0..Maximum.
+    // Percentage value in range 0..Maximum. The template binds PART_Indicator.Width
+    // to this through PercentToWidthConverter; a Transitions block on PART_Indicator
+    // tweens the resulting width change.
     public static readonly StyledProperty<double> PercentageProperty =
         AvaloniaProperty.Register<DpsIndicatorControl, double>(
             nameof(Percentage),
             defaultBindingMode: Avalonia.Data.BindingMode.TwoWay);
-
-    // AnimatedPercentage: used by the template to animate visual changes when Percentage updates.
-    // A DoubleTransition (registered in the static constructor) tweens this value smoothly.
-    public static readonly StyledProperty<double> AnimatedPercentageProperty =
-        AvaloniaProperty.Register<DpsIndicatorControl, double>(nameof(AnimatedPercentage));
 
     public static readonly StyledProperty<double> MaximumProperty =
         AvaloniaProperty.Register<DpsIndicatorControl, double>(nameof(Maximum), 100d);
@@ -57,17 +52,6 @@ public class DpsIndicatorControl : TemplatedControl
         // since the static metadata-override pattern is gone in Avalonia.
         CornerRadius = new CornerRadius(4);
 
-        // Smooth tween of AnimatedPercentage whenever Percentage changes.
-        Transitions = new Transitions
-        {
-            new DoubleTransition
-            {
-                Property = AnimatedPercentageProperty,
-                Duration = TimeSpan.FromMilliseconds(300),
-                Easing = new CubicEaseOut()
-            }
-        };
-
         // Mouse event handlers for debugging
         PointerEntered += OnPointerEntered;
         PointerExited += OnPointerExited;
@@ -83,12 +67,6 @@ public class DpsIndicatorControl : TemplatedControl
     {
         get => GetValue(PercentageProperty);
         set => SetValue(PercentageProperty, value);
-    }
-
-    public double AnimatedPercentage
-    {
-        get => GetValue(AnimatedPercentageProperty);
-        set => SetValue(AnimatedPercentageProperty, value);
     }
 
     public double Maximum
@@ -137,12 +115,7 @@ public class DpsIndicatorControl : TemplatedControl
     {
         base.OnPropertyChanged(change);
 
-        if (change.Property == PercentageProperty)
-        {
-            // Drive AnimatedPercentage; the registered DoubleTransition handles the tween.
-            SetValue(AnimatedPercentageProperty, change.GetNewValue<double>());
-        }
-        else if (change.Property == PopupTemplateProperty)
+        if (change.Property == PopupTemplateProperty)
         {
             Debug.WriteLine($"[DpsIndicatorControl] PopupTemplate changed: {change.NewValue?.GetType().Name ?? "null"}");
         }

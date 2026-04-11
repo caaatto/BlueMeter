@@ -17,7 +17,27 @@
                             Opacity="{TemplateBinding TrackOpacity}"
                             IsVisible="False" />
 
-                    <!--  indicator, width calculated by converter  -->
+                    <!--
+                        Indicator rectangle — width is driven by a MultiBinding through
+                        PercentToWidthConverter(Percentage, Maximum, controlWidth).
+
+                        The third arg reads the TemplatedParent's own Bounds.Width instead
+                        of binding through the Root Grid by ElementName: template-scoped
+                        ElementName lookups are unreliable in Avalonia's compiled XAML and
+                        resolved to 0 here, which hid the bar's size entirely. The Grid
+                        fills the control so TemplatedParent.Bounds.Width matches what
+                        Root.Bounds.Width would have reported.
+
+                        Width smoothing is handled by the Transitions block below — any
+                        time the MultiBinding recomputes Width (Percentage change, control
+                        resize, Maximum change), Avalonia tweens from the previous value.
+                        The earlier port routed this through an intermediate
+                        AnimatedPercentage property with an imperative Animation.RunAsync,
+                        which wrote at Animation priority but never caused the MultiBinding
+                        to re-evaluate Width smoothly — animating the Rectangle's Width
+                        directly is simpler and is Avalonia's canonical "tween a bound
+                        dimension" pattern.
+                    -->
                     <Rectangle Name="PART_Indicator"
                                Height="{TemplateBinding Height}"
                                HorizontalAlignment="Left"
@@ -25,11 +45,18 @@
                                Opacity="{TemplateBinding TrackOpacity}"
                                RadiusX="{Binding CornerRadius.TopLeft, RelativeSource={RelativeSource TemplatedParent}}"
                                RadiusY="{Binding CornerRadius.TopLeft, RelativeSource={RelativeSource TemplatedParent}}">
+                        <Rectangle.Transitions>
+                            <Transitions>
+                                <DoubleTransition Property="Width"
+                                                  Duration="0:0:0.3"
+                                                  Easing="CubicEaseOut" />
+                            </Transitions>
+                        </Rectangle.Transitions>
                         <Rectangle.Width>
                             <MultiBinding Converter="{StaticResource PercentToWidthConverter}">
-                                <Binding Path="AnimatedPercentage" RelativeSource="{RelativeSource TemplatedParent}" />
+                                <Binding Path="Percentage" RelativeSource="{RelativeSource TemplatedParent}" />
                                 <Binding Path="Maximum" RelativeSource="{RelativeSource TemplatedParent}" />
-                                <Binding ElementName="Root" Path="Bounds.Width" />
+                                <Binding Path="Bounds.Width" RelativeSource="{RelativeSource TemplatedParent}" />
                             </MultiBinding>
                         </Rectangle.Width>
                     </Rectangle>

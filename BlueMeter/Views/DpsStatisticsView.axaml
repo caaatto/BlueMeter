@@ -31,10 +31,8 @@
         <converters:ThemeBackgroundConverter x:Key="ThemeBackgroundConverter" />
         <converters:ThemeAccentConverter x:Key="ThemeAccentConverter" />
         <converters:ThemeForegroundConverter x:Key="ThemeForegroundConverter" />
-        <converters:HolidayTitleConverter x:Key="HolidayTitleConverter" />
         <converters:PanelColorModeConverter x:Key="PanelColorModeConverter" />
         <converters:PanelContentColorModeConverter x:Key="PanelContentColorModeConverter" />
-        <converters:PercentToOpacityConverter x:Key="PercentToOpacityConverter" />
         <converters:TrainingModeCheckConverter x:Key="TrainingModeCheckConverter" />
         <converters:NumberToBoolConverter x:Key="NumberToBoolConverter" />
         <converters:InverseBooleanConverter x:Key="InverseBooleanConverter" />
@@ -45,6 +43,8 @@
         <converters:ClassesToIconConverter x:Key="ClassesToIconConverter" />
         <converters:ClassSpecColorConverter x:Key="ClassSpecColorConverter" />
         <converters:ConditionalPercentToOpacityConverter x:Key="ConditionalPercentToOpacityConverter" />
+        <converters:EnumToLocalizedStringConverter x:Key="EnumToLocalizedStringConverter" />
+        <converters:LocalizedKeyConverter x:Key="LocalizedKeyConverter" />
 
         <!-- Per-row details template: rank, class icon, player name, value, percent. -->
         <DataTemplate x:Key="StatisticDetailDataTemplate" DataType="{x:Type viewModels:StatisticDataViewModel}">
@@ -74,24 +74,24 @@
                 <StackPanel Grid.Column="2" Orientation="Horizontal">
                     <TextBlock Name="PlayerName"
                                VerticalAlignment="Center"
-                               FontFamily="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC"
+                               FontFamily="avares://BlueMeter/Assets/Fonts#HarmonyOS Sans SC"
                                Foreground="White"
                                Text="{Binding Player.Name}"
                                IsVisible="{Binding !Player.IsNpc}" />
                     <TextBlock VerticalAlignment="Center"
-                               FontFamily="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC"
+                               FontFamily="avares://BlueMeter/Assets/Fonts#HarmonyOS Sans SC"
                                Foreground="White"
                                IsVisible="{Binding !Player.IsNpc}">
-                        <Run Text=" -" />
-                        <Run Text="{Binding Player.Spec, StringFormat='ClassSpec_{0}'}" />
-                        <Run Text="{Binding Player.PowerLevel, StringFormat='({0})'}" />
+                        <Run Text=" - " />
+                        <Run Text="{Binding Player.Spec, Converter={StaticResource LocalizedKeyConverter}, ConverterParameter=ClassSpec}" />
+                        <Run Text="{Binding Player.PowerLevel, StringFormat=' ({0})'}" />
                     </TextBlock>
                 </StackPanel>
 
                 <TextBlock Grid.Column="3"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
-                           FontFamily="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC"
+                           FontFamily="avares://BlueMeter/Assets/Fonts#HarmonyOS Sans SC"
                            FontWeight="Bold"
                            Foreground="White">
                     <Run>
@@ -116,7 +116,7 @@
                 <TextBlock Grid.Column="4"
                            HorizontalAlignment="Right"
                            VerticalAlignment="Center"
-                           FontFamily="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC"
+                           FontFamily="avares://BlueMeter/Assets/Fonts#HarmonyOS Sans SC"
                            FontWeight="Bold"
                            Foreground="White"
                            Text="{Binding Percent, StringFormat='({0:P1})'}" />
@@ -172,7 +172,24 @@
             </StackPanel>
         </DataTemplate>
 
-        <!-- Per-row progress bar template, referenced as ItemTemplate on SortedDpsControl. -->
+        <!--
+            Per-row progress bar template, referenced as ItemTemplate on SortedDpsControl.
+
+            NOTE on the Button Command binding: the original WPF template used
+            `RelativeSource FindAncestor AncestorType=controls:SortedDpsControl` to
+            reach the control's ItemClickCommand. The direct Avalonia equivalent
+            `$parent[controls:SortedDpsControl]` throws
+            `ArgumentException: Unable to resolve type controls:SortedDpsControl`
+            at binding-materialization time for DataTemplates under
+            `x:CompileBindings="False"` — the runtime binding-path parser doesn't
+            inherit the enclosing Window's xmlns prefixes into the template's
+            NameScope, so it can't resolve user-namespace types. We bypass the
+            SortedDpsControl middleman entirely and bind straight to the Window
+            DataContext (the DpsStatisticsViewModel), pulling the same command
+            that SortedDpsControl.ItemClickCommand is itself bound from at the
+            use site further down in this file. `Window` resolves through the
+            default Avalonia namespace, so the runtime parser is happy.
+        -->
         <DataTemplate x:Key="ProgressBarDataTemplate" DataType="{x:Type viewModels:StatisticDataViewModel}">
             <Grid Height="36" Margin="0">
                 <Button Margin="1"
@@ -183,7 +200,7 @@
                         BorderThickness="0"
                         Cursor="Arrow"
                         Focusable="False"
-                        Command="{Binding $parent[controls:SortedDpsControl].ItemClickCommand}"
+                        Command="{Binding $parent[Window].DataContext.OpenPlayerSkillBreakdownCommand}"
                         CommandParameter="{Binding}">
                     <Button.Template>
                         <ControlTemplate TargetType="Button">
@@ -241,11 +258,25 @@
             <Setter Property="Background" Value="#22FFFFFF" />
         </Style>
 
+        <!--
+            Topmost button glyph swap. Default shows the "pin outline" (&#xe864;); when the
+            owning Window's Topmost property is true the button gains the `active` class
+            via Classes.active binding and the glyph swaps to the "pin filled" (&#xe863;).
+            Style setters sit below LocalValue, so the button must not declare an inline
+            Content attribute — these setters own the value.
+        -->
+        <Style Selector="Button.topmost">
+            <Setter Property="Content" Value="&#xe864;" />
+        </Style>
+        <Style Selector="Button.topmost.active">
+            <Setter Property="Content" Value="&#xe863;" />
+        </Style>
+
         <!-- Statistic type label (centered, theme-driven foreground). -->
         <Style Selector="TextBlock.statisticType">
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Center" />
-            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC" />
+            <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts#HarmonyOS Sans SC" />
             <Setter Property="Foreground" Value="{Binding AppConfig.EffectiveThemeColor, Mode=OneWay, Converter={StaticResource ThemeForegroundConverter}, ConverterParameter=text}" />
         </Style>
 
@@ -308,11 +339,22 @@
                                 Content="&#xe689;"
                                 FontSize="15" />
 
+                        <!--
+                            Bind TextBlock.Text directly via a MultiBinding. Avalonia's
+                            inline <Run Text="{Binding ...}"/> captures its value when the
+                            TextBlock builds its Inlines and doesn't re-render on source
+                            changes, so the label would freeze on whatever it showed first
+                            (e.g. "Damage (Total)") no matter how many times the user cycled
+                            StatisticIndex / ScopeTime. A single Text binding invalidates
+                            cleanly on every property change.
+                        -->
                         <TextBlock Grid.Column="1" Classes="statisticType">
-                            <Run Text="{Binding StatisticIndex, StringFormat='StatisticType_{0}'}" />
-                            <Run Text="(" />
-                            <Run Text="{Binding ScopeTime, StringFormat='ScopeTime_{0}'}" />
-                            <Run Text=")" />
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} ({1})">
+                                    <Binding Path="StatisticIndex" Converter="{StaticResource EnumToLocalizedStringConverter}" />
+                                    <Binding Path="ScopeTime" Converter="{StaticResource EnumToLocalizedStringConverter}" />
+                                </MultiBinding>
+                            </TextBlock.Text>
                         </TextBlock>
 
                         <Button Grid.Column="2"
@@ -327,7 +369,7 @@
                                 Name="SwitchButton"
                                 Classes="icon"
                                 Command="{Binding ToggleScopeTimeCommand}"
-                                Content=""
+                                Content="&#xe607;"
                                 FontSize="12"
                                 ToolTip.Tip="{loc:Localize Tooltip_ToggleScope}" />
 
@@ -349,14 +391,23 @@
                                        ToolTip.Tip="{loc:Localize DpsStatistics_Indicator_ClickThrough_Tooltip}"
                                        IsVisible="{Binding AppConfig.MouseThroughEnabled}" />
 
-                            <!-- Topmost toggle: glyph swaps via a data trigger on the Topmost window property. -->
+                            <!--
+                                Topmost toggle. The glyph swaps between the "pin outline"
+                                (&#xe864;, topmost OFF) and the "pin filled" (&#xe863;, topmost ON)
+                                via a Classes.active binding to the owning Window's Topmost
+                                property. Matching selectors in Window.Styles set the Content
+                                Setter — we can't use an inline Content here because inline
+                                attributes sit at LocalValue priority and would override the
+                                style setters. Avalonia doesn't have WPF's DataTrigger, so
+                                class-selector toggling is the canonical replacement.
+                            -->
                             <Button Name="TopmostButton"
                                     Classes="icon topmost"
+                                    Classes.active="{Binding $parent[Window].Topmost}"
                                     Width="21"
                                     Command="{Binding ToggleTopmostCommand}"
                                     FontFamily="avares://BlueMeter/Assets/Fonts/iconfont.ttf#iconfont"
                                     FontSize="15"
-                                    Content="&#xe864;"
                                     ToolTip.Tip="{loc:Localize DpsStatistics_Indicator_WindowTopMost_Tooltip}" />
 
                             <Button Classes="icon"
@@ -570,9 +621,9 @@
                 </Border>
             </Grid>
 
-            <!-- Holiday (Christmas) decorations, shown only when EnableHolidayThemes is on. -->
+            <!-- Holiday (Christmas) decorations, shown only when a holiday window is active. -->
             <controls:DpsMeterChristmasDecorations ZIndex="1000"
-                                                   IsVisible="{Binding AppConfig.EnableHolidayThemes}" />
+                                                   IsVisible="{Binding AppConfig.IsHolidayDecorationVisible}" />
         </Grid>
     </Border>
 </Window>

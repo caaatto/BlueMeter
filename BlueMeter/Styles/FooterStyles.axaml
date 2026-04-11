@@ -4,7 +4,7 @@
     <Style Selector="TextBlock.footerText">
         <Setter Property="Height" Value="16" />
         <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts/HarmonyOS_Sans_SC_Regular.ttf#HarmonyOS Sans SC" />
+        <Setter Property="FontFamily" Value="avares://BlueMeter/Assets/Fonts#HarmonyOS Sans SC" />
         <Setter Property="Foreground" Value="#FFFFFF" />
     </Style>
 

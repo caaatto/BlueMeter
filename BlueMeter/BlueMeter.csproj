@@ -11,6 +11,14 @@
     <RootNamespace>BlueMeter</RootNamespace>
     <Version>1.5.6</Version>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <!--
+      Sets the .exe file icon (Windows Explorer, taskbar, alt-tab). Points at the
+      shared asset in BlueMeter.Assets — same icon Phase 11 removed from the old
+      WPF project. Per-window title-bar icons are set through Window.Icon bindings
+      in App.axaml.cs so that every opened Window (including frameless ones with
+      SystemDecorations="None") gets the taskbar glyph.
+    -->
+    <ApplicationIcon>..\BlueMeter.Assets\Images\ApplicationIcon.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -70,6 +78,17 @@
     </Content>
     <Content Include="appsettings.Development.json">
       <CopyToOutputDirectory Condition="'$(Configuration)' != 'Release'">PreserveNewest</CopyToOutputDirectory>
+    </Content>
+
+    <!--
+      Queue-pop alert sounds. SoundPlayerService plays these through the Win32
+      MCI API (`mciSendString open <path> type mpegvideo`), which reads from the
+      filesystem — it cannot consume avares:// resources. Copy the files next
+      to the .exe under Assets\sounds\ so GetSoundFilePath() resolves them
+      relative to AppDomain.CurrentDomain.BaseDirectory.
+    -->
+    <Content Include="..\BlueMeter.Assets\sounds\**\*.mp3" Link="Assets\sounds\%(RecursiveDir)%(FileName)%(Extension)">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
 

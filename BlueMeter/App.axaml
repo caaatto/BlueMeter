@@ -1,10 +1,21 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="using:BlueMeter.Converters"
              x:Class="BlueMeter.App"
              RequestedThemeVariant="Dark">
 
     <Application.Resources>
         <ResourceDictionary>
+            <!--
+                Converters referenced from Window root attributes (Title, Opacity)
+                must live at application scope. Avalonia's compiled XAML processes
+                Window attributes before <Window.Resources> children are added to
+                the dictionary, so a StaticResource lookup inside the root tag
+                fails if the converter is declared only on the window itself.
+            -->
+            <converters:HolidayTitleConverter x:Key="HolidayTitleConverter" />
+            <converters:PercentToOpacityConverter x:Key="PercentToOpacityConverter" />
+
             <ResourceDictionary.ThemeDictionaries>
                 <ResourceInclude x:Key="Dark" Source="avares://BlueMeter/Themes/Dark.axaml" />
                 <ResourceInclude x:Key="Light" Source="avares://BlueMeter/Themes/Light.axaml" />

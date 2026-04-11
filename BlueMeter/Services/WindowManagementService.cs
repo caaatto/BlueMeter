@@ -141,7 +141,7 @@ public class WindowManagementService(IServiceProvider provider, ILogger<WindowMa
             logger.LogDebug(LogEvents.WindowClosed, "Window closed: {Window}", nameof(EncounterHistoryView));
 
         var main = MainWindow;
-        if (main is not null && view != main)
+        if (main is not null && main.IsVisible && view != main)
         {
             view.Show(main);
         }
@@ -184,6 +184,12 @@ public class WindowManagementService(IServiceProvider provider, ILogger<WindowMa
     /// Show the window (attached to the main window as parent if available) and bring
     /// it to the foreground. Re-shows with the main-window parent on first display;
     /// subsequent calls only un-minimize and activate.
+    ///
+    /// Avalonia's <see cref="Window.Show(Window)"/> throws
+    /// <see cref="InvalidOperationException"/> ("Cannot show window with non-visible
+    /// owner") when the owner is hidden — which happens every time the user minimizes
+    /// the DPS window to tray and then picks a tool window from the tray menu. Fall
+    /// back to an ownerless <see cref="Window.Show()"/> in that case.
     /// </summary>
     private void ShowOrActivate(Window view)
     {
@@ -198,7 +204,7 @@ public class WindowManagementService(IServiceProvider provider, ILogger<WindowMa
         }
 
         var main = MainWindow;
-        if (main is not null && view != main)
+        if (main is not null && main.IsVisible && view != main)
         {
             view.Show(main);
         }

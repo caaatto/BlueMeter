@@ -5,6 +5,9 @@ namespace BlueMeter.Models;
 /// </summary>
 public enum ScopeTime
 {
+    [LocalizedDescription("ScopeTime_Total")]
     Total,
+
+    [LocalizedDescription("ScopeTime_Current")]
     Current
 }

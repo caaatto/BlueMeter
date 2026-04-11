@@ -318,6 +318,7 @@ public partial class AppConfig : ObservableObject
     {
         OnPropertyChanged(nameof(EffectiveThemeColor));
         OnPropertyChanged(nameof(CurrentHolidayName));
+        OnPropertyChanged(nameof(IsHolidayDecorationVisible));
     }
 
     /// <summary>
@@ -331,6 +332,15 @@ public partial class AppConfig : ObservableObject
         if (!EnableHolidayThemes) return false;
         return ResolveHolidayProvider()?.GetCurrentHolidayTheme() != null;
     }
+
+    /// <summary>
+    /// XAML-friendly gate for holiday decoration visibility. Combines the user
+    /// toggle with the date-based check from <see cref="IHolidayThemeProvider"/>
+    /// so the Christmas overlay only shows during the configured window — the
+    /// raw <see cref="EnableHolidayThemes"/> flag on its own would leak the
+    /// decorations into every month whenever the toggle is left on.
+    /// </summary>
+    public bool IsHolidayDecorationVisible => ShouldShowHolidayDecorations();
 
     /// <summary>
     /// Get the current holiday name if holiday themes are enabled and a holiday is active.

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Avalonia;
+using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Avalonia.Platform;
 using Avalonia.Threading;
 using BlueMeter.Config;
 using BlueMeter.Extensions;
@@ -33,6 +35,19 @@ public partial class App : Application
 {
     private static ILogger<App>? _logger;
     private static IObservable<LogEvent>? _logStream;
+
+    /// <summary>
+    /// Default window icon shared by every Avalonia <see cref="Window"/> the DI
+    /// container hands out. Loaded lazily from the linked
+    /// <c>avares://BlueMeter/Assets/Images/ApplicationIcon.ico</c> asset so we
+    /// only hit <see cref="AssetLoader"/> once for the process. Used from the
+    /// Window factory override in <see cref="RegisterTypes"/> and from the
+    /// manual registrations further down; WPF inherited the .exe icon onto
+    /// every window for free, Avalonia makes each Window opt-in via
+    /// <see cref="Window.Icon"/>.
+    /// </summary>
+    private static WindowIcon? _defaultWindowIcon;
+    private static bool _defaultWindowIconLoaded;
 
     /// <summary>
     /// Generic host that owns DI, configuration, and logging for the whole app.
@@ -64,10 +79,18 @@ public partial class App : Application
         // first frame already has live data. The WPF original called this from
         // App.Main; Avalonia's classic-desktop lifetime gives us
         // OnFrameworkInitializationCompleted as the equivalent boot point.
+        //
+        // We pivot onto the thread pool via Task.Run before blocking. Avalonia's
+        // SynchronizationContext is already installed on the UI thread by the
+        // time this method runs, so a plain .GetAwaiter().GetResult() here would
+        // deadlock the first time any awaited task (e.g. File.ReadAllTextAsync
+        // inside ChecklistService.InitializeAsync) tried to post its continuation
+        // back to the blocked UI thread. WPF's original call site got away with
+        // this because WPF doesn't install its sync context until app.Run().
         try
         {
             var startup = Host.Services.GetRequiredService<IApplicationStartup>();
-            startup.InitializeAsync().GetAwaiter().GetResult();
+            Task.Run(() => startup.InitializeAsync()).GetAwaiter().GetResult();
         }
         catch (Exception ex)
         {
@@ -186,13 +209,16 @@ public partial class App : Application
                 RegisterViews(services);
 
                 // ----- Manually-registered windows (suffix is "Window", not "View") -----
-                services.AddTransient<ChartsWindow>();
-                services.AddTransient<ReplayWindow>();
-                services.AddTransient<ChartTestWindow>();
-                services.AddTransient<ChecklistWindow>();
+                // These go through the same factory wrapper as the reflection-based
+                // registrations so the default application icon is stamped onto
+                // every resolved window.
+                services.AddTransient(provider => CreateWithIcon<ChartsWindow>(provider));
+                services.AddTransient(provider => CreateWithIcon<ReplayWindow>(provider));
+                services.AddTransient(provider => CreateWithIcon<ChartTestWindow>(provider));
+                services.AddTransient(provider => CreateWithIcon<ChecklistWindow>(provider));
                 // MainView is the application root and must be a singleton so the
                 // tray-restore plumbing keeps pointing at the same instance.
-                services.AddSingleton<MainView>();
+                services.AddSingleton(provider => CreateWithIcon<MainView>(provider));
 
                 // ----- Singleton services (mirror WPF App.xaml.cs) -----
                 services.AddSingleton<DebugFunctions>();
@@ -283,7 +309,74 @@ public partial class App : Application
                 ? overrideLifetime
                 : ServiceLifetime.Transient;
 
-            services.Add(new ServiceDescriptor(type, type, lifetime));
+            if (typeof(Window).IsAssignableFrom(type))
+            {
+                // Windows get a factory wrapper so we can stamp the default
+                // application icon after construction — Avalonia doesn't
+                // inherit the exe icon onto individual windows the way WPF
+                // does, so we have to set it explicitly.
+                var capturedType = type;
+                services.Add(new ServiceDescriptor(
+                    capturedType,
+                    provider =>
+                    {
+                        var instance = (Window)ActivatorUtilities.CreateInstance(provider, capturedType);
+                        ApplyDefaultWindowIcon(instance);
+                        return instance;
+                    },
+                    lifetime));
+            }
+            else
+            {
+                services.Add(new ServiceDescriptor(type, type, lifetime));
+            }
+        }
+    }
+
+    /// <summary>
+    /// Construct <typeparamref name="T"/> through the DI container and stamp
+    /// it with the default application icon. Used by the manual
+    /// <c>services.AddTransient&lt;T&gt;</c> registrations that would otherwise
+    /// bypass the factory wrapper in <see cref="RegisterTypes"/>.
+    /// </summary>
+    private static T CreateWithIcon<T>(IServiceProvider provider) where T : Window
+    {
+        var window = ActivatorUtilities.CreateInstance<T>(provider);
+        ApplyDefaultWindowIcon(window);
+        return window;
+    }
+
+    /// <summary>
+    /// Apply the shared <see cref="_defaultWindowIcon"/> to <paramref name="window"/>
+    /// unless the caller has already assigned a custom one. The icon is cached
+    /// on first successful load and re-used for every subsequent window; a
+    /// failure is logged once and subsequent calls become no-ops.
+    /// </summary>
+    private static void ApplyDefaultWindowIcon(Window window)
+    {
+        if (window.Icon != null)
+        {
+            return;
+        }
+
+        if (!_defaultWindowIconLoaded)
+        {
+            _defaultWindowIconLoaded = true;
+            try
+            {
+                var uri = new Uri("avares://BlueMeter/Assets/Images/ApplicationIcon.ico");
+                using var stream = AssetLoader.Open(uri);
+                _defaultWindowIcon = new WindowIcon(stream);
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogWarning(ex, "Failed to load default window icon");
+            }
+        }
+
+        if (_defaultWindowIcon != null)
+        {
+            window.Icon = _defaultWindowIcon;
         }
     }
 }

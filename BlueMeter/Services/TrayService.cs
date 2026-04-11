@@ -38,15 +38,16 @@ public sealed class TrayService : ITrayService, IDisposable
 
         try
         {
-            // Icon will be wired up properly once BlueMeter.Assets is exposed via avares://
-            // (Phase 8/10). For now we attempt the load and silently fall back to the default.
             var iconUri = new Uri("avares://BlueMeter/Assets/Images/ApplicationIcon.ico");
             using var stream = AssetLoader.Open(iconUri);
             _tray.Icon = new WindowIcon(stream);
         }
-        catch
+        catch (Exception ex)
         {
-            // Ignore — icon resource not yet wired up
+            // Fall back to the default system icon rather than crash startup,
+            // but make the failure visible — a silent catch here is how we
+            // ended up with an invisible tray glyph for the whole smoke test.
+            _logger?.LogWarning(ex, "Failed to load tray icon; falling back to default");
         }
 
         var menu = new NativeMenu();

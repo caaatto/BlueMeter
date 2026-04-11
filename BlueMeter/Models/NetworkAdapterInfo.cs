@@ -1,3 +1,3 @@
 namespace BlueMeter.Models;
 
-public sealed record NetworkAdapterInfo(string Name, string Description);
+public sealed record NetworkAdapterInfo(string Name = "", string Description = "");

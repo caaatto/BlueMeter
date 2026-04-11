@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -26,10 +27,18 @@ public partial class DpsStatisticsOptions : BaseViewModel
     public bool IsSkip2Sec => MinimalDurationInSeconds == 2;
     public bool IsSkip5Sec => MinimalDurationInSeconds == 5;
 
+    // Parameter is string-typed because Avalonia does not run a type converter
+    // on literal CommandParameter="..." attributes — an int-typed RelayCommand
+    // throws ArgumentException in CanExecute when the menu submenu opens.
     [RelayCommand]
-    private void SetMinimalDuration(int duration)
+    private void SetMinimalDuration(string duration)
     {
-        MinimalDurationInSeconds = duration;
+        if (!int.TryParse(duration, NumberStyles.Integer, CultureInfo.InvariantCulture, out var seconds))
+        {
+            return;
+        }
+
+        MinimalDurationInSeconds = seconds;
         OnPropertyChanged(nameof(IsRecordAll));
         OnPropertyChanged(nameof(IsSkip2Sec));
         OnPropertyChanged(nameof(IsSkip5Sec));
@@ -641,10 +650,17 @@ public partial class DpsStatisticsViewModel : BaseViewModel, IDisposable
         UpdateData();
     }
 
+    // See the note on SetMinimalDuration — Avalonia hands literal
+    // CommandParameter="..." strings to CanExecute without type conversion.
     [RelayCommand]
-    private void SetSkillDisplayLimit(int limit)
+    private void SetSkillDisplayLimit(string limit)
     {
-        var clampedLimit = Math.Max(0, limit);
+        if (!int.TryParse(limit, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsed))
+        {
+            return;
+        }
+
+        var clampedLimit = Math.Max(0, parsed);
         foreach (var vm in StatisticData.Values)
         {
             vm.SkillDisplayLimit = clampedLimit;

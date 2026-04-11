@@ -11,6 +11,8 @@ using BlueMeter.Extensions;
 using BlueMeter.Localization;
 using BlueMeter.Logging;
 using BlueMeter.Plugins;
+using BlueMeter.Plugins.BuiltIn;
+using BlueMeter.Plugins.Interfaces;
 using BlueMeter.Services;
 using BlueMeter.Styles.Classes;
 using BlueMeter.Themes;
@@ -212,10 +214,12 @@ public partial class App : Application
                 services.AddSingleton<IQueuePopUIDetector, QueuePopUIDetector>();
                 services.AddSingleton<IApplicationStartup, ApplicationStartup>();
 
-                // Plugin registrations (DpsPlugin/ModuleSolverPlugin/WorldBossPlugin)
-                // land in Phase 11 once the plugin assemblies are ported. Until then,
-                // IPluginManager resolves with an empty IEnumerable<IPlugin> and the
-                // main window opens with no plugin tabs.
+                // ----- Built-in plugins (Phase 11) -----
+                // PluginManager constructor injects IEnumerable<IPlugin>, so each
+                // plugin only needs to be registered against IPlugin to appear in
+                // the main view's plugin list. DpsPlugin / ModuleSolverPlugin land
+                // in subsequent batches.
+                services.AddSingleton<IPlugin, WorldBossPlugin>();
 
                 // ----- Localization -----
                 services.AddSingleton(new LocalizationConfiguration

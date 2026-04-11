@@ -1,5 +1,5 @@
 using System.Globalization;
-using BlueMeter.WPF.Converters;
+using BlueMeter.Converters;
 
 namespace BlueMeter.Tests.WpfConverters;
 

@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BlueMeter.Core\BlueMeter.Core.csproj" />
-    <ProjectReference Include="..\BlueMeter.WPF\BlueMeter.WPF.csproj" />
+    <ProjectReference Include="..\BlueMeter\BlueMeter.csproj" />
   </ItemGroup>
 
   <ItemGroup>

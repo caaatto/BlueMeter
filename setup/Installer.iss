@@ -13,7 +13,7 @@
 #define MyAppName "BlueMeter"
 #define MyAppVersion "1.3.14"
 #define MyAppURL "https://github.com/caaatto/BlueMeter"
-#define MyAppExeName "BlueMeter.WPF.exe"
+#define MyAppExeName "BlueMeter.exe"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -26,7 +26,7 @@ AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={autopf}\{#MyAppName}
-SetupIconFile=..\BlueMeter.WPF\Assets\Images\ApplicationIcon.ico
+SetupIconFile=..\BlueMeter.Assets\Images\ApplicationIcon.ico
 UninstallDisplayIcon={app}\{#MyAppExeName}
 ; "ArchitecturesAllowed=x64compatible" specifies that Setup cannot run
 ; on anything but x64 and Windows 11 on Arm.
@@ -105,7 +105,7 @@ end;
 function InitializeSetup: Boolean;
 begin
   // add the dependencies you need
-  Dependency_AddDotNet80Desktop;  // WPF requires Desktop Runtime
+  Dependency_AddDotNet80Desktop;  // .NET 8 Desktop Runtime
   Dependency_AddNpcap;  // Packet capture driver (free edition, non-silent)
 
   Result := True;

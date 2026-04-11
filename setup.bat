@@ -51,15 +51,15 @@ echo.
 echo Building BlueMeter...
 echo.
 
-REM Navigate to WPF project and build
-if not exist "BlueMeter.WPF" (
-    echo Error: BlueMeter.WPF directory not found!
+REM Navigate to BlueMeter project and build
+if not exist "BlueMeter" (
+    echo Error: BlueMeter directory not found!
     echo Make sure you're running this script from the BlueMeter root directory.
     pause
     exit /b 1
 )
 
-cd BlueMeter.WPF
+cd BlueMeter
 
 REM Clean previous builds
 echo Cleaning previous builds...
@@ -93,7 +93,7 @@ if /i "%LAUNCH%"=="y" (
     echo.
     echo Launching BlueMeter...
     echo.
-    start "" "BlueMeter.WPF\bin\Release\net8.0-windows\BlueMeter.WPF.exe"
+    start "" "BlueMeter\bin\x64\Release\net8.0-windows\BlueMeter.exe"
 ) else (
     echo.
     echo Setup complete! To launch BlueMeter later, double-click launcher.bat

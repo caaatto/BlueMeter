@@ -1,6 +1,6 @@
 using System.Globalization;
-using System.Windows.Media;
-using BlueMeter.WPF.Converters;
+using Avalonia.Media;
+using BlueMeter.Converters;
 
 namespace BlueMeter.Tests.WpfConverters;
 
@@ -67,7 +67,7 @@ public class ConditionalPercentToColorConverterTests
     [Fact]
     public void Convert_NullValues_ReturnsBaseColor()
     {
-        var result = _converter.Convert(null, typeof(Color), Colors.Green, _culture);
+        var result = _converter.Convert(null!, typeof(Color), Colors.Green, _culture);
         var color = Assert.IsType<Color>(result);
         Assert.Equal(Colors.Green, color);
     }

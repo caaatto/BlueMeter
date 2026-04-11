@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using Moq.Protected;
 using Xunit;
-using BlueMeter.WPF.Services;
+using BlueMeter.Services;
 
 namespace BlueMeter.Tests;
 

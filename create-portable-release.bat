@@ -42,7 +42,7 @@ dotnet clean -c Release >nul 2>&1
 
 REM Publish with self-contained .NET runtime
 echo Publishing self-contained build...
-dotnet publish BlueMeter.WPF/BlueMeter.WPF.csproj ^
+dotnet publish BlueMeter/BlueMeter.csproj ^
     -c Release ^
     -r win-x64 ^
     --self-contained true ^
@@ -63,7 +63,7 @@ echo Creating portable launcher...
 (
 echo @echo off
 echo cd /d "%%~dp0"
-echo start "" "BlueMeter.WPF.exe"
+echo start "" "BlueMeter.exe"
 echo exit
 ) > "release-portable\BlueMeter-v%VERSION%-portable\BlueMeter.bat"
 
@@ -101,7 +101,7 @@ echo ## Troubleshooting
 echo.
 echo If BlueMeter doesn't start:
 echo 1. Check that Npcap is installed
-echo 2. Try running `BlueMeter.WPF.exe` directly as administrator
+echo 2. Try running `BlueMeter.exe` directly as administrator
 echo 3. Check Windows Defender isn't blocking the application
 echo.
 echo For more information, see the main README.md

@@ -1,5 +1,5 @@
 @echo off
-cd /d "%~dp0BlueMeter.WPF"
+cd /d "%~dp0BlueMeter"
 echo Building BlueMeter with new logging features...
 dotnet build -c Release
 if %ERRORLEVEL% NEQ 0 (

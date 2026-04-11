@@ -1,0 +1,55 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="using:BlueMeter.Views.Checklist"
+        xmlns:vm="using:BlueMeter.ViewModels.Checklist"
+        x:Class="BlueMeter.Views.Checklist.ChecklistWindow"
+        x:CompileBindings="False"
+        Title="Daily/Weekly Checklist"
+        Width="450"
+        Height="700"
+        MinWidth="400"
+        MinHeight="500"
+        WindowStartupLocation="CenterScreen"
+        Background="#1E1E1E"
+        SystemDecorations="None"
+        TransparencyLevelHint="Transparent"
+        ExtendClientAreaToDecorationsHint="True"
+        CanResize="True">
+
+    <!--
+        Port notes (WPF -> Avalonia):
+          - WindowChrome CaptionHeight=30 + UseAeroCaptionButtons replaced
+            with the chromeless quartet on the Window element. The custom
+            30px title bar handles drag via PointerPressed -> BeginMoveDrag.
+          - The hosted ChecklistView UserControl gets its DataContext set
+            in the DI ctor (matches the WPF code-behind) so the Window's
+            own DataContext doesn't have to flow through.
+    -->
+
+    <Border BorderBrush="#3E3E42"
+            BorderThickness="1"
+            CornerRadius="4">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <!-- Custom Title Bar -->
+            <Border Grid.Row="0"
+                    Background="#252526"
+                    BorderBrush="#3E3E42"
+                    BorderThickness="0,0,0,1"
+                    PointerPressed="OnTitleBarPointerPressed">
+                <TextBlock Text="Daily/Weekly Checklist"
+                           Foreground="#FFFFFF"
+                           FontSize="12"
+                           VerticalAlignment="Center"
+                           Margin="10,0,0,0" />
+            </Border>
+
+            <!-- Checklist Content -->
+            <local:ChecklistView Grid.Row="1" x:Name="ChecklistContent" />
+        </Grid>
+    </Border>
+</Window>

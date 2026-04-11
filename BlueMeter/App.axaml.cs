@@ -57,6 +57,21 @@ public partial class App : Application
         // window is constructed so ClassesToIconConverter can resolve the lookups.
         ClassIconResources.Register(this);
 
+        // Centralized startup: localization, network adapter, database, checklist,
+        // queue alerts, packet analyzer. Must run before MainView is shown so the
+        // first frame already has live data. The WPF original called this from
+        // App.Main; Avalonia's classic-desktop lifetime gives us
+        // OnFrameworkInitializationCompleted as the equivalent boot point.
+        try
+        {
+            var startup = Host.Services.GetRequiredService<IApplicationStartup>();
+            startup.InitializeAsync().GetAwaiter().GetResult();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "ApplicationStartup.InitializeAsync failed");
+        }
+
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
             desktop.MainWindow = Host.Services.GetRequiredService<MainView>();
@@ -92,6 +107,16 @@ public partial class App : Application
     private void OnDesktopExit(object? sender, ControlledApplicationLifetimeExitEventArgs e)
     {
         _logger?.LogInformation(LogEvents.AppExiting, "Application exiting");
+
+        // Centralized shutdown — mirrors WPF's appStartup.Shutdown() call after app.Run().
+        try
+        {
+            Host?.Services.GetService<IApplicationStartup>()?.Shutdown();
+        }
+        catch (Exception ex)
+        {
+            _logger?.LogWarning(ex, "ApplicationStartup.Shutdown failed");
+        }
 
         try
         {
@@ -185,6 +210,7 @@ public partial class App : Application
                 services.AddSingleton<ISoundPlayerService, SoundPlayerService>();
                 services.AddSingleton<IQueueAlertManager, QueueAlertManager>();
                 services.AddSingleton<IQueuePopUIDetector, QueuePopUIDetector>();
+                services.AddSingleton<IApplicationStartup, ApplicationStartup>();
 
                 // Plugin registrations (DpsPlugin/ModuleSolverPlugin/WorldBossPlugin)
                 // land in Phase 11 once the plugin assemblies are ported. Until then,

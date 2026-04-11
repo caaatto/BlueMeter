@@ -29,6 +29,9 @@
         <StyleInclude Source="avares://BlueMeter/Styles/SeparatorStyle.axaml" />
         <StyleInclude Source="avares://BlueMeter/Styles/TestThemeStyle.axaml" />
         <StyleInclude Source="avares://BlueMeter/Styles/FooterStyles.axaml" />
+        <StyleInclude Source="avares://BlueMeter/Styles/ModernCardStyle.axaml" />
+        <StyleInclude Source="avares://BlueMeter/Styles/SwitchControl.axaml" />
+        <StyleInclude Source="avares://BlueMeter/Styles/ChecklistStyles.axaml" />
     </Application.Styles>
 
 </Application>

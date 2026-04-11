@@ -1,0 +1,202 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Modern Card style with neon glow effect.
+        Used by ModuleSolveView; the dark-HUD palette is duplicated into Light.axaml
+        so the tool window keeps its intended aesthetic regardless of theme variant.
+
+        Consumer migration from WPF:
+          Style="{StaticResource ModernCardStyle}"        -> Classes="modernCard"
+          Style="{StaticResource ActiveModuleCardStyle}"  -> Classes="modernCard active"
+          Style="{StaticResource ModuleTitleStyle}"       -> Classes="moduleTitle"
+          Style="{StaticResource ModuleDescriptionStyle}" -> Classes="moduleDescription"
+          Style="{StaticResource ModuleIconStyle}"        -> Classes="moduleIcon"
+          Style="{StaticResource TitleBarStyle}"          -> Classes="titleBar"
+          Style="{StaticResource ActionBarStyle}"         -> Classes="actionBar"
+          Style="{StaticResource ModernGlowButton}"       -> Theme="{DynamicResource ModernGlowButton}"
+          Style="{StaticResource StartButtonStyle}"       -> Theme="{DynamicResource StartButton}"
+          Style="{StaticResource ModernListBoxItemStyle}" -> on the parent ListBox:
+              ItemContainerTheme="{DynamicResource ModernListBoxItem}"
+    -->
+
+    <Styles.Resources>
+        <!--  Modern Glow Button  -->
+        <ControlTheme x:Key="ModernGlowButton" TargetType="Button">
+            <Setter Property="Background" Value="{DynamicResource BackgroundCardBrush}" />
+            <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource BorderAccentBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="20,10" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="PART_Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="8"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+
+            <Style Selector="^:pointerover /template/ Border#PART_Border">
+                <Setter Property="Background" Value="{DynamicResource BackgroundCardHoverBrush}" />
+                <Setter Property="BoxShadow" Value="0 0 15 0 #CC00D9FF" />
+            </Style>
+            <Style Selector="^:pointerover">
+                <Setter Property="RenderTransform" Value="scale(1.05)" />
+            </Style>
+            <Style Selector="^:pressed /template/ Border#PART_Border">
+                <Setter Property="Background" Value="{DynamicResource BackgroundSecondaryBrush}" />
+            </Style>
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.98)" />
+            </Style>
+        </ControlTheme>
+
+        <!--  Start Button (gradient)  -->
+        <ControlTheme x:Key="StartButton" TargetType="Button" BasedOn="{StaticResource ModernGlowButton}">
+            <Setter Property="Background" Value="{DynamicResource GradientCyanPurpleBrush}" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="MinWidth" Value="100" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="PART_Border"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="8"
+                            Padding="{TemplateBinding Padding}"
+                            BoxShadow="0 0 10 0 #8000D9FF">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+
+            <Style Selector="^:pointerover /template/ Border#PART_Border">
+                <Setter Property="BoxShadow" Value="0 0 20 0 #E600D9FF" />
+            </Style>
+            <Style Selector="^:pointerover">
+                <Setter Property="RenderTransform" Value="scale(1.05)" />
+            </Style>
+            <Style Selector="^:pressed /template/ Border#PART_Border">
+                <Setter Property="Opacity" Value="0.8" />
+            </Style>
+            <Style Selector="^:pressed">
+                <Setter Property="RenderTransform" Value="scale(0.98)" />
+            </Style>
+        </ControlTheme>
+
+        <!--  Modern ListBoxItem  -->
+        <ControlTheme x:Key="ModernListBoxItem" TargetType="ListBoxItem">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="ListBoxItem">
+                    <Border x:Name="ItemBorder"
+                            Background="{DynamicResource BackgroundCardBrush}"
+                            BorderBrush="{DynamicResource BorderDefaultBrush}"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Padding="15,12">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+
+            <Style Selector="^:selected /template/ Border#ItemBorder">
+                <Setter Property="Background" Value="{DynamicResource BackgroundCardHoverBrush}" />
+                <Setter Property="BorderBrush" Value="{DynamicResource BorderAccentBrush}" />
+                <Setter Property="BorderThickness" Value="2" />
+                <Setter Property="BoxShadow" Value="0 0 12 0 #8000D9FF" />
+            </Style>
+            <Style Selector="^:pointerover /template/ Border#ItemBorder">
+                <Setter Property="Background" Value="{DynamicResource BackgroundCardHoverBrush}" />
+                <Setter Property="BoxShadow" Value="0 0 8 0 #4D00D9FF" />
+            </Style>
+        </ControlTheme>
+    </Styles.Resources>
+
+    <!--  Modern Card (Border) — Classes="modernCard"  -->
+    <Style Selector="Border.modernCard">
+        <Setter Property="Background" Value="{DynamicResource BackgroundCardBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="10" />
+        <Setter Property="Padding" Value="20" />
+        <Setter Property="Margin" Value="10" />
+        <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+    </Style>
+    <Style Selector="Border.modernCard:pointerover">
+        <Setter Property="Background" Value="{DynamicResource BackgroundCardHoverBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderAccentBrush}" />
+        <Setter Property="BoxShadow" Value="0 0 20 0 #9900D9FF" />
+        <Setter Property="RenderTransform" Value="scale(1.02)" />
+    </Style>
+
+    <!--  Active Module Card — Classes="modernCard active"  -->
+    <Style Selector="Border.modernCard.active">
+        <Setter Property="BorderBrush" Value="{DynamicResource GradientCyanPurpleBrush}" />
+        <Setter Property="BorderThickness" Value="2" />
+        <Setter Property="BoxShadow" Value="0 0 15 0 #66A855F7" />
+    </Style>
+
+    <!--  Module Title  -->
+    <Style Selector="TextBlock.moduleTitle">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="{DynamicResource TextPrimaryBrush}" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+    </Style>
+
+    <!--  Module Description  -->
+    <Style Selector="TextBlock.moduleDescription">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="Normal" />
+        <Setter Property="Foreground" Value="{DynamicResource TextSecondaryBrush}" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="LineHeight" Value="18" />
+    </Style>
+
+    <!--  Module Icon  -->
+    <Style Selector="TextBlock.moduleIcon">
+        <Setter Property="FontSize" Value="32" />
+        <Setter Property="Foreground" Value="{DynamicResource AccentCyanBrush}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+
+    <!--  Title Bar  -->
+    <Style Selector="Border.titleBar">
+        <Setter Property="Background" Value="{DynamicResource BackgroundSecondaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="Padding" Value="20,15" />
+    </Style>
+
+    <!--  Action Bar  -->
+    <Style Selector="Border.actionBar">
+        <Setter Property="Background" Value="{DynamicResource BackgroundSecondaryBrush}" />
+        <Setter Property="BorderBrush" Value="{DynamicResource BorderDefaultBrush}" />
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="Padding" Value="20,15" />
+    </Style>
+
+</Styles>

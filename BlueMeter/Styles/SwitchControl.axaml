@@ -1,0 +1,102 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="using:BlueMeter.Controls"
+        xmlns:converters="using:BlueMeter.Converters">
+
+    <!--
+        SwitchControl ControlTheme.
+
+        The C# code-behind (BlueMeter/Controls/SwitchControl.cs) handles thumb
+        translation and the on/off label slide imperatively via Animation.RunAsync,
+        so this template only needs to lay out the named parts and let pseudo-class
+        selectors swap the track background between checked / unchecked.
+
+        Track background animation is via a BrushTransition on Border#PART_Track
+        rather than a Storyboard ColorAnimation (WPF used Storyboard.TargetName +
+        ColorAnimation against a named SolidColorBrush).
+    -->
+
+    <Styles.Resources>
+        <converters:HalfValueConverter x:Key="HalfValueConverter" />
+        <converters:SwitchTrackWidthConverter x:Key="SwitchTrackWidthConverter" />
+
+        <ControlTheme x:Key="{x:Type controls:SwitchControl}" TargetType="controls:SwitchControl">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="controls:SwitchControl">
+                    <Border x:Name="PART_Track"
+                            Background="{DynamicResource AntBorderBrush}"
+                            CornerRadius="{Binding $self.Bounds.Height, Converter={StaticResource HalfValueConverter}}"
+                            Height="{TemplateBinding Height}">
+                        <Border.Width>
+                            <MultiBinding Converter="{StaticResource SwitchTrackWidthConverter}">
+                                <Binding ElementName="PART_OnLabel" Path="Bounds.Width" />
+                                <Binding ElementName="PART_OffLabel" Path="Bounds.Width" />
+                                <Binding Path="Bounds.Height" RelativeSource="{RelativeSource Self}" />
+                            </MultiBinding>
+                        </Border.Width>
+                        <Border.Transitions>
+                            <Transitions>
+                                <BrushTransition Property="Background" Duration="0:0:0.2" />
+                            </Transitions>
+                        </Border.Transitions>
+                        <Grid>
+                            <Border x:Name="PART_OnBorder"
+                                    HorizontalAlignment="Left">
+                                <ContentControl x:Name="PART_OnLabel"
+                                                Content="{TemplateBinding OnContent}"
+                                                FontSize="{TemplateBinding FontSize}"
+                                                Foreground="White"
+                                                HorizontalAlignment="Center"
+                                                HorizontalContentAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                VerticalContentAlignment="Center" />
+                            </Border>
+
+                            <Border x:Name="PART_OffBorder"
+                                    HorizontalAlignment="Right">
+                                <ContentControl x:Name="PART_OffLabel"
+                                                Content="{TemplateBinding OffContent}"
+                                                FontSize="{TemplateBinding FontSize}"
+                                                Foreground="Black"
+                                                HorizontalAlignment="Center"
+                                                HorizontalContentAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                VerticalContentAlignment="Center" />
+                            </Border>
+
+                            <Border x:Name="PART_Thumb"
+                                    Margin="3"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Stretch"
+                                    Background="#FFFFFF"
+                                    BorderBrush="#CCCCCC"
+                                    BorderThickness="1"
+                                    Width="{Binding $self.Bounds.Height}"
+                                    MinHeight="12"
+                                    CornerRadius="{Binding $self.Bounds.Height, Converter={StaticResource HalfValueConverter}}"
+                                    RenderTransformOrigin="50%,50%" />
+                        </Grid>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+
+            <!--  Checked: track turns Ant primary blue  -->
+            <Style Selector="^:checked /template/ Border#PART_Track">
+                <Setter Property="Background" Value="{DynamicResource AntPrimaryBrush}" />
+            </Style>
+
+            <!--  Disabled: dim the track + thumb  -->
+            <Style Selector="^:disabled /template/ Border#PART_Track">
+                <Setter Property="Opacity" Value="0.5" />
+            </Style>
+            <Style Selector="^:disabled /template/ Border#PART_Thumb">
+                <Setter Property="Opacity" Value="0.5" />
+            </Style>
+        </ControlTheme>
+    </Styles.Resources>
+
+</Styles>

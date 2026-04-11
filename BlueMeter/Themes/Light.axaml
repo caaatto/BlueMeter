@@ -6,6 +6,62 @@
     <Color x:Key="AccentColor">#2297F4</Color>
     <SolidColorBrush x:Key="AccentSolidBrush" Color="{StaticResource AccentColor}" />
 
+    <!--
+        Modern HUD palette — duplicated from Dark.axaml so ModernCardStyle and the
+        ModuleSolveView render with the same dark-HUD aesthetic regardless of the
+        active theme variant. The tool window is deliberately dark by design.
+    -->
+    <Color x:Key="Background.Primary">#0A0E1A</Color>
+    <Color x:Key="Background.Secondary">#12192B</Color>
+    <Color x:Key="Background.Tertiary">#1A2332</Color>
+    <Color x:Key="Background.Card">#151D2E</Color>
+    <Color x:Key="Background.CardHover">#1C2738</Color>
+
+    <Color x:Key="Accent.Cyan">#00D9FF</Color>
+    <Color x:Key="Accent.CyanDark">#00A8CC</Color>
+    <Color x:Key="Accent.Purple">#A855F7</Color>
+    <Color x:Key="Accent.PurpleDark">#8B3FD9</Color>
+    <Color x:Key="Accent.Blue">#3B82F6</Color>
+
+    <Color x:Key="Text.Primary">#FFFFFF</Color>
+    <Color x:Key="Text.Secondary">#D4DDE8</Color>
+    <Color x:Key="Text.Tertiary">#8B95A8</Color>
+    <Color x:Key="Text.Muted">#6B7280</Color>
+
+    <Color x:Key="Border.Default">#2A3547</Color>
+    <Color x:Key="Border.Accent">#00D9FF</Color>
+    <Color x:Key="Border.Glow">#00D9FF</Color>
+
+    <SolidColorBrush x:Key="BackgroundPrimaryBrush" Color="{StaticResource Background.Primary}" />
+    <SolidColorBrush x:Key="BackgroundSecondaryBrush" Color="{StaticResource Background.Secondary}" />
+    <SolidColorBrush x:Key="BackgroundTertiaryBrush" Color="{StaticResource Background.Tertiary}" />
+    <SolidColorBrush x:Key="BackgroundCardBrush" Color="{StaticResource Background.Card}" />
+    <SolidColorBrush x:Key="BackgroundCardHoverBrush" Color="{StaticResource Background.CardHover}" />
+
+    <SolidColorBrush x:Key="AccentCyanBrush" Color="{StaticResource Accent.Cyan}" />
+    <SolidColorBrush x:Key="AccentPurpleBrush" Color="{StaticResource Accent.Purple}" />
+    <SolidColorBrush x:Key="AccentBlueBrush" Color="{StaticResource Accent.Blue}" />
+
+    <SolidColorBrush x:Key="TextPrimaryBrush" Color="{StaticResource Text.Primary}" />
+    <SolidColorBrush x:Key="TextSecondaryBrush" Color="{StaticResource Text.Secondary}" />
+    <SolidColorBrush x:Key="TextTertiaryBrush" Color="{StaticResource Text.Tertiary}" />
+    <SolidColorBrush x:Key="TextMutedBrush" Color="{StaticResource Text.Muted}" />
+
+    <SolidColorBrush x:Key="BorderDefaultBrush" Color="{StaticResource Border.Default}" />
+    <SolidColorBrush x:Key="BorderAccentBrush" Color="{StaticResource Border.Accent}" />
+
+    <LinearGradientBrush x:Key="GradientCyanPurpleBrush" StartPoint="0%,0%" EndPoint="100%,0%">
+        <GradientStop Color="{StaticResource Accent.Cyan}" Offset="0" />
+        <GradientStop Color="{StaticResource Accent.Purple}" Offset="1" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="GradientCyanPurpleVerticalBrush" StartPoint="0%,0%" EndPoint="0%,100%">
+        <GradientStop Color="{StaticResource Accent.Cyan}" Offset="0" />
+        <GradientStop Color="{StaticResource Accent.Purple}" Offset="1" />
+    </LinearGradientBrush>
+
+    <SolidColorBrush x:Key="OverlayBrush" Color="#80000000" Opacity="0.7" />
+
     <ResourceDictionary.MergedDictionaries>
         <ResourceInclude Source="avares://BlueMeter/Styles/Classes/Classes.Colors.Light.axaml" />
     </ResourceDictionary.MergedDictionaries>

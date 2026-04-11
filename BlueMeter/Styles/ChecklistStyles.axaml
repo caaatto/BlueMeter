@@ -1,0 +1,234 @@
+<Styles xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--
+        Checklist styles. Pure dark hex palette, no theme dependencies — the
+        ChecklistView/ChecklistWindow tool windows are deliberately dark.
+
+        Consumer migration from WPF:
+          Style="{StaticResource TaskItemBorder}"      -> Classes="taskItem"
+          Style="{StaticResource CompletedTaskText}"   -> Classes="completedTask"
+          Style="{StaticResource TaskProgressBar}"     -> Classes="task"
+          Style="{StaticResource SectionHeaderText}"   -> Classes="sectionHeader"
+          Style="{StaticResource EventTimerBorder}"    -> Classes="eventTimer"
+          Style="{StaticResource CounterButton}"       -> Theme="{DynamicResource CounterButton}"
+          Style="{StaticResource ActionButton}"        -> Theme="{DynamicResource ActionButton}"
+          Style="{StaticResource ToggleActionButton}"  -> Theme="{DynamicResource ToggleActionButton}"
+          Style="{StaticResource ProfileComboBox}"     -> Theme="{DynamicResource ProfileComboBox}"
+          Style="{StaticResource SearchTextBox}"       -> Theme="{DynamicResource SearchTextBox}"
+
+        Storyboards (FadeInAnimation, FadeOutAnimation, SlideInFromTopAnimation,
+        TaskCompletedAnimation, ProgressIncrementAnimation) are dropped — they
+        were declarative resources triggered from code-behind. The Avalonia
+        replacement is to construct Animation instances in ChecklistView.cs and
+        run them via Animation.RunAsync(target) when needed.
+    -->
+
+    <Styles.Resources>
+        <!--  Task category colors  -->
+        <SolidColorBrush x:Key="Category.Dungeon" Color="#2196F3" />
+        <SolidColorBrush x:Key="Category.Raid" Color="#9C27B0" />
+        <SolidColorBrush x:Key="Category.PvP" Color="#F44336" />
+        <SolidColorBrush x:Key="Category.Crafting" Color="#4CAF50" />
+        <SolidColorBrush x:Key="Category.Social" Color="#FF9800" />
+        <SolidColorBrush x:Key="Category.Dailies" Color="#FFEB3B" />
+        <SolidColorBrush x:Key="Category.Weeklies" Color="#00BCD4" />
+
+        <!--  Checklist palette  -->
+        <SolidColorBrush x:Key="Checklist.Background" Color="#1E1E1E" />
+        <SolidColorBrush x:Key="Checklist.Foreground" Color="#FFFFFF" />
+        <SolidColorBrush x:Key="Checklist.Border" Color="#3E3E42" />
+        <SolidColorBrush x:Key="Checklist.Hover" Color="#2A2D2E" />
+        <SolidColorBrush x:Key="Checklist.Pressed" Color="#333537" />
+        <SolidColorBrush x:Key="Checklist.Accent" Color="#007ACC" />
+
+        <!--  Counter Button (small +/- buttons)  -->
+        <ControlTheme x:Key="CounterButton" TargetType="Button">
+            <Setter Property="Background" Value="#3E3E42" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Width" Value="28" />
+            <Setter Property="Height" Value="28" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="PART_Border"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            Padding="0">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+            <Style Selector="^:pointerover /template/ Border#PART_Border">
+                <Setter Property="Background" Value="#007ACC" />
+            </Style>
+            <Style Selector="^:pressed /template/ Border#PART_Border">
+                <Setter Property="Background" Value="#005A9E" />
+            </Style>
+        </ControlTheme>
+
+        <!--  Action Button (primary)  -->
+        <ControlTheme x:Key="ActionButton" TargetType="Button">
+            <Setter Property="Background" Value="#007ACC" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="Button">
+                    <Border x:Name="PART_Border"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+            <Style Selector="^:pointerover /template/ Border#PART_Border">
+                <Setter Property="Background" Value="#1C97EA" />
+            </Style>
+            <Style Selector="^:pressed /template/ Border#PART_Border">
+                <Setter Property="Background" Value="#005A9E" />
+            </Style>
+        </ControlTheme>
+
+        <!--  Toggle Action Button  -->
+        <ControlTheme x:Key="ToggleActionButton" TargetType="ToggleButton">
+            <Setter Property="Background" Value="#3E3E42" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="ToggleButton">
+                    <Border x:Name="PART_Border"
+                            Background="{TemplateBinding Background}"
+                            CornerRadius="4"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter HorizontalAlignment="Center"
+                                          VerticalAlignment="Center"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+            <Style Selector="^:checked /template/ Border#PART_Border">
+                <Setter Property="Background" Value="#007ACC" />
+            </Style>
+            <Style Selector="^:pointerover /template/ Border#PART_Border">
+                <Setter Property="Background" Value="#4E4E52" />
+            </Style>
+            <Style Selector="^:checked:pointerover /template/ Border#PART_Border">
+                <Setter Property="Background" Value="#1C97EA" />
+            </Style>
+        </ControlTheme>
+
+        <!--  Profile ComboBox (light, for the profile switcher)  -->
+        <ControlTheme x:Key="ProfileComboBox" TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}">
+            <Setter Property="Background" Value="#FFFFFF" />
+            <Setter Property="Foreground" Value="#000000" />
+            <Setter Property="BorderBrush" Value="#CCCCCC" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="8,6" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="MinWidth" Value="150" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+        </ControlTheme>
+
+        <!--  Search TextBox — uses Avalonia's built-in Watermark instead of WPF's placeholder TextBlock overlay  -->
+        <ControlTheme x:Key="SearchTextBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+            <Setter Property="Background" Value="#2A2D2E" />
+            <Setter Property="Foreground" Value="#FFFFFF" />
+            <Setter Property="BorderBrush" Value="#3E3E42" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="8,6" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Height" Value="32" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Watermark" Value="Search tasks..." />
+        </ControlTheme>
+    </Styles.Resources>
+
+    <!--  Task Item Border  -->
+    <Style Selector="Border.taskItem">
+        <Setter Property="Background" Value="#2A2D2E" />
+        <Setter Property="BorderThickness" Value="0,0,0,1" />
+        <Setter Property="BorderBrush" Value="#3E3E42" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="Margin" Value="0,2" />
+        <Setter Property="CornerRadius" Value="4" />
+        <Setter Property="Cursor" Value="Hand" />
+    </Style>
+    <Style Selector="Border.taskItem:pointerover">
+        <Setter Property="Background" Value="#333537" />
+    </Style>
+
+    <!--  Completed Task TextBlock — strikethrough + dim when bound IsCompleted  -->
+    <Style Selector="TextBlock.completedTask">
+        <Setter Property="Foreground" Value="#CCCCCC" />
+        <Setter Property="FontFamily" Value="Segoe UI" />
+        <Setter Property="FontSize" Value="14" />
+    </Style>
+    <Style Selector="TextBlock.completedTask.done">
+        <Setter Property="TextDecorations" Value="Strikethrough" />
+        <Setter Property="Opacity" Value="0.5" />
+    </Style>
+
+    <!--  Task ProgressBar  -->
+    <Style Selector="ProgressBar.task">
+        <Setter Property="Height" Value="6" />
+        <Setter Property="Background" Value="#3E3E42" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Foreground">
+            <LinearGradientBrush StartPoint="0%,0%" EndPoint="100%,0%">
+                <GradientStop Color="#4CAF50" Offset="0" />
+                <GradientStop Color="#8BC34A" Offset="1" />
+            </LinearGradientBrush>
+        </Setter>
+    </Style>
+
+    <!--  Event Timer Border  -->
+    <Style Selector="Border.eventTimer">
+        <Setter Property="Background" Value="#2A2D2E" />
+        <Setter Property="BorderBrush" Value="#3E3E42" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="6" />
+        <Setter Property="Padding" Value="12,8" />
+        <Setter Property="Margin" Value="4" />
+    </Style>
+    <!--
+        Active event timer pulse animation: WPF used a DataTrigger on IsActive
+        with a Forever ColorAnimation pulsing the BorderBrush color. The Avalonia
+        replacement is the .active class — the C# code-behind toggles the class
+        when the bound IsActive flips, and starts/stops the pulse Animation
+        imperatively (Avalonia has no DataTrigger equivalent for runtime
+        binding-driven state changes).
+    -->
+    <Style Selector="Border.eventTimer.active">
+        <Setter Property="BorderBrush" Value="#4CAF50" />
+    </Style>
+
+    <!--  Section Header  -->
+    <Style Selector="TextBlock.sectionHeader">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="Margin" Value="0,8,0,4" />
+    </Style>
+
+</Styles>
